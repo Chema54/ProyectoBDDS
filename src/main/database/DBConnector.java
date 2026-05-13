@@ -18,11 +18,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class DBConnector {
-  private static final Logger LOGGER = Logger.getLogger(DBConnector.class.getName());
+  private static final Logger LOGGER = LogManager.getLogger(DBConnector.class.getName());
   private static DBConnector instance;
   private final String URL;
   private final String USERNAME;
@@ -51,7 +51,7 @@ public class DBConnector {
   }
 
   private UserDisplayableException handleConfigurationFileNotFound(FileNotFoundException e) {
-    LOGGER.log(Level.SEVERE, "No se ha encontrado el archivo de configuración de la base de datos: db.properties", e);
+    LOGGER.error("No se ha encontrado el archivo de configuración de la base de datos: db.properties", e);
     return new UserDisplayableException(
       "No se ha encontrado el archivo de configuración de la base de datos. Por favor, comuníquese con el desarrollador del sistema."
     );
@@ -59,7 +59,7 @@ public class DBConnector {
 
   private void handlePropertiesVerification() throws UserDisplayableException {
     if (URL == null || USERNAME == null || PASSWORD == null) {
-      LOGGER.log(Level.SEVERE, "Las propiedades de conexión a la base de datos no están configuradas correctamente. Revisar db.properties.");
+      LOGGER.error("Las propiedades de conexión a la base de datos no están configuradas correctamente. Revisar db.properties.");
       throw new UserDisplayableException(
         "Las propiedades de conexión a la base de datos no están configuradas correctamente. Por favor, comuníquese con el desarrollador del sistema."
       );

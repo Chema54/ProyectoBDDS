@@ -16,9 +16,9 @@ import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.sql.SQLException;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.stream.XMLStreamException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * ExceptionHandler is a core class used across the application to handle exceptions by logging them
@@ -38,7 +38,7 @@ public class ExceptionHandler {
    * @param message the message to prepend to the user-friendly message
    */
   public static UserDisplayableException handleUnexpectedException(Logger logger, Exception e, String message) {
-    logger.log(Level.SEVERE, "Error Inesperado: " + e.getMessage(), e);
+    logger.error("Error Inesperado: " + e.getMessage(), e);
     String finalMessage = message + " Error inesperado. Por favor, comuniquese con el desarrollador si el error persiste.";
     return new UserDisplayableException(finalMessage.trim(), e);
   }
@@ -50,7 +50,7 @@ public class ExceptionHandler {
    * @return UserDisplayableException with a user-friendly message
    */
   private static UserDisplayableException handleXMLStreamException(Logger logger, IOException e) {
-    logger.log(Level.SEVERE, "Error al Cargar la Interfaz gráfica: Error de análisis XML. Verifique el archivo FXML.", e);
+    logger.error("Error al Cargar la Interfaz gráfica: Error de análisis XML. Verifique el archivo FXML.", e);
     return new UserDisplayableException(
       "Error al procesar archivo de la interfaz gráfica. Por favor, comuniquese al desarrollador si el error persiste.",
       e
@@ -73,7 +73,7 @@ public class ExceptionHandler {
     }
 
     if (e.getCause() instanceof ClassNotFoundException) {
-      logger.log(Level.SEVERE, "Error al cargar la interfaz gráfica: Clase no encontrada. Verifique el archivo FXML.", e);
+      logger.error("Error al cargar la interfaz gráfica: Clase no encontrada. Verifique el archivo FXML.", e);
       return new UserDisplayableException(
         "Error al cargar la interfaz gráfica. Por favor, comuníquese con el desarrollador si el error persiste.",
         e
@@ -104,7 +104,7 @@ public class ExceptionHandler {
       return handleAccessDeniedExceptionMessage(logger, (AccessDeniedException) e, message);
     }
 
-    logger.log(Level.SEVERE, "Error de Entrada/Salida Desconocido: {}", e);
+    logger.error("Error de Entrada/Salida Desconocido: {}", e);
     String finalMessage = message + " Error de Entrada/Salida desconocido. Por favor, inténtelo más tarde.";
     return new UserDisplayableException(finalMessage.trim(), e);
   }
@@ -117,7 +117,7 @@ public class ExceptionHandler {
    * @return UserDisplayableException with a user-friendly message
    */
   private static UserDisplayableException handleFileNotFoundExceptionMessage(Logger logger, FileNotFoundException e, String message) {
-    logger.log(Level.SEVERE, "Archivo no Encontrado (Verificar Ruta de Archivo): {}", e);
+    logger.error("Archivo no Encontrado (Verificar Ruta de Archivo): {}", e);
     String finalMessage = message + " Error de archivo no encontrado. Por favor, verifique la ruta del archivo.";
     return new UserDisplayableException(finalMessage.trim(), e);
   }
@@ -130,7 +130,7 @@ public class ExceptionHandler {
    * @return UserDisplayableException with a user-friendly message
    */
   private static UserDisplayableException handleAccessDeniedExceptionMessage(Logger logger, AccessDeniedException e, String message) {
-    logger.log(Level.SEVERE, "Acceso Denegado (Verificar Permisos): {}", e);
+    logger.error("Acceso Denegado (Verificar Permisos): {}", e);
     String finalMessage = message + " Acceso denegado. Por favor, verifique los permisos del archivo.";
     return new UserDisplayableException(finalMessage.trim(), e);
   }
@@ -145,7 +145,7 @@ public class ExceptionHandler {
    * @return NotFoundException with a default message
    */
   public static NotFoundException handleNotFoundException(Logger logger, String entity) {
-    logger.log(Level.WARNING, "Recurso no Encontrado: {}", entity);
+    logger.warn("Recurso no Encontrado: {}", entity);
     return new NotFoundException("El " + entity + " no se encontró. Por favor, verifique la información ingresada.");
   }
 
@@ -190,7 +190,7 @@ public class ExceptionHandler {
         finalMessage += getSQLSyntaxErrorMessage(logger, e);
         break;
       default:
-        logger.log(Level.SEVERE, "Error SQL desconocido: {}", e);
+        logger.error("Error SQL desconocido: {}", e);
         finalMessage += SQL_UNKNOWN_ERROR;
     }
 
@@ -199,26 +199,26 @@ public class ExceptionHandler {
 
   private static String getSQLConnectionErrorMessage(Logger logger, SQLException e, String state) {
     if ("08S01".equals(state)) {
-      logger.log(Level.SEVERE, "Error de comunicación: {}", e);
+      logger.error("Error de comunicación: {}", e);
       return "Error de comunicación con la base de datos. Por favor, inténtelo más tarde.";
     }
 
-    logger.log(Level.SEVERE, "Error de conexión: {}", e);
+    logger.error("Error de conexión: {}", e);
     return "Error de conexión a la base de datos. Por favor, inténtelo más tarde.";
   }
 
   private static String getSQLIntegrityErrorMessage(Logger logger, SQLException e) {
-    logger.log(Level.SEVERE, "Error de integridad: {}", e);
+    logger.error("Error de integridad: {}", e);
     return "Error de integridad de datos. Por favor, revise la información ingresada.";
   }
 
   private static String getSQLAuthenticationErrorMessage(Logger logger, SQLException e) {
-    logger.log(Level.SEVERE, "Error de autenticación: {}", e);
+    logger.error("Error de autenticación: {}", e);
     return "Error de autenticación de base de datos. Por favor, contacte al administrador del sistema.";
   }
 
   private static String getSQLSyntaxErrorMessage(Logger logger, SQLException e) {
-    logger.log(Level.SEVERE, "Error de sintaxis: {}", e);
+    logger.error("Error de sintaxis: {}", e);
     return "Error de sintaxis en la consulta. Por favor, contacte al administrador del sistema.";
   }
 }
