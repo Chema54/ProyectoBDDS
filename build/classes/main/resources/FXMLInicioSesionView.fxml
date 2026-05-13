@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #737373;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.aplication.FXMLInicioSesionController">
+   <children>
+      <GridPane layoutX="188.0" layoutY="31.0" prefHeight="676.0" prefWidth="954.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="Usuario:" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <font>
+                  <Font size="44.0" />
+               </font>
+            </Label>
+            <TextField fx:id="tf_usuario" prefHeight="54.0" prefWidth="132.0" promptText="tu-usuario" GridPane.columnIndex="2" GridPane.rowIndex="1">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </TextField>
+            <PasswordField fx:id="tf_password" prefHeight="51.0" prefWidth="244.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <ImageView fitHeight="208.0" fitWidth="246.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
+               <image>
+                  <Image url="@img_logo.png" />
+               </image>
+            </ImageView>
+            <Label text="Contraseña:" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <font>
+                  <Font size="44.0" />
+               </font>
+            </Label>
+            <Label text="Global">
+               <font>
+                  <Font size="64.0" />
+               </font>
+               <textFill>
+                  <LinearGradient endY="0.47619047619047616" startX="0.6523809523809523" startY="1.0">
+                     <stops>
+                        <Stop color="#eeff00" />
+                        <Stop color="WHITE" offset="1.0" />
+                     </stops>
+                  </LinearGradient>
+               </textFill>
+            </Label>
+            <Label text="Finance" GridPane.columnIndex="2">
+               <font>
+                  <Font size="64.0" />
+               </font>
+               <textFill>
+                  <LinearGradient endY="0.47619047619047616" startX="0.6523809523809523" startY="1.0">
+                     <stops>
+                        <Stop color="#eeff00" />
+                        <Stop color="WHITE" offset="1.0" />
+                     </stops>
+                  </LinearGradient>
+               </textFill>
+            </Label>
+         </children>
+      </GridPane>
+   </children>
+</AnchorPane>
