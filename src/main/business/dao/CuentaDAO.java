@@ -18,6 +18,7 @@ import main.common.UserDisplayableException;
 import main.database.DBConnector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
@@ -48,9 +49,9 @@ public class CuentaDAO extends CompleteDAOShape<CuentaDTO, String> {
       Connection connection = DBConnector.getInstance().getConnection();
       PreparedStatement statement = connection.prepareStatement(CREATE_QUERY)
     ) {
-      statement.setString(1, cuentaDTO.getContraseña());
-      statement.setString(2, cuentaDTO.getRol());
-      statement.setString(3, cuentaDTO.role().toDBString());
+      statement.setString(1, cuentaDTO.getUsuario());
+      statement.setString(2, cuentaDTO.getContraseña());
+      statement.setString(3, cuentaDTO.getRol().toDBString());
       statement.executeUpdate();
     } catch (SQLException e) {
       throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible crear la cuenta.");
@@ -104,9 +105,9 @@ public class CuentaDAO extends CompleteDAOShape<CuentaDTO, String> {
       Connection connection = DBConnector.getInstance().getConnection();
       PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)
     ) {
-      statement.setString(1, BCrypt.hashpw(cuentaDTO.contraseña(), BCrypt.gensalt()));
-      statement.setString(2, cuentaDTO.rol().toDBString());
-      statement.setString(3, cuentaDTO.usuario());
+      statement.setString(1, BCrypt.hashpw(cuentaDTO.getContraseña(), BCrypt.gensalt()));
+      statement.setString(2, cuentaDTO.getRol().toDBString());
+      statement.setString(3, cuentaDTO.getUsuario());
       statement.executeUpdate();
     } catch (SQLException e) {
       throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible actualizar la cuenta.");

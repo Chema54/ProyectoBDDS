@@ -5,6 +5,7 @@
 package main.business.dto;
 
 import main.business.dto.enumeraiones.CuentaRol;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
