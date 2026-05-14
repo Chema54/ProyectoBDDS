@@ -7,6 +7,7 @@ package main.aplication;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.PasswordField;
@@ -31,5 +32,15 @@ public class FXMLInicioSesionController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }    
+
+    @FXML
+    private void btn_IniciarSesion(ActionEvent event) {
+        
+    }
+
+    @FXML
+    private void btn_Salir(ActionEvent event) {
+        System.exit(0);
+    }
     
 }
