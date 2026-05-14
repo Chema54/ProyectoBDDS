@@ -24,10 +24,10 @@ public enum UsuarioRol {
                 return "Central";
 
             case SUCURSAL:
-                return "Académico";
+                return "Sucursal";
 
             case SALIDAS:
-                return "Académico Evaluador";
+                return "Salidas";
 
 
             default:
