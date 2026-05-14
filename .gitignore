@@ -1,1 +1,5 @@
-/dist/
+nbproject/private/
+nbproject/Makefile-variables.mk
+nbproject/Package-*.bash
+build/
+dist/
