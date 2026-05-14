@@ -8,7 +8,7 @@ package main.business.dto.enumeraiones;
  *
  * @author josem
  */
-public enum CuentaRol {
+public enum UsuarioRol {
     CENTRAL,
     SUCURSAL,
     SALIDAS;

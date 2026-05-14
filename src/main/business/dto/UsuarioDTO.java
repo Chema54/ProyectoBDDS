@@ -4,21 +4,21 @@
  */
 package main.business.dto;
 
-import main.business.dto.enumeraiones.CuentaRol;
+import main.business.dto.enumeraiones.UsuarioRol;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
  * @author josem
  */
-public class CuentaDTO {
+public class UsuarioDTO {
 
     private String usuario;
     private String contraseña;
-    private CuentaRol rol;
+    private UsuarioRol rol;
     private boolean tieneAcceso;
 
-    public CuentaDTO(String usuario, String contraseña, CuentaRol rol, boolean tieneAcceso) {
+    public UsuarioDTO(String usuario, String contraseña, UsuarioRol rol, boolean tieneAcceso) {
         this.usuario = usuario;
         this.contraseña = contraseña;
         this.rol = rol;
@@ -33,7 +33,7 @@ public class CuentaDTO {
         return contraseña;
     }
 
-    public CuentaRol getRol() {
+    public UsuarioRol getRol() {
         return rol;
     }
 
@@ -52,7 +52,7 @@ public class CuentaDTO {
             return false;
         }
 
-        CuentaDTO that = (CuentaDTO) instance;
+        UsuarioDTO that = (UsuarioDTO) instance;
 
         return usuario.equals(that.usuario)
                 && tieneAcceso == that.tieneAcceso
