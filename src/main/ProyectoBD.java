@@ -22,7 +22,7 @@ public class ProyectoBD extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("resources/FXMLInicioSesionView.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("resources/gui/FXMLMenuCentralView.fxml"));
         
         Scene scene = new Scene(root);
         
@@ -34,7 +34,7 @@ public class ProyectoBD extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
+        /*
         UsuarioDAO usuarioDAO = new UsuarioDAO();
         UsuarioDTO usuario = new UsuarioDTO(
                 "admin",
@@ -49,6 +49,7 @@ public class ProyectoBD extends Application {
         } catch (UserDisplayableException e) {
             System.out.println(e.getMessage());
         }
+        */
         
         launch(args);
     }

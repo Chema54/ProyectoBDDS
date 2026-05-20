@@ -41,7 +41,7 @@
                </font></PasswordField>
             <ImageView fitHeight="208.0" fitWidth="246.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
                <image>
-                  <Image url="@img_logo.png" />
+                  <Image url="@../img_logo.png" />
                </image>
             </ImageView>
             <Label text="Contraseña:" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="2">
