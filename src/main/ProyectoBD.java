@@ -9,6 +9,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import main.business.dao.UsuarioDAO;
+import main.business.dto.UsuarioDTO;
+import main.business.dto.enumeraiones.UsuarioRol;
+import main.common.UserDisplayableException;
 
 /**
  *
@@ -18,7 +22,7 @@ public class ProyectoBD extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("resources/gui/FXMLMenuCentralView.fxml"));
         
         Scene scene = new Scene(root);
         
@@ -30,6 +34,23 @@ public class ProyectoBD extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        /*
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        UsuarioDTO usuario = new UsuarioDTO(
+                "admin",
+                UsuarioDTO.getGeneratedHashedPassword("1234"),
+                UsuarioRol.CENTRAL,
+                true
+        );
+
+        try {
+            usuarioDAO.createOne(usuario);
+            System.out.println("Usuario registrado correctamente.");
+        } catch (UserDisplayableException e) {
+            System.out.println(e.getMessage());
+        }
+        */
+        
         launch(args);
     }
     
