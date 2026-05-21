@@ -6,7 +6,11 @@ package main.application;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 
 /**
  * FXML Controller class
@@ -15,6 +19,15 @@ import javafx.fxml.Initializable;
  */
 public class FXMLRegistrarEmpleadosController implements Initializable {
 
+    @FXML
+    private TextField tfNombreEmpleado;
+    @FXML
+    private TextField tfApellidosEmpleado;
+    @FXML
+    private ComboBox<?> cbSucursal;
+    @FXML
+    private ComboBox<?> cbDepartamentok;
+
     /**
      * Initializes the controller class.
      */
@@ -22,5 +35,14 @@ public class FXMLRegistrarEmpleadosController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }    
+
+    @FXML
+    private void btnGuardar(ActionEvent event) {
+    }
+
+    @FXML
+    private void btnCancelar(ActionEvent event) {
+        
+    }
     
 }
