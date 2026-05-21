@@ -12,7 +12,6 @@
 
 <AnchorPane id="AnchorPane" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #737373;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.application.FXMLMenuCentralController">
    <children>
-      <StackPane fx:id="stackPane_VistaCentral" layoutY="29.0" prefHeight="691.0" prefWidth="1280.0" />
       <MenuBar prefHeight="29.0" prefWidth="1280.0">
         <menus>
           <Menu mnemonicParsing="false" text="Usuarios">
@@ -60,5 +59,6 @@
           </Menu>
         </menus>
       </MenuBar>
+      <StackPane id="stackPane_VistaCentral" fx:id="stackPane_VistaCentral" layoutY="29.0" prefHeight="691.0" prefWidth="1280.0" />
    </children>
 </AnchorPane>

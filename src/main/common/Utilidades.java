@@ -1,4 +1,4 @@
-/*
+    /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
@@ -32,14 +32,14 @@ public class Utilidades {
                 Node pantallaActual = vista.getChildren().get(totalPantallas - 1);
                 pantallaActual.setDisable(true);
             }
-            
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource(rutaFXML));
             Parent nuevaVista = loader.load();
             vista.getChildren().add(nuevaVista);
 
             nuevaVista.requestFocus();
 
-        } catch (IOException ex) {
+        } catch (IOException | NullPointerException ex) {
             mostrarAlertaSimple("Error", "No se puede cargar esta vista", AlertType.ERROR);
         }
     }

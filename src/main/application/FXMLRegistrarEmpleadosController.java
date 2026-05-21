@@ -9,8 +9,12 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.StackPane;
+import main.common.Utilidades;
 
 /**
  * FXML Controller class
@@ -28,21 +32,17 @@ public class FXMLRegistrarEmpleadosController implements Initializable {
     @FXML
     private ComboBox<?> cbDepartamentok;
 
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
-
-    @FXML
-    private void btnGuardar(ActionEvent event) {
+        // Tu inicialización normal
     }
 
     @FXML
     private void btnCancelar(ActionEvent event) {
         
     }
-    
+
+    @FXML
+    private void btnGuardar(ActionEvent event) {
+    }
 }

@@ -56,6 +56,7 @@ public class FXMLMenuCentralController implements Initializable {
 
     @FXML
     private void irModificarEmpleados(ActionEvent event) {
+        utilidades.abrirNuevaPantalla("/main/resources/gui/FXMLModificarEmpleadosView.fxml", stackPane_VistaCentral);                
     }
 
     @FXML
