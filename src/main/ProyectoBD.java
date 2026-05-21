@@ -22,7 +22,7 @@ public class ProyectoBD extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("resources/gui/FXMLMenuCentralView.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("resources/gui/FXMLInicioSesionView.fxml"));
         
         Scene scene = new Scene(root);
         
@@ -36,13 +36,15 @@ public class ProyectoBD extends Application {
     public static void main(String[] args) {
         /*
         UsuarioDAO usuarioDAO = new UsuarioDAO();
+        
         UsuarioDTO usuario = new UsuarioDTO(
-                "admin",
-                UsuarioDTO.getGeneratedHashedPassword("1234"),
-                UsuarioRol.CENTRAL,
-                true
+                1,                                             
+                "leninrevan",                                  
+                UsuarioDTO.getGeneratedHashedPassword("1234"), 
+                UsuarioRol.CENTRAL,                            
+                true                                           
         );
-
+        
         try {
             usuarioDAO.createOne(usuario);
             System.out.println("Usuario registrado correctamente.");

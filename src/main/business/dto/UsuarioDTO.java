@@ -13,16 +13,24 @@ import org.mindrot.jbcrypt.BCrypt;
  */
 public class UsuarioDTO {
 
+    private int idEmpleado; 
     private String usuario;
     private String contraseña;
     private UsuarioRol rol;
     private boolean tieneAcceso;
 
-    public UsuarioDTO(String usuario, String contraseña, UsuarioRol rol, boolean tieneAcceso) {
+    // Actualizamos el constructor para recibirlo
+    public UsuarioDTO(int idEmpleado, String usuario, String contraseña, UsuarioRol rol, boolean tieneAcceso) {
+        this.idEmpleado = idEmpleado;
         this.usuario = usuario;
         this.contraseña = contraseña;
         this.rol = rol;
         this.tieneAcceso = tieneAcceso;
+    }
+
+    // Su respectivo Getter para que el DAO lo pueda leer
+    public int getIdEmpleado() {
+        return idEmpleado;
     }
 
     public String getUsuario() {

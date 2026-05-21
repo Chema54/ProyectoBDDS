@@ -1,41 +1,17 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Enum.java to edit this template
- */
 package main.business.dto.enumeraiones;
 
-/**
- *
- * @author josem
- */
 public enum UsuarioRol {
-    CENTRAL,
-    SUCURSAL,
-    SALIDAS;
+    CENTRAL(1),   
+    SUCURSAL(2),  
+    SALIDAS(3);   
 
+    private final int idRol;
 
-
-    @Override
-    public String toString() {
-
-        switch (this) {
-
-            case CENTRAL:
-                return "Central";
-
-            case SUCURSAL:
-                return "Sucursal";
-
-            case SALIDAS:
-                return "Salidas";
-
-
-            default:
-                return this.name();
-        }
+    UsuarioRol(int idRol) {
+        this.idRol = idRol;
     }
 
-    public String toDBString() {
-        return this.name();
+    public int getIdRol() {
+        return idRol;
     }
 }

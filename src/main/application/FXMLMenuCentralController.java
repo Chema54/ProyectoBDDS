@@ -6,10 +6,13 @@ package main.application;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import main.common.Utilidades;
 
 /**
@@ -18,6 +21,10 @@ import main.common.Utilidades;
  * @author leninrevan
  */
 public class FXMLMenuCentralController implements Initializable {
+    
+    Utilidades utilidades = new Utilidades();
+    @FXML
+    private StackPane stackPane_VistaCentral;
 
     /**
      * Initializes the controller class.
@@ -27,33 +34,32 @@ public class FXMLMenuCentralController implements Initializable {
         // TODO
     }    
 
+
     @FXML
-    private void irAdministrarUsuarios(MouseEvent event) {
-        Utilidades.mostrarAlertaSimple("MostrarAlerta", "Prototipando", Alert.AlertType.INFORMATION);
+    private void irModificarUsuarios(ActionEvent event) {
     }
 
     @FXML
-    private void irVerKARDEX(MouseEvent event) {
+    private void irMostrarUsuarios(ActionEvent event) {
+        utilidades.abrirNuevaPantalla("/main/resources/gui/FXMLMostrarUsuariosView.fxml", stackPane_VistaCentral);
     }
 
     @FXML
-    private void irVerFacturas(MouseEvent event) {
+    private void irRegistrarUsuarios(ActionEvent event) {
+        utilidades.abrirNuevaPantalla("/main/resources/gui/FXMLRegistroUsuariosView.fxml", stackPane_VistaCentral);
     }
 
     @FXML
-    private void irAdministrarInventario(MouseEvent event) {
+    private void irRegistrarEmpleados(ActionEvent event) {
     }
 
     @FXML
-    private void irAdministrarCatalogo(MouseEvent event) {
+    private void irModificarEmpleados(ActionEvent event) {
     }
 
     @FXML
-    private void irVerEntradas(MouseEvent event) {
+    private void irMostrarEmpleados(ActionEvent event) {
     }
 
-    @FXML
-    private void irVerSalidas(MouseEvent event) {
-    }
     
 }

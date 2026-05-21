@@ -31,7 +31,7 @@ public class DBConnector {
   private DBConnector() throws UserDisplayableException {
     Properties properties = new Properties();
 
-    try (FileInputStream input = new FileInputStream("SourcePackage/main/resources/db.properties")) {
+    try (FileInputStream input = new FileInputStream("src/main/resources/db.properties")) {
       properties.load(input);
 
       this.URL = properties.getProperty("db.url");
