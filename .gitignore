@@ -1,5 +1,11 @@
-nbproject/private/
-nbproject/Makefile-variables.mk
-nbproject/Package-*.bash
-build/
-dist/
+# Carpetas de compilación local
+**/build/
+**/dist/
+**/nbproject/private/
+
+# Archivos del sistema del usuario
+.DS_Store
+Thumbs.db
+
+# Las credenciales
+src/main/resources/db.properties
