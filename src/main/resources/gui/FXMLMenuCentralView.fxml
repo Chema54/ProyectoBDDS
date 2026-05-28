@@ -59,6 +59,6 @@
           </Menu>
         </menus>
       </MenuBar>
-      <StackPane id="stackPane_VistaCentral" fx:id="stackPane_VistaCentral" layoutY="29.0" prefHeight="691.0" prefWidth="1280.0" />
+        <AnchorPane id="pane_Escritorio" fx:id="pane_Escritorio" layoutY="29.0" prefHeight="691.0" prefWidth="1280.0" />
    </children>
 </AnchorPane>
