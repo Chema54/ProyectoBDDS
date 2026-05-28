@@ -9,7 +9,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="691.0" prefWidth="1280.0" style="-fx-background-color: #737373;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.application.FXMLRegistrarEmpleadosController">
+<AnchorPane id="AnchorPane" prefHeight="691.0" prefWidth="1280.0" style="-fx-background-color: #737373;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.application.FXMLRegistroEmpleadosController">
    <children>
       <GridPane prefHeight="691.0" prefWidth="1280.0">
         <columnConstraints>
@@ -68,7 +68,6 @@
                </font>
             </Label>
             <Button mnemonicParsing="false" onAction="#btnGuardar" prefHeight="60.0" prefWidth="150.0" style="-fx-background-color: #156600;" text="Guardar" textFill="WHITE" GridPane.columnIndex="5" GridPane.rowIndex="3" />
-            <Button mnemonicParsing="false" onAction="#btnCancelar" prefHeight="60.0" prefWidth="151.0" style="-fx-background-color: #FF2E2E;" text="Cancelar" textFill="WHITE" GridPane.columnIndex="4" GridPane.rowIndex="3" />
          </children>
       </GridPane>
    </children>

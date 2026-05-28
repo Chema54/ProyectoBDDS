@@ -1,16 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #737373;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="main.application.FXMLRegistroUsuariosController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #737373;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.application.FXMLRegistroUsuariosController">
    <children>
-      <Button layoutX="210.0" layoutY="127.0" mnemonicParsing="false" text="Button" />
-      <ChoiceBox layoutX="178.0" layoutY="186.0" prefWidth="150.0" />
-      <ChoiceBox layoutX="349.0" layoutY="127.0" prefWidth="150.0" />
+      <GridPane layoutX="10.0" layoutY="10.0" prefHeight="691.0" prefWidth="1280.0">
+         <children>
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../img_usuarios.png" />
+               </image>
+               <GridPane.margin>
+                  <Insets left="50.0" />
+               </GridPane.margin>
+            </ImageView>
+            <TextField fx:id="tfNombreUsuario" promptText="Ej: Lenin" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </TextField>
+            <Label text="Nombre" textFill="WHITE" GridPane.rowIndex="1">
+               <font>
+                  <Font size="30.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="cbRol" prefHeight="45.0" prefWidth="200.0" promptText="Sucursal o salida" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label text="Rol:" textFill="WHITE" GridPane.rowIndex="3">
+               <font>
+                  <Font size="30.0" />
+               </font>
+            </Label>
+            <Button mnemonicParsing="false" onAction="#btnGuardar" prefHeight="60.0" prefWidth="150.0" style="-fx-background-color: #156600;" text="Guardar" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <Label text="Contraseña" textFill="WHITE" GridPane.rowIndex="2">
+               <font>
+                  <Font size="30.0" />
+               </font>
+            </Label>
+            <PasswordField fx:id="pwPassword" promptText="Su clave" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </PasswordField>
+         </children>
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+      </GridPane>
    </children>
 </AnchorPane>

@@ -4,6 +4,7 @@
  */
 package main.application;
 
+import main.common.VentanaInterna;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -12,9 +13,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.MenuItem;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import main.common.Utilidades;
@@ -40,9 +38,6 @@ public class FXMLMenuCentralController implements Initializable {
     }    
 
 
-    @FXML
-    private void irModificarUsuarios(ActionEvent event) {
-    }
 
     @FXML
     private void irMostrarUsuarios(ActionEvent event) {
@@ -72,17 +67,54 @@ public class FXMLMenuCentralController implements Initializable {
 
     @FXML
     private void irRegistrarEmpleados(ActionEvent event) {
-        utilidades.abrirNuevaPantalla("/main/resources/gui/FXMLRegistrarEmpleadosView.fxml", stackPane_VistaCentral);        
+        try {
+            // 1. Cargas el FXML del formulario que quieres mostrar adentro
+            Node formulario = FXMLLoader.load(getClass().getResource("/main/resources/gui/FXMLRegistrarEmpleadosView.fxml"));
+
+            // 2. Lo envuelves en tu componente personalizado de ventana flotante
+            VentanaInterna ventana = new VentanaInterna("Registrar Usuario", formulario);
+
+            // 3. Posición inicial en el escritorio para que no se encimen todas arriba a la izquierda
+            ventana.setLayoutX(50);
+            ventana.setLayoutY(50);
+
+            // 4. Lo agregas al AnchorPane/Pane central
+            pane_Escritorio.getChildren().add(ventana);
+
+        } catch (IOException ex) {
+            System.out.println("Error al cargar el formulario: " + ex.getMessage());
+        }
     }
 
     @FXML
     private void irModificarEmpleados(ActionEvent event) {
-        utilidades.abrirNuevaPantalla("/main/resources/gui/FXMLModificarEmpleadosView.fxml", stackPane_VistaCentral);                
+        try {
+            // 1. Cargas el FXML del formulario que quieres mostrar adentro
+            Node formulario = FXMLLoader.load(getClass().getResource("/main/resources/gui/FXMLModificarEmpleadosView.fxml"));
+
+            // 2. Lo envuelves en tu componente personalizado de ventana flotante
+            VentanaInterna ventana = new VentanaInterna("Registrar Usuario", formulario);
+
+            // 3. Posición inicial en el escritorio para que no se encimen todas arriba a la izquierda
+            ventana.setLayoutX(50);
+            ventana.setLayoutY(50);
+
+            // 4. Lo agregas al AnchorPane/Pane central
+            pane_Escritorio.getChildren().add(ventana);
+
+        } catch (IOException ex) {
+            System.out.println("Error al cargar el formulario: " + ex.getMessage());
+        }
+    }
+
+    @FXML
+    private void irModificarUsuarios(ActionEvent event) {
     }
 
     @FXML
     private void irMostrarEmpleados(ActionEvent event) {
     }
+
 
     
 }

@@ -34,7 +34,7 @@ public class ProyectoBD extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
+        /*
         UsuarioDAO usuarioDAO = new UsuarioDAO();
         
         UsuarioDTO usuario = new UsuarioDTO(
@@ -51,7 +51,7 @@ public class ProyectoBD extends Application {
         } catch (UserDisplayableException e) {
             System.out.println(e.getMessage());
         }
-        
+        */
         
         launch(args);
     }

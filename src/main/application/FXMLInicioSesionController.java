@@ -69,11 +69,13 @@ public class FXMLInicioSesionController implements Initializable {
                         
                         Stage currentStage = (Stage) tf_usuario.getScene().getWindow();
                         currentStage.close();
-                        stage.setResizable(false);
+                        stage.setResizable(true);
+                        stage.setMaximized(true);
                         stage.show();
                         
                     } catch (IOException e) {
                         mostrarAlertaSimple("Error", "No se pudo cargar la vista del menú central.", Alert.AlertType.ERROR);
+                        e.printStackTrace();
                     }
                 } else {
                     mostrarAlertaSimple("Información", "Acceso correcto. Vista no disponible para este rol.", Alert.AlertType.INFORMATION);

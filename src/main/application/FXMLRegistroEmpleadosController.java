@@ -21,7 +21,7 @@ import main.common.Utilidades;
  *
  * @author leninrevan
  */
-public class FXMLRegistrarEmpleadosController implements Initializable {
+public class FXMLRegistroEmpleadosController implements Initializable {
 
     @FXML
     private TextField tfNombreEmpleado;
@@ -37,10 +37,6 @@ public class FXMLRegistrarEmpleadosController implements Initializable {
         // Tu inicialización normal
     }
 
-    @FXML
-    private void btnCancelar(ActionEvent event) {
-        
-    }
 
     @FXML
     private void btnGuardar(ActionEvent event) {

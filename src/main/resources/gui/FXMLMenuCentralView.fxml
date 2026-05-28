@@ -1,64 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.geometry.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #737373;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.application.FXMLMenuCentralController">
+<AnchorPane id="AnchorPane"
+            style="-fx-background-color: #737373;"
+            xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="main.application.FXMLMenuCentralController">
+
    <children>
-      <MenuBar prefHeight="29.0" prefWidth="1280.0">
+
+      <!-- MENU BAR -->
+      <MenuBar AnchorPane.topAnchor="0.0"
+               AnchorPane.leftAnchor="0.0"
+               AnchorPane.rightAnchor="0.0">
+
         <menus>
+
           <Menu mnemonicParsing="false" text="Usuarios">
             <items>
-                  <MenuItem mnemonicParsing="false" onAction="#irRegistrarUsuarios" text="Registrar" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#irModificarUsuarios" text="Modificar" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#irMostrarUsuarios" text="Mostrar" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-              <MenuItem mnemonicParsing="false" text="Close" />
+
+              <MenuItem mnemonicParsing="false"
+                        onAction="#irRegistrarUsuarios"
+                        text="Registrar" />
+
+              <SeparatorMenuItem mnemonicParsing="false" />
+
+              <MenuItem mnemonicParsing="false"
+                        onAction="#irModificarUsuarios"
+                        text="Modificar" />
+
+              <SeparatorMenuItem mnemonicParsing="false" />
+
+              <MenuItem mnemonicParsing="false"
+                        onAction="#irMostrarUsuarios"
+                        text="Mostrar" />
+
             </items>
           </Menu>
+
           <Menu mnemonicParsing="false" text="Empleados">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#irRegistrarEmpleados" text="Registrar" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#irModificarEmpleados" text="Modificar" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#irMostrarEmpleados" text="Mostrar" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Close" />
+
+              <MenuItem mnemonicParsing="false"
+                        onAction="#irRegistrarEmpleados"
+                        text="Registrar" />
+
+              <SeparatorMenuItem mnemonicParsing="false" />
+
+              <MenuItem mnemonicParsing="false"
+                        onAction="#irModificarEmpleados"
+                        text="Modificar" />
+
+              <SeparatorMenuItem mnemonicParsing="false" />
+
+              <MenuItem mnemonicParsing="false"
+                        onAction="#irMostrarEmpleados"
+                        text="Mostrar" />
+
             </items>
           </Menu>
-            <Menu mnemonicParsing="false" text="Artículos">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Action 1" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Close" />
-              </items>
-            </Menu>
-            <Menu mnemonicParsing="false" text="Logistica">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Action 1" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Close" />
-              </items>
-            </Menu>
-          <Menu mnemonicParsing="false" text="Ayuda">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Close" />
-            </items>
-          </Menu>
+
+          <Menu mnemonicParsing="false" text="Artículos" />
+          <Menu mnemonicParsing="false" text="Logistica" />
+          <Menu mnemonicParsing="false" text="Ayuda" />
+
         </menus>
+
       </MenuBar>
-        <AnchorPane id="pane_Escritorio" fx:id="pane_Escritorio" layoutY="29.0" prefHeight="691.0" prefWidth="1280.0" />
+
+      <!-- ESCRITORIO -->
+      <AnchorPane fx:id="pane_Escritorio"
+                  layoutY="25.0"
+                  style="-fx-background-color: #737373;"
+                  AnchorPane.topAnchor="25.0"
+                  AnchorPane.bottomAnchor="0.0"
+                  AnchorPane.leftAnchor="0.0"
+                  AnchorPane.rightAnchor="0.0"/>
+
    </children>
+
 </AnchorPane>
