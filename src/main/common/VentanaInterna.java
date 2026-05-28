@@ -42,7 +42,7 @@ public class VentanaInterna extends BorderPane {
             "-fx-border-radius: 4px;"
         );
 
-        this.setPrefSize(100, 100);
+        this.setPrefSize(150, 100);
 
         // =========================
         // BARRA TITULO

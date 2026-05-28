@@ -29,7 +29,7 @@ public class SucursalDAO extends CompleteDAOShape<SucursalDTO, Integer> {
     private static final String GET_ALL_QUERY = "SELECT * FROM Sucursal";
     private static final String GET_QUERY = "SELECT * FROM Sucursal WHERE id_sucursal = ?";
     private static final String UPDATE_QUERY = "UPDATE Sucursal SET direccion = ?, nombre = ? WHERE id_sucursal = ?";
-    private static final String DELETE_QUERY = "DELETE FROM Sucursal WHERE id_sucursal";
+    private static final String DELETE_QUERY = "DELETE FROM Sucursal WHERE id_sucursal = ?";
 
     @Override
     public void createOne(SucursalDTO sucursalDTO) throws UserDisplayableException {

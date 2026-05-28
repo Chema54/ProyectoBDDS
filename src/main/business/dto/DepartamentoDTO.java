@@ -62,10 +62,16 @@ public class DepartamentoDTO {
         }
     }
 
+    /*
     @Override
     public String toString() {
         return "Departamento: " + idDepartamento
                 + ", Nombre: " + nombreDepartamento
                 + ", Sucursal: " + idSucursal;
+    }
+    */
+    @Override
+    public String toString() {
+        return nombreDepartamento;
     }
 }

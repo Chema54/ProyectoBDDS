@@ -65,9 +65,16 @@ public class SucursalDTO {
             return new SucursalDTO(this);
         }
     }
-
+    /*
     @Override
     public String toString() {
         return "Sucursal: " + idSucursal + ", Nombre: " + nombre + ", Direccion" + direccion;
     }
+    */
+
+    @Override
+    public String toString() {
+        return nombre;
+    }
+    
 }

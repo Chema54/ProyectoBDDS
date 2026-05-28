@@ -69,7 +69,7 @@ public class FXMLMenuCentralController implements Initializable {
     private void irRegistrarEmpleados(ActionEvent event) {
         try {
             // 1. Cargas el FXML del formulario que quieres mostrar adentro
-            Node formulario = FXMLLoader.load(getClass().getResource("/main/resources/gui/FXMLRegistrarEmpleadosView.fxml"));
+            Node formulario = FXMLLoader.load(getClass().getResource("/main/resources/gui/FXMLRegistroEmpleadosView.fxml"));
 
             // 2. Lo envuelves en tu componente personalizado de ventana flotante
             VentanaInterna ventana = new VentanaInterna("Registrar Usuario", formulario);
