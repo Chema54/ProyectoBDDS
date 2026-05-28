@@ -42,67 +42,43 @@ public class DetalleFacturaDAO extends CompleteDAOShape<DetalleFacturaDTO, Integ
             "DELETE FROM DetalleFactura WHERE id_detalle = ?";
 
     @Override
-    public DetalleFacturaDTO getDTOInstanceFromResultSet(ResultSet resultSet) throws SQLException {
+    public void createOne(DetalleFacturaDTO detalleFacturaDTO) throws UserDisplayableException {
+        try (
+            Connection connection = DBConnector.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(CREATE_QUERY)
+        ) {
+            statement.setInt(1, detalleFacturaDTO.getIDDetalle());
+            statement.setInt(2, detalleFacturaDTO.getIDFactura());
+            statement.setInt(3, detalleFacturaDTO.getIDArticulo());
+            statement.setInt(4, detalleFacturaDTO.getCantidad());
+            statement.setDouble(5, detalleFacturaDTO.getCosto());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible crear el detalle de factura.");
+        }
+    }
 
-        return new DetalleFacturaDTO.DetalleFacturaBuilder()
+    @Override
+    public List<DetalleFacturaDTO> getAll() throws UserDisplayableException {
+        try (
+            Connection connection = DBConnector.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(GET_ALL_QUERY);
+            ResultSet resultSet = statement.executeQuery()
+        ) {
+            List<DetalleFacturaDTO> list = new ArrayList<>();
+            while (resultSet.next()) {
+                DetalleFacturaDTO detalleFacturaDto = new DetalleFacturaDTO.DetalleFacturaBuilder()
                 .setIDDetalle(resultSet.getInt("id_detalle"))
                 .setIDFactura(resultSet.getInt("id_factura"))
                 .setIDArticulo(resultSet.getInt("id_articulo"))
                 .setCantidad(resultSet.getInt("cantidad"))
                 .setCosto(resultSet.getDouble("costo"))
                 .build();
-    }
-
-    @Override
-    public void createOne(DetalleFacturaDTO detalleFacturaDTO) throws UserDisplayableException {
-
-        try (
-                Connection connection = DBConnector.getInstance().getConnection();
-                PreparedStatement statement = connection.prepareStatement(CREATE_QUERY)
-        ) {
-
-            statement.setInt(1, detalleFacturaDTO.getIDDetalle());
-            statement.setInt(2, detalleFacturaDTO.getIDFactura());
-            statement.setInt(3, detalleFacturaDTO.getIDArticulo());
-            statement.setInt(4, detalleFacturaDTO.getCantidad());
-            statement.setDouble(5, detalleFacturaDTO.getCosto());
-
-            statement.executeUpdate();
-
-        } catch (SQLException e) {
-
-            throw ExceptionHandler.handleSQLException(
-                    LOGGER,
-                    e,
-                    "No ha sido posible crear el detalle de factura."
-            );
-        }
-    }
-
-    @Override
-    public List<DetalleFacturaDTO> getAll() throws UserDisplayableException {
-
-        try (
-                Connection connection = DBConnector.getInstance().getConnection();
-                PreparedStatement statement = connection.prepareStatement(GET_ALL_QUERY);
-                ResultSet resultSet = statement.executeQuery()
-        ) {
-
-            List<DetalleFacturaDTO> list = new ArrayList<>();
-
-            while (resultSet.next()) {
-                list.add(getDTOInstanceFromResultSet(resultSet));
+                list.add(detalleFacturaDto);
             }
-
             return list;
-
         } catch (SQLException e) {
-
-            throw ExceptionHandler.handleSQLException(
-                    LOGGER,
-                    e,
-                    "No ha sido posible cargar los detalles de factura."
-            );
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible cargar los detalles de factura.");
         }
     }
 
@@ -110,30 +86,23 @@ public class DetalleFacturaDAO extends CompleteDAOShape<DetalleFacturaDTO, Integ
     public DetalleFacturaDTO getOne(Integer id) throws UserDisplayableException {
 
         try (
-                Connection connection = DBConnector.getInstance().getConnection();
-                PreparedStatement statement = connection.prepareStatement(GET_QUERY)
+            Connection connection = DBConnector.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(GET_QUERY);
+            ResultSet resultSet = statement.executeQuery();
         ) {
-
             statement.setInt(1, id);
-
-            DetalleFacturaDTO detalleFacturaDTO = null;
-
-            try (ResultSet resultSet = statement.executeQuery()) {
-
-                if (resultSet.next()) {
-                    detalleFacturaDTO = getDTOInstanceFromResultSet(resultSet);
-                }
+            if (resultSet.next()) {
+                return new DetalleFacturaDTO.DetalleFacturaBuilder()
+                .setIDDetalle(resultSet.getInt("id_detalle"))
+                .setIDFactura(resultSet.getInt("id_factura"))
+                .setIDArticulo(resultSet.getInt("id_articulo"))
+                .setCantidad(resultSet.getInt("cantidad"))
+                .setCosto(resultSet.getDouble("costo"))
+                .build();
             }
-
-            return detalleFacturaDTO;
-
+            return null;
         } catch (SQLException e) {
-
-            throw ExceptionHandler.handleSQLException(
-                    LOGGER,
-                    e,
-                    "No ha sido posible obtener el detalle de factura."
-            );
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible obtener el detalle de factura.");
         }
     }
 
@@ -141,47 +110,30 @@ public class DetalleFacturaDAO extends CompleteDAOShape<DetalleFacturaDTO, Integ
     public void updateOne(DetalleFacturaDTO detalleFacturaDTO) throws UserDisplayableException {
 
         try (
-                Connection connection = DBConnector.getInstance().getConnection();
-                PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)
+            Connection connection = DBConnector.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)
         ) {
-
             statement.setInt(1, detalleFacturaDTO.getIDFactura());
             statement.setInt(2, detalleFacturaDTO.getIDArticulo());
             statement.setInt(3, detalleFacturaDTO.getCantidad());
             statement.setDouble(4, detalleFacturaDTO.getCosto());
             statement.setInt(5, detalleFacturaDTO.getIDDetalle());
-
             statement.executeUpdate();
-
         } catch (SQLException e) {
-
-            throw ExceptionHandler.handleSQLException(
-                    LOGGER,
-                    e,
-                    "No ha sido posible actualizar el detalle de factura."
-            );
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible actualizar el detalle de factura.");
         }
     }
 
     @Override
     public void deleteOne(Integer id) throws UserDisplayableException {
-
         try (
-                Connection connection = DBConnector.getInstance().getConnection();
-                PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)
+            Connection connection = DBConnector.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)
         ) {
-
             statement.setInt(1, id);
-
             statement.executeUpdate();
-
         } catch (SQLException e) {
-
-            throw ExceptionHandler.handleSQLException(
-                    LOGGER,
-                    e,
-                    "No ha sido posible eliminar el detalle de factura."
-            );
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible eliminar el detalle de factura.");
         }
     }
 }

@@ -31,16 +31,6 @@ public class EmpleadoDAO extends CompleteDAOShape<EmpleadoDTO, Integer> {
     private static final String GET_QUERY = "SELECT * FROM Empleado WHERE id_empleado = ?";
     private static final String UPDATE_QUERY = "UPDATE Empleado SET apellidos = ?, nombre = ? WHERE id_empleado = ? AND id_departamento = ?";
     private static final String DELETE_QUERY = "DELETE FROM Empleado WHERE id_empleado";
-  
-    @Override
-    public EmpleadoDTO getDTOInstanceFromResultSet(ResultSet resultSet) throws SQLException {
-        return new EmpleadoDTO.EmpleadoBuilder()
-            .setIDEmpleado(resultSet.getInt("id_empleado"))
-            .setNombre(resultSet.getString("nombre"))
-            .setApellidos(resultSet.getString("apellidos"))
-            .setIDDepartamento(resultSet.getInt("id_departamento"))
-            .build();
-    }
 
     @Override
     public void createOne(EmpleadoDTO empleadoDTO) throws UserDisplayableException {
@@ -66,9 +56,14 @@ public class EmpleadoDAO extends CompleteDAOShape<EmpleadoDTO, Integer> {
             ResultSet resultSet = statement.executeQuery()
         ) {
             List<EmpleadoDTO> list = new ArrayList<>();
-
             while (resultSet.next()) {
-              list.add(createDTOInstanceFromResultSet(resultSet));
+              EmpleadoDTO empleadoDTO =  new EmpleadoDTO.EmpleadoBuilder()
+              .setIDEmpleado(resultSet.getInt("id_empleado"))
+              .setNombre(resultSet.getString("nombre"))
+              .setApellidos(resultSet.getString("apellidos"))
+              .setIDDepartamento(resultSet.getInt("id_departamento"))
+              .build();
+              list.add(empleadoDTO);
           }
             return list;
         } catch (SQLException e) {
@@ -80,19 +75,19 @@ public class EmpleadoDAO extends CompleteDAOShape<EmpleadoDTO, Integer> {
     public EmpleadoDTO getOne(Integer id) throws UserDisplayableException {
         try (
             Connection connection = DBConnector.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(GET_QUERY)
+            PreparedStatement statement = connection.prepareStatement(GET_QUERY);
+            ResultSet resultSet = statement.executeQuery();
         ) {
             statement.setInt(1, id);
-
-            EmpleadoDTO empleadoDTO = null;
-
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    empleadoDTO = createDTOInstanceFromResultSet(resultSet);
-                }
+            if (resultSet.next()) {
+                return new EmpleadoDTO.EmpleadoBuilder()
+                .setIDEmpleado(resultSet.getInt("id_empleado"))
+                .setNombre(resultSet.getString("nombre"))
+                .setApellidos(resultSet.getString("apellidos"))
+                .setIDDepartamento(resultSet.getInt("id_departamento"))
+                .build();
             }
-
-            return empleadoDTO;
+            return null;
         } catch (SQLException e) {
             throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible obtener el articulo.");
         }

@@ -30,15 +30,6 @@ public class SucursalDAO extends CompleteDAOShape<SucursalDTO, Integer> {
     private static final String GET_QUERY = "SELECT * FROM Sucursal WHERE id_sucursal = ?";
     private static final String UPDATE_QUERY = "UPDATE Sucursal SET direccion = ?, nombre = ? WHERE id_sucursal = ?";
     private static final String DELETE_QUERY = "DELETE FROM Sucursal WHERE id_sucursal";
-  
-    @Override
-    public SucursalDTO getDTOInstanceFromResultSet(ResultSet resultSet) throws SQLException {
-        return new SucursalDTO.SucursalBuilder()
-            .setIDSucursal(resultSet.getInt("id_sucursal"))
-            .setNombre(resultSet.getString("nombre"))
-            .setDireccion(resultSet.getString("direccion"))
-            .build();
-    }
 
     @Override
     public void createOne(SucursalDTO sucursalDTO) throws UserDisplayableException {
@@ -51,7 +42,7 @@ public class SucursalDAO extends CompleteDAOShape<SucursalDTO, Integer> {
             statement.setString(3, sucursalDTO.getDireccion());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible crear el articulo.");
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible crear la sucursal.");
         }
     }
 
@@ -63,13 +54,17 @@ public class SucursalDAO extends CompleteDAOShape<SucursalDTO, Integer> {
             ResultSet resultSet = statement.executeQuery()
         ) {
             List<SucursalDTO> list = new ArrayList<>();
-
             while (resultSet.next()) {
-              list.add(createDTOInstanceFromResultSet(resultSet));
-          }
+                SucursalDTO sucursalDTO = new SucursalDTO.SucursalBuilder()
+                .setIDSucursal(resultSet.getInt("id_sucursal"))
+                .setNombre(resultSet.getString("nombre"))
+                .setDireccion(resultSet.getString("direccion"))
+                .build();
+                list.add(sucursalDTO);   
+            }
             return list;
         } catch (SQLException e) {
-            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible cargar los articulos.");
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible cargar las sucursales.");
         }
     }
 
@@ -77,21 +72,20 @@ public class SucursalDAO extends CompleteDAOShape<SucursalDTO, Integer> {
     public SucursalDTO getOne(Integer id) throws UserDisplayableException {
         try (
             Connection connection = DBConnector.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(GET_QUERY)
+            PreparedStatement statement = connection.prepareStatement(GET_QUERY);
+            ResultSet resultSet = statement.executeQuery();
         ) {
             statement.setInt(1, id);
-
-            SucursalDTO sucursalDTO = null;
-
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    sucursalDTO = createDTOInstanceFromResultSet(resultSet);
-                }
+            if (resultSet.next()) {
+                return new SucursalDTO.SucursalBuilder()
+                .setIDSucursal(resultSet.getInt("id_sucursal"))
+                .setNombre(resultSet.getString("nombre"))
+                .setDireccion(resultSet.getString("direccion"))
+                .build();
             }
-
-            return sucursalDTO;
+            return null;
         } catch (SQLException e) {
-            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible obtener el articulo.");
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible obtener la sucursal.");
         }
     }
 
@@ -106,7 +100,7 @@ public class SucursalDAO extends CompleteDAOShape<SucursalDTO, Integer> {
             statement.setInt(3, sucursalDTO.getIDSucursal());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible actualizar el articulo.");
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible actualizar la sucursal.");
         }
     }
 
@@ -119,7 +113,7 @@ public class SucursalDAO extends CompleteDAOShape<SucursalDTO, Integer> {
             statement.setInt(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible eliminar la práctica.");
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible eliminar la sucursal.");
         }
     }
 

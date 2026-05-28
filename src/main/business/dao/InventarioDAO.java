@@ -42,98 +42,66 @@ public class InventarioDAO extends CompleteDAOShape<InventarioDTO, Integer> {
             "DELETE FROM Inventario WHERE id_articulo = ?";
 
     @Override
-    public InventarioDTO getDTOInstanceFromResultSet(ResultSet resultSet) throws SQLException {
+    public void createOne(InventarioDTO inventarioDTO) throws UserDisplayableException {
+        try (
+            Connection connection = DBConnector.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(CREATE_QUERY);
+        ) {
+            statement.setInt(1, inventarioDTO.getIDSucursal());
+            statement.setInt(2, inventarioDTO.getIDArticulo());
+            statement.setString(3, inventarioDTO.getCantidad());
+            statement.setString(4, inventarioDTO.getStockMinimo());
+            statement.setString(5, inventarioDTO.getStockMaximo());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible crear el inventario.");
+        }
+    }
 
-        return new InventarioDTO.InventarioBuilder()
+    @Override
+    public List<InventarioDTO> getAll() throws UserDisplayableException {
+        try (
+            Connection connection = DBConnector.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(GET_ALL_QUERY);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            List<InventarioDTO> list = new ArrayList<>();
+            while (resultSet.next()) {
+                InventarioDTO inventarioDTO = new InventarioDTO.InventarioBuilder()
                 .setIDSucursal(resultSet.getInt("id_sucursal"))
                 .setIDArticulo(resultSet.getInt("id_articulo"))
                 .setCantidad(resultSet.getString("cantidad"))
                 .setStockMinimo(resultSet.getString("stock_minimo"))
                 .setStockMaximo(resultSet.getString("stock_maximo"))
                 .build();
-    }
-
-    @Override
-    public void createOne(InventarioDTO inventarioDTO) throws UserDisplayableException {
-
-        try (
-                Connection connection = DBConnector.getInstance().getConnection();
-                PreparedStatement statement = connection.prepareStatement(CREATE_QUERY)
-        ) {
-
-            statement.setInt(1, inventarioDTO.getIDSucursal());
-            statement.setInt(2, inventarioDTO.getIDArticulo());
-            statement.setString(3, inventarioDTO.getCantidad());
-            statement.setString(4, inventarioDTO.getStockMinimo());
-            statement.setString(5, inventarioDTO.getStockMaximo());
-
-            statement.executeUpdate();
-
-        } catch (SQLException e) {
-
-            throw ExceptionHandler.handleSQLException(
-                    LOGGER,
-                    e,
-                    "No ha sido posible crear el inventario."
-            );
-        }
-    }
-
-    @Override
-    public List<InventarioDTO> getAll() throws UserDisplayableException {
-
-        try (
-                Connection connection = DBConnector.getInstance().getConnection();
-                PreparedStatement statement = connection.prepareStatement(GET_ALL_QUERY);
-                ResultSet resultSet = statement.executeQuery()
-        ) {
-
-            List<InventarioDTO> list = new ArrayList<>();
-
-            while (resultSet.next()) {
-                list.add(getDTOInstanceFromResultSet(resultSet));
+                list.add(inventarioDTO);
             }
-
             return list;
-
         } catch (SQLException e) {
-
-            throw ExceptionHandler.handleSQLException(
-                    LOGGER,
-                    e,
-                    "No ha sido posible cargar el inventario."
-            );
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible cargar el inventario.");
         }
     }
 
     @Override
     public InventarioDTO getOne(Integer id) throws UserDisplayableException {
-
         try (
-                Connection connection = DBConnector.getInstance().getConnection();
-                PreparedStatement statement = connection.prepareStatement(GET_QUERY)
+            Connection connection = DBConnector.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(GET_QUERY);
+            ResultSet resultSet= statement.executeQuery();
         ) {
-
             statement.setInt(1, id);
-
-            InventarioDTO inventarioDTO = null;
-
-            try (ResultSet resultSet = statement.executeQuery()) {
-
-                if (resultSet.next()) {
-                    inventarioDTO = getDTOInstanceFromResultSet(resultSet);
-                }
+            if (resultSet.next()) {
+                return new InventarioDTO.InventarioBuilder()
+                .setIDSucursal(resultSet.getInt("id_sucursal"))
+                .setIDArticulo(resultSet.getInt("id_articulo"))
+                .setCantidad(resultSet.getString("cantidad"))
+                .setStockMinimo(resultSet.getString("stock_minimo"))
+                .setStockMaximo(resultSet.getString("stock_maximo"))
+                .build();
             }
-
-            return inventarioDTO;
-
+            return null;
         } catch (SQLException e) {
-
-            throw ExceptionHandler.handleSQLException(
-                    LOGGER,
-                    e,
-                    "No ha sido posible obtener el inventario."
-            );
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible obtener el inventario.");
         }
     }
 
@@ -141,47 +109,30 @@ public class InventarioDAO extends CompleteDAOShape<InventarioDTO, Integer> {
     public void updateOne(InventarioDTO inventarioDTO) throws UserDisplayableException {
 
         try (
-                Connection connection = DBConnector.getInstance().getConnection();
-                PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)
+            Connection connection = DBConnector.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY);
         ) {
-
             statement.setString(1, inventarioDTO.getCantidad());
             statement.setString(2, inventarioDTO.getStockMinimo());
             statement.setString(3, inventarioDTO.getStockMaximo());
             statement.setInt(4, inventarioDTO.getIDSucursal());
             statement.setInt(5, inventarioDTO.getIDArticulo());
-
             statement.executeUpdate();
-
         } catch (SQLException e) {
-
-            throw ExceptionHandler.handleSQLException(
-                    LOGGER,
-                    e,
-                    "No ha sido posible actualizar el inventario."
-            );
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible actualizar el inventario.");
         }
     }
 
     @Override
     public void deleteOne(Integer id) throws UserDisplayableException {
-
         try (
-                Connection connection = DBConnector.getInstance().getConnection();
-                PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)
+            Connection connection = DBConnector.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(DELETE_QUERY);
         ) {
-
             statement.setInt(1, id);
-
             statement.executeUpdate();
-
         } catch (SQLException e) {
-
-            throw ExceptionHandler.handleSQLException(
-                    LOGGER,
-                    e,
-                    "No ha sido posible eliminar el inventario."
-            );
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible eliminar el inventario.");
         }
     }
 }

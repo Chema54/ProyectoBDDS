@@ -37,7 +37,6 @@ public class UsuarioDAO extends CompleteDAOShape<UsuarioDTO, String> {
     private static final String DELETE_QUERY = 
         "DELETE FROM Usuario WHERE nombre_usuario = ?";
 
-    @Override
     public UsuarioDTO getDTOInstanceFromResultSet(ResultSet resultSet) throws SQLException {
         int idRolDB = resultSet.getInt("id_rol");
         UsuarioRol rolEnum = UsuarioRol.CENTRAL; 

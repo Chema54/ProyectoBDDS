@@ -25,20 +25,20 @@ import org.apache.logging.log4j.Logger;
  */
 public class ArticuloDAO extends CompleteDAOShape<ArticuloDTO, Integer> {
     private static final Logger LOGGER = LogManager.getLogger(ArticuloDAO.class);
-    private static final String CREATE_QUERY = "INSERT INTO Articulo (id_articulo, descripcion, partida_presupuestal) VALUES (?, ?, ?)";
-    private static final String GET_ALL_QUERY = "SELECT * FROM Articulo";
-    private static final String GET_QUERY = "SELECT * FROM Articulo WHERE id_articulo = ?";
-    private static final String UPDATE_QUERY = "UPDATE Articulo SET partida_presupuestal = ?, descripcion = ? WHERE id_articulo = ?";
+    
+    private static final String CREATE_QUERY = 
+        "INSERT INTO Articulo (id_articulo, descripcion, partida_presupuestal) VALUES (?, ?, ?)";
+    
+    private static final String GET_ALL_QUERY = 
+        "SELECT * FROM Articulo";
+    
+    private static final String GET_QUERY = 
+        "SELECT * FROM Articulo WHERE id_articulo = ?";
+    
+    private static final String UPDATE_QUERY = 
+        "UPDATE Articulo SET partida_presupuestal = ?, descripcion = ? WHERE id_articulo = ?";
+    
     private static final String DELETE_QUERY = "DELETE FROM Articulo WHERE id_articulo";
-  
-    @Override
-    public ArticuloDTO getDTOInstanceFromResultSet(ResultSet resultSet) throws SQLException {
-        return new ArticuloDTO.ArticuloBuilder()
-            .setIDArticulo(resultSet.getInt("id_articulo"))
-            .setDescripcion(resultSet.getString("descripcion"))
-            .setPartidaPresupuestal(resultSet.getString("reason_of_assignation"))
-            .build();
-    }
 
     @Override
     public void createOne(ArticuloDTO articuloDTO) throws UserDisplayableException {
@@ -50,6 +50,7 @@ public class ArticuloDAO extends CompleteDAOShape<ArticuloDTO, Integer> {
             statement.setString(2, articuloDTO.getDescripcion());
             statement.setString(3, articuloDTO.getPartidaPresupuestal());
             statement.executeUpdate();
+            connection.close();
         } catch (SQLException e) {
             throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible crear el articulo.");
         }
@@ -63,10 +64,14 @@ public class ArticuloDAO extends CompleteDAOShape<ArticuloDTO, Integer> {
             ResultSet resultSet = statement.executeQuery()
         ) {
             List<ArticuloDTO> list = new ArrayList<>();
-
             while (resultSet.next()) {
-              list.add(createDTOInstanceFromResultSet(resultSet));
-          }
+                ArticuloDTO articuloDTO = new ArticuloDTO.ArticuloBuilder()
+                .setIDArticulo(resultSet.getInt("id_articulo"))
+                .setDescripcion(resultSet.getString("descripcion"))
+                .setPartidaPresupuestal(resultSet.getString("partida_presupuestal"))
+                .build();
+                list.add(articuloDTO);
+            }
             return list;
         } catch (SQLException e) {
             throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible cargar los articulos.");
@@ -77,19 +82,18 @@ public class ArticuloDAO extends CompleteDAOShape<ArticuloDTO, Integer> {
     public ArticuloDTO getOne(Integer id) throws UserDisplayableException {
         try (
             Connection connection = DBConnector.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(GET_QUERY)
+            PreparedStatement statement = connection.prepareStatement(GET_QUERY);
+            ResultSet resultSet = statement.executeQuery();
         ) {
             statement.setInt(1, id);
-
-            ArticuloDTO articuloDTO = null;
-
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    articuloDTO = createDTOInstanceFromResultSet(resultSet);
-                }
+            if (resultSet.next()) {
+                return new ArticuloDTO.ArticuloBuilder()
+                .setIDArticulo(resultSet.getInt("id_articulo"))
+                .setDescripcion(resultSet.getString("descripcion"))
+                .setPartidaPresupuestal(resultSet.getString("partida_presupuestal"))
+                .build();
             }
-
-            return articuloDTO;
+            return null;
         } catch (SQLException e) {
             throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible obtener el articulo.");
         }

@@ -34,58 +34,40 @@ public class DepartamentoDAO extends CompleteDAOShape<DepartamentoDTO, Integer> 
             "DELETE FROM Departamento WHERE id_departamento = ?";
 
     @Override
-    public DepartamentoDTO getDTOInstanceFromResultSet(ResultSet resultSet) throws SQLException {
-        return new DepartamentoDTO.DepartamentoBuilder()
-                .setIDDepartamento(resultSet.getInt("id_departamento"))
-                .setNombreDepartamento(resultSet.getString("nombre_departamento"))
-                .setIDSucursal(resultSet.getInt("id_sucursal"))
-                .build();
-    }
-
-    @Override
     public void createOne(DepartamentoDTO departamentoDTO) throws UserDisplayableException {
         try (
-                Connection connection = DBConnector.getInstance().getConnection();
-                PreparedStatement statement = connection.prepareStatement(CREATE_QUERY)
+            Connection connection = DBConnector.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(CREATE_QUERY)
         ) {
-
             statement.setInt(1, departamentoDTO.getIDDepartamento());
             statement.setString(2, departamentoDTO.getNombreDepartamento());
             statement.setInt(3, departamentoDTO.getIDSucursal());
-
             statement.executeUpdate();
-
         } catch (SQLException e) {
-            throw ExceptionHandler.handleSQLException(
-                    LOGGER,
-                    e,
-                    "No ha sido posible crear el departamento."
-            );
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible crear el departamento.");
         }
     }
 
     @Override
     public List<DepartamentoDTO> getAll() throws UserDisplayableException {
         try (
-                Connection connection = DBConnector.getInstance().getConnection();
-                PreparedStatement statement = connection.prepareStatement(GET_ALL_QUERY);
-                ResultSet resultSet = statement.executeQuery()
+            Connection connection = DBConnector.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(GET_ALL_QUERY);
+            ResultSet resultSet = statement.executeQuery()
         ) {
 
             List<DepartamentoDTO> list = new ArrayList<>();
-
             while (resultSet.next()) {
-                list.add(getDTOInstanceFromResultSet(resultSet));
+                DepartamentoDTO departamentoDTO = new DepartamentoDTO.DepartamentoBuilder()
+                .setIDDepartamento(resultSet.getInt("id_departamento"))
+                .setNombreDepartamento(resultSet.getString("nombre_departamento"))
+                .setIDSucursal(resultSet.getInt("id_sucursal"))
+                .build();
+                list.add(departamentoDTO);
             }
-
             return list;
-
         } catch (SQLException e) {
-            throw ExceptionHandler.handleSQLException(
-                    LOGGER,
-                    e,
-                    "No ha sido posible cargar los departamentos."
-            );
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible cargar los departamentos.");
         }
     }
 
@@ -93,68 +75,48 @@ public class DepartamentoDAO extends CompleteDAOShape<DepartamentoDTO, Integer> 
     public DepartamentoDTO getOne(Integer id) throws UserDisplayableException {
         try (
                 Connection connection = DBConnector.getInstance().getConnection();
-                PreparedStatement statement = connection.prepareStatement(GET_QUERY)
+                PreparedStatement statement = connection.prepareStatement(GET_QUERY);
+                ResultSet resultSet = statement.executeQuery();
         ) {
-
             statement.setInt(1, id);
-
-            try (ResultSet resultSet = statement.executeQuery()) {
-
-                if (resultSet.next()) {
-                    return getDTOInstanceFromResultSet(resultSet);
-                }
+            if (resultSet.next()) {
+                return new DepartamentoDTO.DepartamentoBuilder()
+                .setIDDepartamento(resultSet.getInt("id_departamento"))
+                .setNombreDepartamento(resultSet.getString("nombre_departamento"))
+                .setIDSucursal(resultSet.getInt("id_sucursal"))
+                .build();
             }
-
             return null;
-
         } catch (SQLException e) {
-            throw ExceptionHandler.handleSQLException(
-                    LOGGER,
-                    e,
-                    "No ha sido posible obtener el departamento."
-            );
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible obtener el departamento." );
         }
     }
 
     @Override
     public void updateOne(DepartamentoDTO departamentoDTO) throws UserDisplayableException {
         try (
-                Connection connection = DBConnector.getInstance().getConnection();
-                PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)
+            Connection connection = DBConnector.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)
         ) {
-
             statement.setString(1, departamentoDTO.getNombreDepartamento());
             statement.setInt(2, departamentoDTO.getIDSucursal());
             statement.setInt(3, departamentoDTO.getIDDepartamento());
-
             statement.executeUpdate();
-
         } catch (SQLException e) {
-            throw ExceptionHandler.handleSQLException(
-                    LOGGER,
-                    e,
-                    "No ha sido posible actualizar el departamento."
-            );
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible actualizar el departamento.");
         }
     }
 
     @Override
     public void deleteOne(Integer id) throws UserDisplayableException {
         try (
-                Connection connection = DBConnector.getInstance().getConnection();
-                PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)
+            Connection connection = DBConnector.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)
         ) {
-
             statement.setInt(1, id);
-
             statement.executeUpdate();
-
         } catch (SQLException e) {
-            throw ExceptionHandler.handleSQLException(
-                    LOGGER,
-                    e,
-                    "No ha sido posible eliminar el departamento."
-            );
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible eliminar el departamento.");
         }
     }
 }

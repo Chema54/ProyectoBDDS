@@ -42,67 +42,44 @@ public class ProveedorDAO extends CompleteDAOShape<ProveedorDTO, Integer> {
             "DELETE FROM Proveedor WHERE id_proveedor = ?";
 
     @Override
-    public ProveedorDTO getDTOInstanceFromResultSet(ResultSet resultSet) throws SQLException {
+    public void createOne(ProveedorDTO proveedorDTO) throws UserDisplayableException {
 
-        return new ProveedorDTO.ProveedorBuilder()
+        try (
+            Connection connection = DBConnector.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(CREATE_QUERY);
+        ) {
+            statement.setInt(1, proveedorDTO.getIDProveedor());
+            statement.setString(2, proveedorDTO.getRazonSocial());
+            statement.setString(3, proveedorDTO.getRFC());
+            statement.setString(4, proveedorDTO.getDomicilioFiscal());
+            statement.setString(5, proveedorDTO.getTelefono());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible crear el proveedor.");
+        }
+    }
+
+    @Override
+    public List<ProveedorDTO> getAll() throws UserDisplayableException {
+        try (
+            Connection connection = DBConnector.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(GET_ALL_QUERY);
+            ResultSet resultSet = statement.executeQuery()
+        ) {
+            List<ProveedorDTO> list = new ArrayList<>();
+            while (resultSet.next()) {
+                ProveedorDTO proveedorDTO = new ProveedorDTO.ProveedorBuilder()
                 .setIDProveedor(resultSet.getInt("id_proveedor"))
                 .setRazonSocial(resultSet.getString("razon_social"))
                 .setRFC(resultSet.getString("rfc"))
                 .setDomicilioFiscal(resultSet.getString("domicilio_fiscal"))
                 .setTelefono(resultSet.getString("telefono"))
                 .build();
-    }
-
-    @Override
-    public void createOne(ProveedorDTO proveedorDTO) throws UserDisplayableException {
-
-        try (
-                Connection connection = DBConnector.getInstance().getConnection();
-                PreparedStatement statement = connection.prepareStatement(CREATE_QUERY)
-        ) {
-
-            statement.setInt(1, proveedorDTO.getIDProveedor());
-            statement.setString(2, proveedorDTO.getRazonSocial());
-            statement.setString(3, proveedorDTO.getRFC());
-            statement.setString(4, proveedorDTO.getDomicilioFiscal());
-            statement.setString(5, proveedorDTO.getTelefono());
-
-            statement.executeUpdate();
-
-        } catch (SQLException e) {
-
-            throw ExceptionHandler.handleSQLException(
-                    LOGGER,
-                    e,
-                    "No ha sido posible crear el proveedor."
-            );
-        }
-    }
-
-    @Override
-    public List<ProveedorDTO> getAll() throws UserDisplayableException {
-
-        try (
-                Connection connection = DBConnector.getInstance().getConnection();
-                PreparedStatement statement = connection.prepareStatement(GET_ALL_QUERY);
-                ResultSet resultSet = statement.executeQuery()
-        ) {
-
-            List<ProveedorDTO> list = new ArrayList<>();
-
-            while (resultSet.next()) {
-                list.add(getDTOInstanceFromResultSet(resultSet));
+                list.add(proveedorDTO);
             }
-
             return list;
-
         } catch (SQLException e) {
-
-            throw ExceptionHandler.handleSQLException(
-                    LOGGER,
-                    e,
-                    "No ha sido posible cargar los proveedores."
-            );
+            throw ExceptionHandler.handleSQLException(LOGGER,e,"No ha sido posible cargar los proveedores.");
         }
     }
 
@@ -110,77 +87,53 @@ public class ProveedorDAO extends CompleteDAOShape<ProveedorDTO, Integer> {
     public ProveedorDTO getOne(Integer id) throws UserDisplayableException {
 
         try (
-                Connection connection = DBConnector.getInstance().getConnection();
-                PreparedStatement statement = connection.prepareStatement(GET_QUERY)
+            Connection connection = DBConnector.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(GET_QUERY);
+            ResultSet resultSet = statement.executeQuery();
         ) {
-
             statement.setInt(1, id);
-
-            ProveedorDTO proveedorDTO = null;
-
-            try (ResultSet resultSet = statement.executeQuery()) {
-
-                if (resultSet.next()) {
-                    proveedorDTO = getDTOInstanceFromResultSet(resultSet);
-                }
+            if (resultSet.next()) {
+                return new ProveedorDTO.ProveedorBuilder()
+                .setIDProveedor(resultSet.getInt("id_proveedor"))
+                .setRazonSocial(resultSet.getString("razon_social"))
+                .setRFC(resultSet.getString("rfc"))
+                .setDomicilioFiscal(resultSet.getString("domicilio_fiscal"))
+                .setTelefono(resultSet.getString("telefono"))
+                .build();
             }
-
-            return proveedorDTO;
-
+            return null;
         } catch (SQLException e) {
-
-            throw ExceptionHandler.handleSQLException(
-                    LOGGER,
-                    e,
-                    "No ha sido posible obtener el proveedor."
-            );
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible obtener el proveedor.");
         }
     }
 
     @Override
     public void updateOne(ProveedorDTO proveedorDTO) throws UserDisplayableException {
-
         try (
-                Connection connection = DBConnector.getInstance().getConnection();
-                PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)
+            Connection connection = DBConnector.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY);
         ) {
-
             statement.setString(1, proveedorDTO.getRazonSocial());
             statement.setString(2, proveedorDTO.getRFC());
             statement.setString(3, proveedorDTO.getDomicilioFiscal());
             statement.setString(4, proveedorDTO.getTelefono());
             statement.setInt(5, proveedorDTO.getIDProveedor());
-
             statement.executeUpdate();
-
         } catch (SQLException e) {
-
-            throw ExceptionHandler.handleSQLException(
-                    LOGGER,
-                    e,
-                    "No ha sido posible actualizar el proveedor."
-            );
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible actualizar el proveedor.");
         }
     }
 
     @Override
     public void deleteOne(Integer id) throws UserDisplayableException {
-
         try (
-                Connection connection = DBConnector.getInstance().getConnection();
-                PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)
+            Connection connection = DBConnector.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)
         ) {
-
             statement.setInt(1, id);
-
             statement.executeUpdate();
-
         } catch (SQLException e) {
-
-            throw ExceptionHandler.handleSQLException(
-                    LOGGER,
-                    e,
-                    "No ha sido posible eliminar el proveedor."
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible eliminar el proveedor."
             );
         }
     }

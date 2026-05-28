@@ -34,13 +34,13 @@ public class ProyectoBD extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        /*
+        
         UsuarioDAO usuarioDAO = new UsuarioDAO();
         
         UsuarioDTO usuario = new UsuarioDTO(
-                1,                                             
-                "leninrevan",                                  
-                UsuarioDTO.getGeneratedHashedPassword("1234"), 
+                2,                                             
+                "thefatbv",                                  
+                UsuarioDTO.getGeneratedHashedPassword("12345"), 
                 UsuarioRol.CENTRAL,                            
                 true                                           
         );
@@ -51,7 +51,7 @@ public class ProyectoBD extends Application {
         } catch (UserDisplayableException e) {
             System.out.println(e.getMessage());
         }
-        */
+        
         
         launch(args);
     }

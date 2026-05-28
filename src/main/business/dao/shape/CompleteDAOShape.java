@@ -8,6 +8,6 @@ package main.business.dao.shape;
  *
  * @author josem
  */
-public abstract class CompleteDAOShape<T, F> extends DAOShape<T>
+public abstract class CompleteDAOShape<T, F>
   implements CreateOneDAOShape<T>, GetOneDAOShape<T, F>, GetAllDAOShape<T>, UpdateOneDAOShape<T>, DeleteOneDAOShape<F> {
 }
