@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="350.0" prefWidth="500.0" style="-fx-background-color: #737373;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.application.FXMLModificarDepartamentoController">
+   <children>
+      <VBox alignment="CENTER" spacing="20.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+         <children>
+            <Label text="Asignar Encargado de Área" textFill="WHITE">
+               <font><Font name="System Bold" size="20.0" /></font>
+            </Label>
+            
+            <VBox spacing="5.0">
+                <Label text="1. Selecciona la Sucursal:" textFill="WHITE"/>
+                <ComboBox fx:id="cbSucursal" prefWidth="400.0" promptText="Elegir Sucursal..."/>
+            </VBox>
+
+            <VBox spacing="5.0">
+                <Label text="2. Selecciona el Departamento:" textFill="WHITE"/>
+                <ComboBox fx:id="cbDepartamento" disable="true" prefWidth="400.0" promptText="Esperando Sucursal..."/>
+            </VBox>
+
+            <VBox spacing="5.0">
+                <Label text="3. Selecciona al Nuevo Encargado:" textFill="WHITE"/>
+                <ComboBox fx:id="cbEncargado" disable="true" prefWidth="400.0" promptText="Esperando Sucursal..."/>
+            </VBox>
+
+            <Button mnemonicParsing="false" onAction="#btnGuardarEncargado" text="Guardar Cambios" style="-fx-background-color: #28c840; -fx-text-fill: white; -fx-font-weight: bold;"/>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

@@ -72,16 +72,18 @@ public class SucursalDAO extends CompleteDAOShape<SucursalDTO, Integer> {
     public SucursalDTO getOne(Integer id) throws UserDisplayableException {
         try (
             Connection connection = DBConnector.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(GET_QUERY);
-            ResultSet resultSet = statement.executeQuery();
+            PreparedStatement statement = connection.prepareStatement(GET_QUERY)
         ) {
             statement.setInt(1, id);
-            if (resultSet.next()) {
-                return new SucursalDTO.SucursalBuilder()
-                .setIDSucursal(resultSet.getInt("id_sucursal"))
-                .setNombre(resultSet.getString("nombre"))
-                .setDireccion(resultSet.getString("direccion"))
-                .build();
+            
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return new SucursalDTO.SucursalBuilder()
+                    .setIDSucursal(resultSet.getInt("id_sucursal"))
+                    .setNombre(resultSet.getString("nombre"))
+                    .setDireccion(resultSet.getString("direccion"))
+                    .build();
+                }
             }
             return null;
         } catch (SQLException e) {

@@ -27,18 +27,15 @@ public class ArticuloDAO extends CompleteDAOShape<ArticuloDTO, Integer> {
     private static final Logger LOGGER = LogManager.getLogger(ArticuloDAO.class);
     
     private static final String CREATE_QUERY = 
-        "INSERT INTO Articulo (id_articulo, descripcion, partida_presupuestal) VALUES (?, ?, ?)";
-    
+        "INSERT INTO Articulo (descripcion, id_partida, estado, nombre) VALUES (?, ?, ?, ?)";
     private static final String GET_ALL_QUERY = 
         "SELECT * FROM Articulo";
-    
     private static final String GET_QUERY = 
         "SELECT * FROM Articulo WHERE id_articulo = ?";
-    
     private static final String UPDATE_QUERY = 
-        "UPDATE Articulo SET partida_presupuestal = ?, descripcion = ? WHERE id_articulo = ?";
-    
-    private static final String DELETE_QUERY = "DELETE FROM Articulo WHERE id_articulo";
+        "UPDATE Articulo SET descripcion = ?, id_partida = ?, estado = ?, nombre = ? WHERE id_articulo = ?";
+    private static final String DELETE_QUERY = 
+        "DELETE FROM Articulo WHERE id_articulo = ?";
 
     @Override
     public void createOne(ArticuloDTO articuloDTO) throws UserDisplayableException {
@@ -46,11 +43,11 @@ public class ArticuloDAO extends CompleteDAOShape<ArticuloDTO, Integer> {
             Connection connection = DBConnector.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement(CREATE_QUERY)
         ) {
-            statement.setInt(1, articuloDTO.getIDArticulo());
-            statement.setString(2, articuloDTO.getDescripcion());
-            statement.setString(3, articuloDTO.getPartidaPresupuestal());
+            statement.setString(1, articuloDTO.getDescripcion());
+            statement.setInt(2, articuloDTO.getIdPartida());
+            statement.setString(3, articuloDTO.getEstado());
+            statement.setString(4, articuloDTO.getNombre());
             statement.executeUpdate();
-            connection.close();
         } catch (SQLException e) {
             throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible crear el articulo.");
         }
@@ -68,7 +65,9 @@ public class ArticuloDAO extends CompleteDAOShape<ArticuloDTO, Integer> {
                 ArticuloDTO articuloDTO = new ArticuloDTO.ArticuloBuilder()
                 .setIDArticulo(resultSet.getInt("id_articulo"))
                 .setDescripcion(resultSet.getString("descripcion"))
-                .setPartidaPresupuestal(resultSet.getString("partida_presupuestal"))
+                .setIdPartida(resultSet.getInt("id_partida"))
+                .setEstado(resultSet.getString("estado"))
+                .setNombre(resultSet.getString("nombre"))
                 .build();
                 list.add(articuloDTO);
             }
@@ -82,18 +81,21 @@ public class ArticuloDAO extends CompleteDAOShape<ArticuloDTO, Integer> {
     public ArticuloDTO getOne(Integer id) throws UserDisplayableException {
         try (
             Connection connection = DBConnector.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(GET_QUERY);
-            ResultSet resultSet = statement.executeQuery();
+            PreparedStatement statement = connection.prepareStatement(GET_QUERY)
         ) {
             statement.setInt(1, id);
-            if (resultSet.next()) {
-                return new ArticuloDTO.ArticuloBuilder()
-                .setIDArticulo(resultSet.getInt("id_articulo"))
-                .setDescripcion(resultSet.getString("descripcion"))
-                .setPartidaPresupuestal(resultSet.getString("partida_presupuestal"))
-                .build();
+            try(ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return new ArticuloDTO.ArticuloBuilder()
+                    .setIDArticulo(resultSet.getInt("id_articulo"))
+                    .setDescripcion(resultSet.getString("descripcion"))
+                    .setIdPartida(resultSet.getInt("id_partida"))
+                    .setEstado(resultSet.getString("estado"))
+                    .setNombre(resultSet.getString("nombre"))
+                    .build();
+                }
+                return null;
             }
-            return null;
         } catch (SQLException e) {
             throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible obtener el articulo.");
         }
@@ -105,9 +107,11 @@ public class ArticuloDAO extends CompleteDAOShape<ArticuloDTO, Integer> {
             Connection connection = DBConnector.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)
         ) {
-            statement.setString(1, articuloDTO.getPartidaPresupuestal());
-            statement.setString(2, articuloDTO.getDescripcion());
-            statement.setInt(3, articuloDTO.getIDArticulo());
+            statement.setString(1, articuloDTO.getDescripcion());
+            statement.setInt(2, articuloDTO.getIdPartida());
+            statement.setString(3, articuloDTO.getEstado());
+            statement.setString(4, articuloDTO.getNombre());
+            statement.setInt(5, articuloDTO.getIDArticulo());
             statement.executeUpdate();
         } catch (SQLException e) {
             throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible actualizar el articulo.");
@@ -123,8 +127,7 @@ public class ArticuloDAO extends CompleteDAOShape<ArticuloDTO, Integer> {
             statement.setInt(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible eliminar la práctica.");
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible eliminar el articulo.");
         }
     }
-
 }

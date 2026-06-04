@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: #737373;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.application.FXMLGestionPartidasController">
+   <children>
+      <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+         <children>
+            <Label text="Catálogo de Partidas Presupuestales" textFill="WHITE">
+               <font><Font name="System Bold" size="24.0" /></font>
+            </Label>
+            
+            <HBox alignment="CENTER_LEFT" spacing="15.0">
+               <children>
+                  <TextField fx:id="txtClave" promptText="Clave (Ej. 2000)" prefWidth="150.0" />
+                  <TextField fx:id="txtDescripcion" promptText="Descripción (Ej. Materiales de Oficina)" HBox.hgrow="ALWAYS" />
+                  <Button mnemonicParsing="false" onAction="#btnGuardar" text="Registrar Partida" style="-fx-background-color: #28c840; -fx-text-fill: white; -fx-font-weight: bold;"/>
+               </children>
+            </HBox>
+            
+            <TableView fx:id="tablaPartidas" VBox.vgrow="ALWAYS">
+              <columns>
+                <TableColumn fx:id="colId" prefWidth="50.0" text="ID" />
+                <TableColumn fx:id="colClave" prefWidth="150.0" text="Clave" />
+                <TableColumn fx:id="colDescripcion" prefWidth="400.0" text="Descripción" />
+              </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TableView>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

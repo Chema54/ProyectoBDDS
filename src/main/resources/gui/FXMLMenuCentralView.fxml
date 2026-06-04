@@ -3,82 +3,49 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane"
-            style="-fx-background-color: #737373;"
-            xmlns="http://javafx.com/javafx/8"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="main.application.FXMLMenuCentralController">
-
+<AnchorPane id="AnchorPane" style="-fx-background-color: #737373;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.application.FXMLMenuCentralController">
    <children>
-
-      <!-- MENU BAR -->
-      <MenuBar AnchorPane.topAnchor="0.0"
-               AnchorPane.leftAnchor="0.0"
-               AnchorPane.rightAnchor="0.0">
-
+      <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
-
           <Menu mnemonicParsing="false" text="Usuarios">
             <items>
-
-              <MenuItem mnemonicParsing="false"
-                        onAction="#irRegistrarUsuarios"
-                        text="Registrar" />
-
+              <MenuItem mnemonicParsing="false" onAction="#irRegistrarUsuarios" text="Registrar" />
               <SeparatorMenuItem mnemonicParsing="false" />
-
-              <MenuItem mnemonicParsing="false"
-                        onAction="#irModificarUsuarios"
-                        text="Modificar" />
-
+              <MenuItem mnemonicParsing="false" onAction="#irModificarUsuarios" text="Modificar" />
               <SeparatorMenuItem mnemonicParsing="false" />
-
-              <MenuItem mnemonicParsing="false"
-                        onAction="#irMostrarUsuarios"
-                        text="Mostrar" />
-
+              <MenuItem mnemonicParsing="false" onAction="#irMostrarUsuarios" text="Mostrar" />
             </items>
           </Menu>
 
           <Menu mnemonicParsing="false" text="Empleados">
             <items>
-
-              <MenuItem mnemonicParsing="false"
-                        onAction="#irRegistrarEmpleados"
-                        text="Registrar" />
-
+              <MenuItem mnemonicParsing="false" onAction="#irRegistrarEmpleados" text="Registrar" />
               <SeparatorMenuItem mnemonicParsing="false" />
-
-              <MenuItem mnemonicParsing="false"
-                        onAction="#irModificarEmpleados"
-                        text="Modificar" />
-
+              <MenuItem mnemonicParsing="false" onAction="#irModificarEmpleados" text="Modificar" />
               <SeparatorMenuItem mnemonicParsing="false" />
-
-              <MenuItem mnemonicParsing="false"
-                        onAction="#irMostrarEmpleados"
-                        text="Mostrar" />
-
+              <MenuItem mnemonicParsing="false" onAction="#irMostrarEmpleados" text="Mostrar" />
             </items>
           </Menu>
 
-          <Menu mnemonicParsing="false" text="Artículos" />
-          <Menu mnemonicParsing="false" text="Logistica" />
+          <Menu mnemonicParsing="false" text="Departamentos">
+             <items>
+                <MenuItem mnemonicParsing="false" onAction="#irModificarDepartamento" text="Asignar Encargado" />
+             </items>
+          </Menu>
+
+          <Menu mnemonicParsing="false" text="Artículos">
+             <items>
+                <MenuItem mnemonicParsing="false" onAction="#irGestionPartidas" text="Gestión de Partidas" />
+                <SeparatorMenuItem mnemonicParsing="false" />
+                <MenuItem mnemonicParsing="false" onAction="#irGestionArticulos" text="Catálogo de Artículos" />
+             </items>
+          </Menu>
+
+          <Menu mnemonicParsing="false" text="Logística" />
           <Menu mnemonicParsing="false" text="Ayuda" />
-
         </menus>
-
       </MenuBar>
 
-      <!-- ESCRITORIO -->
-      <AnchorPane fx:id="pane_Escritorio"
-                  layoutY="25.0"
-                  style="-fx-background-color: #737373;"
-                  AnchorPane.topAnchor="25.0"
-                  AnchorPane.bottomAnchor="0.0"
-                  AnchorPane.leftAnchor="0.0"
-                  AnchorPane.rightAnchor="0.0"/>
-
+      <AnchorPane fx:id="pane_Escritorio" layoutY="25.0" style="-fx-background-color: #737373;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0" />
    </children>
-
 </AnchorPane>

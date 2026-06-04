@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #737373;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.application.FXMLGestionArticulosController">
+    <children>
+        <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+            <children>
+                <Label text="Catálogo de Artículos" textFill="WHITE">
+                    <font>
+                        <Font name="System Bold" size="24.0" />
+                    </font>
+                </Label>
+            
+                <HBox alignment="CENTER_LEFT" spacing="15.0">
+                    <children>
+                        <TextField fx:id="txtNombre" promptText="Nombre del Artículo" prefWidth="200.0" />
+                        <TextField fx:id="txtDescripcion" promptText="Descripción detallada" HBox.hgrow="ALWAYS" />
+                        <ComboBox fx:id="cbPartida" promptText="Seleccionar Partida..." prefWidth="250.0" />
+                        <Button mnemonicParsing="false" onAction="#btnGuardar" text="Registrar" style="-fx-background-color: #28c840; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                    </children>
+                </HBox>
+            
+                <TableView fx:id="tablaArticulos" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colId" prefWidth="50.0" text="ID" />
+                        <TableColumn fx:id="colNombre" prefWidth="200.0" text="Nombre" />
+                        <TableColumn fx:id="colDescripcion" prefWidth="300.0" text="Descripción" />
+                        <TableColumn fx:id="colPartida" prefWidth="250.0" text="Partida Presupuestal" />
+                        <TableColumn fx:id="colEstado" prefWidth="100.0" text="Estado" />
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                </TableView>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

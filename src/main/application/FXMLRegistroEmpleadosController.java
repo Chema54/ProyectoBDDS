@@ -141,8 +141,6 @@ public class FXMLRegistroEmpleadosController implements Initializable {
         tfNombreEmpleado.setText("");
         tfApellidosEmpleado.setText("");
         cbDepartamento.selectionModelProperty().setValue(null);
-        cbSucursal.selectionModelProperty().setValue(null);
-        cargarInformacionSucursales();
-        configurarSeleccionarSucursal();
+        cbSucursal.selectionModelProperty().setValue(null);        
     }
 }
