@@ -13,7 +13,32 @@
             
             <TabPane VBox.vgrow="ALWAYS" tabClosingPolicy="UNAVAILABLE">
               <tabs>
-                <Tab text="Ingresos (Entradas)">
+              
+                <Tab text="Kardex Histórico">
+                  <content>
+                    <VBox spacing="10.0" style="-fx-background-color: white; -fx-padding: 15;">
+                        <HBox spacing="15.0" alignment="CENTER_LEFT">
+                            <Label text="Seleccionar Artículo para el Kardex:" style="-fx-font-weight: bold;"/> 
+                            <ComboBox fx:id="cbArticuloKardex" prefWidth="300.0" />
+                            <Button mnemonicParsing="false" onAction="#btnGenerarKardex" text="Generar Tarjeta Kardex" style="-fx-background-color: #007bff; -fx-text-fill: white;"/>
+                            <Pane HBox.hgrow="ALWAYS" />
+                            <Button mnemonicParsing="false" onAction="#btnExportarKardexPDF" text="Exportar Kardex a PDF" style="-fx-background-color: #e63946; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                        </HBox>
+                        <TableView fx:id="tablaKardex" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colFechaK" prefWidth="100.0" text="Fecha" />
+                                <TableColumn fx:id="colTipoK" prefWidth="100.0" text="Movimiento" />
+                                <TableColumn fx:id="colCantK" prefWidth="80.0" text="Cant." />
+                                <TableColumn fx:id="colCostoUnitK" prefWidth="120.0" text="Costo Unitario" />
+                                <TableColumn fx:id="colCostoPromK" prefWidth="120.0" text="Costo Promedio" />
+                                <TableColumn fx:id="colRefK" prefWidth="250.0" text="Referencia" />
+                            </columns>
+                        </TableView>
+                    </VBox>
+                  </content>
+                </Tab>
+
+                <Tab text="Reporte Ingresos">
                   <content>
                     <VBox spacing="10.0" style="-fx-background-color: white; -fx-padding: 15;">
                         <HBox spacing="15.0" alignment="CENTER_LEFT">
@@ -36,7 +61,7 @@
                   </content>
                 </Tab>
                 
-                <Tab text="Egresos (Salidas)">
+                <Tab text="Reporte Egresos">
                   <content>
                     <VBox spacing="10.0" style="-fx-background-color: white; -fx-padding: 15;">
                         <HBox spacing="15.0" alignment="CENTER_LEFT">
@@ -59,7 +84,7 @@
                   </content>
                 </Tab>
 
-                <Tab text="Bitácora de Pedidos (Stock Mínimo)">
+                <Tab text="Bitácora de Pedidos">
                   <content>
                     <VBox spacing="10.0" style="-fx-background-color: white; -fx-padding: 15;">
                         <HBox spacing="15.0" alignment="CENTER_LEFT" style="-fx-background-color: #f4f4f4; -fx-padding: 10px; -fx-border-color: #dcdcdc;">

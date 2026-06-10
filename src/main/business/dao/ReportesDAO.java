@@ -15,71 +15,63 @@ import org.apache.logging.log4j.Logger;
 public class ReportesDAO {
     private static final Logger LOGGER = LogManager.getLogger(ReportesDAO.class);
 
-    // Obtiene Ingresos o Egresos (Kardex) filtrados por fecha
+    // Reportes simples (Ingresos / Egresos)
     public List<ReporteKardexDTO> getMovimientosKardex(String tipoMovimiento, Date inicio, Date fin) throws UserDisplayableException {
-        // FIX: Envolver k.fecha en DATE() obliga a MariaDB a ignorar las horas y zonas horarias
-        String query = "SELECT k.fecha, k.cantidad, k.costo, k.costo_promedio, a.nombre AS articulo, p.descripcion AS partida " +
-                       "FROM Kardex k " +
-                       "JOIN Articulo a ON k.id_articulo = a.id_articulo " +
+        String query = "SELECT k.fecha, k.cantidad, k.costo, k.costo_promedio, k.tipo_movimiento, k.referencia, a.nombre AS articulo, p.descripcion AS partida " +
+                       "FROM Kardex k JOIN Articulo a ON k.id_articulo = a.id_articulo " +
                        "LEFT JOIN PartidaPresupuestal p ON a.id_partida = p.id_partida " +
-                       "WHERE k.tipo_movimiento = ? AND DATE(k.fecha) BETWEEN ? AND ? " +
-                       "ORDER BY p.descripcion, k.fecha";
+                       "WHERE k.tipo_movimiento = ? AND DATE(k.fecha) BETWEEN ? AND ? ORDER BY p.descripcion, k.fecha";
         
         List<ReporteKardexDTO> lista = new ArrayList<>();
-        try (Connection conn = DBConnector.getInstance().getConnection();
-             PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setString(1, tipoMovimiento);
-            ps.setDate(2, inicio);
-            ps.setDate(3, fin);
-            
+        try (Connection conn = DBConnector.getInstance().getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, tipoMovimiento); ps.setDate(2, inicio); ps.setDate(3, fin);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    String nombrePartida = rs.getString("partida");
-                    lista.add(new ReporteKardexDTO(
-                        rs.getString("articulo"), 
-                        nombrePartida != null ? nombrePartida : "Sin Partida", // Previene nulos en la tabla
-                        rs.getDate("fecha"),
-                        rs.getInt("cantidad"), 
-                        rs.getDouble("costo"), 
-                        rs.getDouble("costo_promedio")
-                    ));
+                    lista.add(new ReporteKardexDTO(rs.getString("articulo"), rs.getString("partida") != null ? rs.getString("partida") : "Sin Partida", rs.getDate("fecha"), rs.getInt("cantidad"), rs.getDouble("costo"), rs.getDouble("costo_promedio"), rs.getString("tipo_movimiento"), rs.getString("referencia")));
                 }
             }
-            System.out.println("KARDEX - Encontrados " + lista.size() + " movimientos de tipo: " + tipoMovimiento);
-        } catch (SQLException e) {
-            throw ExceptionHandler.handleSQLException(LOGGER, e, "Error al cargar el Kardex.");
-        }
+        } catch (SQLException e) { throw ExceptionHandler.handleSQLException(LOGGER, e, "Error al cargar movimientos."); }
+        return lista;
+    }
+
+    // NUEVO: El Verdadero Kardex Histórico de un Artículo
+    public List<ReporteKardexDTO> getKardexArticulo(int idArticulo) throws UserDisplayableException {
+        String query = "SELECT k.fecha, k.cantidad, k.costo, k.costo_promedio, k.tipo_movimiento, k.referencia, a.nombre AS articulo, p.descripcion AS partida " +
+                       "FROM Kardex k JOIN Articulo a ON k.id_articulo = a.id_articulo " +
+                       "LEFT JOIN PartidaPresupuestal p ON a.id_partida = p.id_partida " +
+                       "WHERE k.id_articulo = ? ORDER BY k.fecha ASC, k.id_kardex ASC";
+        List<ReporteKardexDTO> lista = new ArrayList<>();
+        try (Connection conn = DBConnector.getInstance().getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, idArticulo);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(new ReporteKardexDTO(rs.getString("articulo"), rs.getString("partida"), rs.getDate("fecha"), rs.getInt("cantidad"), rs.getDouble("costo"), rs.getDouble("costo_promedio"), rs.getString("tipo_movimiento"), rs.getString("referencia")));
+                }
+            }
+        } catch (SQLException e) { throw ExceptionHandler.handleSQLException(LOGGER, e, "Error al cargar Kardex del artículo."); }
         return lista;
     }
 
     public List<ReportePedidoDTO> getPedidos() throws UserDisplayableException {
         String query = "SELECT b.fecha, b.cantidad_a_pedir, a.nombre AS articulo FROM BitacoraPedido b JOIN Articulo a ON b.id_articulo = a.id_articulo";
         List<ReportePedidoDTO> lista = new ArrayList<>();
-        try (Connection conn = DBConnector.getInstance().getConnection();
-             PreparedStatement ps = conn.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                lista.add(new ReportePedidoDTO(rs.getString("articulo"), rs.getInt("cantidad_a_pedir"), rs.getDate("fecha")));
-            }
-        } catch (SQLException e) { throw ExceptionHandler.handleSQLException(LOGGER, e, "Error al cargar pedidos."); }
+        try (Connection conn = DBConnector.getInstance().getConnection(); PreparedStatement ps = conn.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) { lista.add(new ReportePedidoDTO(rs.getString("articulo"), rs.getInt("cantidad_a_pedir"), rs.getDate("fecha"))); }
+        } catch (SQLException e) { throw ExceptionHandler.handleSQLException(LOGGER, e, "Error cargar pedidos."); }
         return lista;
     }
 
     public List<ReporteBajaDTO> getBajas() throws UserDisplayableException {
         String query = "SELECT b.fecha, b.motivo, b.cantidad_restante, a.nombre AS articulo FROM BitacoraBaja b JOIN Articulo a ON b.id_articulo = a.id_articulo";
         List<ReporteBajaDTO> lista = new ArrayList<>();
-        try (Connection conn = DBConnector.getInstance().getConnection();
-             PreparedStatement ps = conn.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                lista.add(new ReporteBajaDTO(rs.getString("articulo"), rs.getDate("fecha"), rs.getString("motivo"), rs.getInt("cantidad_restante")));
-            }
-        } catch (SQLException e) { throw ExceptionHandler.handleSQLException(LOGGER, e, "Error al cargar bajas."); }
+        try (Connection conn = DBConnector.getInstance().getConnection(); PreparedStatement ps = conn.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) { lista.add(new ReporteBajaDTO(rs.getString("articulo"), rs.getDate("fecha"), rs.getString("motivo"), rs.getInt("cantidad_restante"))); }
+        } catch (SQLException e) { throw ExceptionHandler.handleSQLException(LOGGER, e, "Error cargar bajas."); }
         return lista;
     }
 
     public void vaciarBitacoraPedidos() throws UserDisplayableException {
-        try (Connection conn = DBConnector.getInstance().getConnection();
-             PreparedStatement ps = conn.prepareStatement("DELETE FROM BitacoraPedido")) {
-            ps.executeUpdate();
-        } catch (SQLException e) { throw ExceptionHandler.handleSQLException(LOGGER, e, "Error al vaciar la bitácora."); }
+        try (Connection conn = DBConnector.getInstance().getConnection(); PreparedStatement ps = conn.prepareStatement("DELETE FROM BitacoraPedido")) { ps.executeUpdate(); } 
+        catch (SQLException e) { throw ExceptionHandler.handleSQLException(LOGGER, e, "Error al vaciar bitácora."); }
     }
 }
