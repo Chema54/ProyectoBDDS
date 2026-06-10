@@ -96,8 +96,11 @@ public class EmpleadoDTO {
         }
     }
 
+    // ==========================================
+    // FIX: PARA QUE SE VEA BIEN EN EL COMBOBOX
+    // ==========================================
     @Override
     public String toString() {
-        return nombre + " " + apellidos; 
+        return this.nombre + " " + this.apellidos + " - " + this.numeroPersonal;
     }
 }

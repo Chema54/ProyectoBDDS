@@ -9,7 +9,9 @@ public class SesionGlobal {
     private SesionGlobal() {}
 
     public static SesionGlobal getInstance() {
-        if (instance == null) instance = new SesionGlobal();
+        if (instance == null) {
+            instance = new SesionGlobal();
+        }
         return instance;
     }
 
@@ -22,4 +24,13 @@ public class SesionGlobal {
     public int getIdSucursalActual() { return idSucursalActual; }
     public int getIdUsuarioActual() { return idUsuarioActual; }
     public String getRolActual() { return rolActual; }
+
+    // ==========================================
+    // FIX: LIMPIEZA DE MEMORIA RAM AL SALIR
+    // ==========================================
+    public void cerrarSesion() {
+        this.idUsuarioActual = 0;
+        this.idSucursalActual = 0;
+        this.rolActual = null;
+    }
 }

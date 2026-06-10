@@ -43,16 +43,26 @@
 
                 <Menu mnemonicParsing="false" text="Logística">
                     <items>
-                        <MenuItem fx:id="miCrearSolicitud" mnemonicParsing="false" onAction="#irCrearSolicitud" text="1. Crear Solicitud (Sucursal)" />
-                        <MenuItem fx:id="miAprobarSalidas" mnemonicParsing="false" onAction="#irAprobarSalidas" text="2. Bandeja de Aprobación (Salidas)" />
+                        <MenuItem fx:id="miCrearSolicitud" mnemonicParsing="false" onAction="#irCrearSolicitud" text="Crear solicitud (Sucursal)" />
+                        <MenuItem fx:id="miAprobarSalidas" mnemonicParsing="false" onAction="#irAprobarSalidas" text="Bandeja de aprobación de salidas" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem fx:id="miRegistrarEntradas" mnemonicParsing="false" onAction="#irRegistrarEntradas" text="3. Registrar Facturas (Entradas)" />
+                        <MenuItem fx:id="miRegistrarEntradas" mnemonicParsing="false" onAction="#irRegistrarEntradas" text="Registrar entradas" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Reportes">
-                    <MenuItem mnemonicParsing="false" onAction="#irCentralReportes" text="Central de Auditoría" />
+                
+                <Menu fx:id="menuReportes" mnemonicParsing="false" text="Reportes">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#irCentralReportes" text="Central de Auditoría" />
+                    </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Ayuda" />
+                
+                <Menu mnemonicParsing="false" text="Ayuda">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#irAcercaDe" text="Acerca de Global Finance" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#irCerrarSesion" text="Cerrar Sesión (Log Out)" style="-fx-text-fill: red; -fx-font-weight: bold;"/>
+                    </items>
+                </Menu>
             </menus>
         </MenuBar>
 

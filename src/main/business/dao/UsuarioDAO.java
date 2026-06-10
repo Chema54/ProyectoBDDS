@@ -73,7 +73,7 @@ public class UsuarioDAO extends CompleteDAOShape<UsuarioDTO, String> {
             psUsuario = con.prepareStatement(queryUsuario, java.sql.Statement.RETURN_GENERATED_KEYS);
             psUsuario.setInt(1, usuario.getIdEmpleado());
             psUsuario.setString(2, usuario.getUsuario());
-            psUsuario.setString(3, usuario.getContraseña()); 
+            psUsuario.setString(3, UsuarioDTO.getGeneratedHashedPassword(usuario.getContraseña())); 
             psUsuario.setDate(4, java.sql.Date.valueOf(java.time.LocalDate.now())); 
             psUsuario.setString(5, usuario.isTieneAcceso() ? "activo" : "inactivo"); 
             psUsuario.executeUpdate();
@@ -86,10 +86,38 @@ public class UsuarioDAO extends CompleteDAOShape<UsuarioDTO, String> {
 
             psRol = con.prepareStatement(queryRol);
             psRol.setInt(1, idUsuarioGenerado);
-            psRol.setInt(2, usuario.getRol().getIdRol());
+            psRol.setInt(2, usuario.getRol().getIdRol()); // Asegúrate que devuelva el int correcto (1=Central, 2=Sucursal, etc.)
             psRol.executeUpdate();
 
             con.commit(); 
+
+            // =========================================================================
+            // CREACIÓN DE USUARIO NATIVO EN MARIADB (RÚBRICA PUNTO 6)
+            // =========================================================================
+            try (java.sql.Statement st = con.createStatement()) {
+                // 1. Crear el usuario en el motor
+                st.execute("CREATE USER IF NOT EXISTS '" + usuario.getUsuario() + "'@'%' IDENTIFIED BY '" + usuario.getContraseña() + "'");
+                
+                // 2. Otorgar permisos según su Rol estricto
+                if (usuario.getRol() == UsuarioRol.CENTRAL) {
+                    st.execute("GRANT ALL PRIVILEGES ON global_finance.* TO '" + usuario.getUsuario() + "'@'%'");
+                } else if (usuario.getRol() == UsuarioRol.SUCURSAL) {
+                    st.execute("GRANT SELECT ON global_finance.* TO '" + usuario.getUsuario() + "'@'%'");
+                    st.execute("GRANT INSERT ON global_finance.CarritoSolicitud TO '" + usuario.getUsuario() + "'@'%'");
+                } else if (usuario.getRol() == UsuarioRol.SALIDAS) {
+                    st.execute("GRANT SELECT ON global_finance.* TO '" + usuario.getUsuario() + "'@'%'");
+                    st.execute("GRANT UPDATE ON global_finance.CarritoSolicitud TO '" + usuario.getUsuario() + "'@'%'");
+                    st.execute("GRANT EXECUTE ON PROCEDURE global_finance.SP_AprobarSalida TO '" + usuario.getUsuario() + "'@'%'");
+                } else if (usuario.getRol() == UsuarioRol.DEPARTAMENTO) {
+                    // FIX: PERMISOS DEL DEPARTAMENTO (Solo lee catálogos y hace peticiones)
+                    st.execute("GRANT SELECT ON global_finance.* TO '" + usuario.getUsuario() + "'@'%'");
+                    st.execute("GRANT INSERT ON global_finance.CarritoSolicitud TO '" + usuario.getUsuario() + "'@'%'");
+                }
+                st.execute("FLUSH PRIVILEGES");
+            } catch (SQLException nativeEx) {
+                LOGGER.warn("El usuario lógico se creó, pero el usuario nativo tuvo un detalle: " + nativeEx.getMessage());
+            }
+            // =========================================================================
 
         } catch (SQLException e) {
             if (con != null) {

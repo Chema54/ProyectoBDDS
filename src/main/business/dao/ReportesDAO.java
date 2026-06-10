@@ -16,11 +16,12 @@ public class ReportesDAO {
     private static final Logger LOGGER = LogManager.getLogger(ReportesDAO.class);
 
     // Reportes simples (Ingresos / Egresos)
+    // Para los Reportes de Ingreso/Egreso
     public List<ReporteKardexDTO> getMovimientosKardex(String tipoMovimiento, Date inicio, Date fin) throws UserDisplayableException {
-        String query = "SELECT k.fecha, k.cantidad, k.costo, k.costo_promedio, k.tipo_movimiento, k.referencia, a.nombre AS articulo, p.descripcion AS partida " +
-                       "FROM Kardex k JOIN Articulo a ON k.id_articulo = a.id_articulo " +
-                       "LEFT JOIN PartidaPresupuestal p ON a.id_partida = p.id_partida " +
-                       "WHERE k.tipo_movimiento = ? AND DATE(k.fecha) BETWEEN ? AND ? ORDER BY p.descripcion, k.fecha";
+        // AQUÍ USAMOS LA VISTA EXIGIDA POR LA RÚBRICA
+        String query = "SELECT * FROM Vista_Kardex_Completo " +
+                       "WHERE tipo_movimiento = ? AND DATE(fecha) BETWEEN ? AND ? " +
+                       "ORDER BY partida, fecha";
         
         List<ReporteKardexDTO> lista = new ArrayList<>();
         try (Connection conn = DBConnector.getInstance().getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
@@ -35,11 +36,11 @@ public class ReportesDAO {
     }
 
     // NUEVO: El Verdadero Kardex Histórico de un Artículo
+    // Para el Kardex Histórico de un solo artículo
     public List<ReporteKardexDTO> getKardexArticulo(int idArticulo) throws UserDisplayableException {
-        String query = "SELECT k.fecha, k.cantidad, k.costo, k.costo_promedio, k.tipo_movimiento, k.referencia, a.nombre AS articulo, p.descripcion AS partida " +
-                       "FROM Kardex k JOIN Articulo a ON k.id_articulo = a.id_articulo " +
-                       "LEFT JOIN PartidaPresupuestal p ON a.id_partida = p.id_partida " +
-                       "WHERE k.id_articulo = ? ORDER BY k.fecha ASC, k.id_kardex ASC";
+        // AQUÍ TAMBIÉN USAMOS LA VISTA
+        String query = "SELECT * FROM Vista_Kardex_Completo " +
+                       "WHERE id_articulo = ? ORDER BY fecha ASC, id_kardex ASC";
         List<ReporteKardexDTO> lista = new ArrayList<>();
         try (Connection conn = DBConnector.getInstance().getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setInt(1, idArticulo);

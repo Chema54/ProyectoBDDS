@@ -1,13 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package main.database;
 
-/**
- *
- * @author josem
- */
 import main.common.ExceptionHandler;
 import main.common.UserDisplayableException;
 
@@ -24,26 +16,43 @@ import org.apache.logging.log4j.Logger;
 public class DBConnector {
   private static final Logger LOGGER = LogManager.getLogger(DBConnector.class.getName());
   private static DBConnector instance;
-  private final String URL;
-  private final String USERNAME;
-  private final String PASSWORD;
+  
+  private String URL;
+  private String USERNAME;
+  private String PASSWORD;
 
   private DBConnector() throws UserDisplayableException {
-    Properties properties = new Properties();
+      loadRootCredentials();
+  }
 
-    try (FileInputStream input = new FileInputStream("src/main/resources/db.properties")) {
-      properties.load(input);
+  // =========================================================
+  // NUEVO: MÉTODO PARA RESTAURAR CREDENCIALES A "ROOT"
+  // =========================================================
+  public void resetCredentials() throws UserDisplayableException {
+      loadRootCredentials();
+      LOGGER.info("Credenciales restauradas al usuario maestro del archivo properties.");
+  }
 
-      this.URL = properties.getProperty("db.url");
-      this.USERNAME = properties.getProperty("db.username");
-      this.PASSWORD = properties.getProperty("db.password");
+  private void loadRootCredentials() throws UserDisplayableException {
+      Properties properties = new Properties();
+      try (FileInputStream input = new FileInputStream("src/main/resources/db.properties")) {
+        properties.load(input);
+        this.URL = properties.getProperty("db.url");
+        this.USERNAME = properties.getProperty("db.username");
+        this.PASSWORD = properties.getProperty("db.password");
+        handlePropertiesVerification();
+      } catch (FileNotFoundException e) {
+        throw handleConfigurationFileNotFound(e);
+      } catch (IOException e) {
+        throw getUserDisplayableExceptionFromDBInitIOException(e);
+      }
+  }
+  // =========================================================
 
-      handlePropertiesVerification();
-    } catch (FileNotFoundException e) {
-      throw handleConfigurationFileNotFound(e);
-    } catch (IOException e) {
-      throw getUserDisplayableExceptionFromDBInitIOException(e);
-    }
+  public void changeCredentials(String newUsername, String newPassword) {
+      this.USERNAME = newUsername;
+      this.PASSWORD = newPassword;
+      LOGGER.info("Credenciales de BD cambiadas a usuario nativo: " + newUsername);
   }
 
   private UserDisplayableException getUserDisplayableExceptionFromDBInitIOException(IOException e) {
@@ -70,7 +79,6 @@ public class DBConnector {
     if (instance == null) {
       instance = new DBConnector();
     }
-
     return instance;
   }
 

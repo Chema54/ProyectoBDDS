@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: #737373;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.application.FXMLModificarUsuariosController">
+   <children>
+      <VBox spacing="20.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="20.0">
+         <children>
+            <Label text="Modificar Cuenta de Sistema" textFill="WHITE"><font><Font name="System Bold" size="24.0" /></font></Label>
+            
+            <HBox alignment="CENTER_LEFT" spacing="15.0" style="-fx-background-color: #555555; -fx-padding: 10;">
+               <children>
+                  <Label text="Cuenta a modificar:" textFill="WHITE"><font><Font size="16.0" /></font></Label>
+                  <ComboBox fx:id="cbBuscarUsuario" prefWidth="300.0" promptText="Seleccione un usuario..." />
+               </children>
+            </HBox>
+
+            <GridPane hgap="15.0" vgap="20.0" VBox.vgrow="ALWAYS">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="150.0" prefWidth="200.0" />
+                <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="250.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="30.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="30.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="30.0" prefHeight="40.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label text="Nueva Contraseña:" textFill="WHITE"><font><Font size="18.0" /></font></Label>
+                  <PasswordField fx:id="txtNuevaPassword" promptText="Dejar en blanco si no desea cambiarla" GridPane.columnIndex="1"><font><Font size="14.0" /></font></PasswordField>
+                  
+                  <Label text="Rol de Sistema:" textFill="WHITE" GridPane.rowIndex="1"><font><Font size="18.0" /></font></Label>
+                  <ComboBox fx:id="cbRol" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  
+                  <Label text="Estado de la Cuenta:" textFill="WHITE" GridPane.rowIndex="2"><font><Font size="18.0" /></font></Label>
+                  <ComboBox fx:id="cbEstado" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+               </children>
+            </GridPane>
+
+            <HBox alignment="CENTER_RIGHT">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#btnGuardarCambios" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: #007bff; -fx-font-weight: bold;" text="Guardar Cambios" textFill="WHITE" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

@@ -12,80 +12,73 @@
 
 <AnchorPane id="AnchorPane" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #737373;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.application.FXMLInicioSesionController">
    <children>
-      <GridPane layoutX="188.0" layoutY="31.0" prefHeight="669.0" prefWidth="954.0">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
+      <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label text="Usuario:" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <font>
-                  <Font size="44.0" />
-               </font>
-            </Label>
-            <TextField fx:id="tf_usuario" prefHeight="54.0" prefWidth="132.0" promptText="tu-usuario" GridPane.columnIndex="2" GridPane.rowIndex="1">
-               <font>
-                  <Font size="25.0" />
-               </font>
-            </TextField>
-            <PasswordField fx:id="tf_password" prefHeight="51.0" prefWidth="244.0" promptText="tu-contraseña" GridPane.columnIndex="2" GridPane.rowIndex="2">
-               <font>
-                  <Font size="19.0" />
-               </font></PasswordField>
-            <ImageView fitHeight="208.0" fitWidth="246.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
-               <image>
-                  <Image url="@../img_logo.png" />
-               </image>
-            </ImageView>
-            <Label text="Contraseña:" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="2">
-               <font>
-                  <Font size="44.0" />
-               </font>
-            </Label>
-            <Label text="Global">
-               <font>
-                  <Font size="64.0" />
-               </font>
-               <textFill>
-                  <LinearGradient endY="0.47619047619047616" startX="0.6523809523809523" startY="1.0">
-                     <stops>
-                        <Stop color="#eeff00" />
-                        <Stop color="WHITE" offset="1.0" />
-                     </stops>
-                  </LinearGradient>
-               </textFill>
-            </Label>
-            <Label text="Finance" GridPane.columnIndex="2">
-               <font>
-                  <Font size="64.0" />
-               </font>
-               <textFill>
-                  <LinearGradient endY="0.47619047619047616" startX="0.6523809523809523" startY="1.0">
-                     <stops>
-                        <Stop color="#eeff00" />
-                        <Stop color="WHITE" offset="1.0" />
-                     </stops>
-                  </LinearGradient>
-               </textFill>
-            </Label>
-            <Button mnemonicParsing="false" onAction="#btn_IniciarSesion" prefHeight="105.0" prefWidth="260.0" style="-fx-background-color: #156600;" text="Iniciar sesión" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="3">
-               <font>
-                  <Font size="30.0" />
-               </font>
-            </Button>
-            <Button mnemonicParsing="false" onAction="#btn_Salir" prefHeight="105.0" prefWidth="260.0" style="-fx-background-color: #FF2E2E;" text="Salir" textFill="WHITE" GridPane.rowIndex="3">
-               <font>
-                  <Font size="30.0" />
-               </font>
-            </Button>
+            <GridPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="500.0" prefWidth="800.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label text="Usuario:" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <font><Font size="44.0" /></font>
+                  </Label>
+                  <TextField fx:id="tf_usuario" prefHeight="54.0" prefWidth="132.0" promptText="tu-usuario" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                     <font><Font size="25.0" /></font>
+                     <GridPane.margin><Insets right="20.0" /></GridPane.margin>
+                  </TextField>
+                  <PasswordField fx:id="tf_password" prefHeight="51.0" prefWidth="244.0" promptText="tu-contraseña" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                     <font><Font size="19.0" /></font>
+                     <GridPane.margin><Insets right="20.0" /></GridPane.margin>
+                  </PasswordField>
+                  <ImageView fitHeight="208.0" fitWidth="246.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
+                     <image>
+                        <Image url="@../img_logo.png" />
+                     </image>
+                  </ImageView>
+                  <Label text="Contraseña:" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <font><Font size="44.0" /></font>
+                  </Label>
+                  <Label text="Global">
+                     <font><Font size="64.0" /></font>
+                     <textFill>
+                        <LinearGradient endY="0.47619047619047616" startX="0.6523809523809523" startY="1.0">
+                           <stops>
+                              <Stop color="#eeff00" />
+                              <Stop color="WHITE" offset="1.0" />
+                           </stops>
+                        </LinearGradient>
+                     </textFill>
+                     <GridPane.margin><Insets left="20.0" /></GridPane.margin>
+                  </Label>
+                  <Label text="Finance" GridPane.columnIndex="2">
+                     <font><Font size="64.0" /></font>
+                     <textFill>
+                        <LinearGradient endY="0.47619047619047616" startX="0.6523809523809523" startY="1.0">
+                           <stops>
+                              <Stop color="#eeff00" />
+                              <Stop color="WHITE" offset="1.0" />
+                           </stops>
+                        </LinearGradient>
+                     </textFill>
+                  </Label>
+                  <Button mnemonicParsing="false" onAction="#btn_IniciarSesion" prefHeight="70.0" prefWidth="240.0" style="-fx-background-color: #156600;" text="Iniciar sesión" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                     <font><Font size="30.0" /></font>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#btn_Salir" prefHeight="70.0" prefWidth="240.0" style="-fx-background-color: #FF2E2E;" text="Salir" textFill="WHITE" GridPane.rowIndex="3">
+                     <font><Font size="30.0" /></font>
+                     <GridPane.margin><Insets left="20.0" /></GridPane.margin>
+                  </Button>
+               </children>
+            </GridPane>
          </children>
-      </GridPane>
+      </StackPane>
    </children>
 </AnchorPane>

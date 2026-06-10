@@ -14,34 +14,23 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-// IMPORTACIONES PARA RASTREAR LA SUCURSAL
 import main.business.dao.DepartamentoDAO;
 import main.business.dao.EmpleadoDAO;
 import main.business.dao.UsuarioDAO;
 import main.business.dto.DepartamentoDTO;
 import main.business.dto.EmpleadoDTO;
 import main.business.dto.UsuarioDTO;
-import main.business.dto.enumeraiones.UsuarioRol;
 import main.common.SesionGlobal;
 import main.common.UserDisplayableException;
 import static main.common.Utilidades.mostrarAlertaSimple;
 
-/**
- * FXML Controller class
- *
- * @author leninrevan
- */
 public class FXMLInicioSesionController implements Initializable {
 
-    @FXML
-    private TextField tf_usuario;
-    @FXML
-    private PasswordField tf_password;
+    @FXML private TextField tf_usuario;
+    @FXML private PasswordField tf_password;
 
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
+    public void initialize(URL url, ResourceBundle rb) { }    
 
     @FXML
     private void btn_IniciarSesion(ActionEvent event) {
@@ -54,31 +43,31 @@ public class FXMLInicioSesionController implements Initializable {
         }
 
         try {
+            // 1. REINICIAMOS LA CONEXIÓN A "ROOT"
+            // (Así evitamos bloqueos si alguien se equivocó antes)
+            main.database.DBConnector.getInstance().resetCredentials();
+
             UsuarioDAO usuarioDAO = new UsuarioDAO();
             UsuarioDTO usuario = usuarioDAO.getOne(usernameInput);
 
             if (usuario == null || !usuario.isTieneAcceso()) {
-                mostrarAlertaSimple("Error", "No es posible acceder", Alert.AlertType.ERROR);
+                mostrarAlertaSimple("Error", "No es posible acceder. Credenciales o estado incorrectos.", Alert.AlertType.ERROR);
                 return;
             }
 
-            if (usuario.hasPasswordMatch(passwordInput + "@Password")) {
+            if (usuario.hasPasswordMatch(passwordInput + "@Password")) { 
                 
                 // =========================================================================
-                // INICIO DE RASTREO Y GUARDADO DE SESIÓN GLOBAL (SIN HARDCODE)
+                // 2. RASTREAMOS LA SESIÓN (MIENTRAS SOMOS ROOT PARA NO TENER BLOQUEOS)
                 // =========================================================================
                 try {
                     EmpleadoDAO empleadoDAO = new EmpleadoDAO();
                     DepartamentoDAO deptoDAO = new DepartamentoDAO();
 
-                    // 1. Solo sacamos el idEmpleado (que es el único ID que tiene tu UsuarioDTO)
                     int idEmpleadoAsociado = usuario.getIdEmpleado();
-
-                    // 2. Rastreamos la ruta: Empleado -> Departamento -> Sucursal
                     EmpleadoDTO empleado = empleadoDAO.getOne(idEmpleadoAsociado);
                     DepartamentoDTO departamento = deptoDAO.getOne(empleado.getIDDepartamento());
 
-                    // 3. Guardamos la sesión usando el idEmpleado como identificador principal
                     SesionGlobal.getInstance().iniciarSesion(
                             idEmpleadoAsociado, 
                             departamento.getIDSucursal(), 
@@ -86,33 +75,44 @@ public class FXMLInicioSesionController implements Initializable {
                     );
                 } catch (Exception e) {
                     mostrarAlertaSimple("Error Crítico", "Fallo al rastrear la sucursal del empleado en la base de datos.", Alert.AlertType.ERROR);
-                    return; // Bloqueamos la entrada para que nadie entre con sucursal "0"
+                    return; 
                 }
-                // =========================================================================
-                // FIN DE GUARDADO DE SESIÓN
-                // =========================================================================
 
-                if (usuario.getRol() == UsuarioRol.CENTRAL) {
-                    try {
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/resources/gui/FXMLMenuCentralView.fxml"));
-                        Parent root = loader.load();
-                        
-                        Stage stage = new Stage();
-                        stage.setTitle("Sistema Global Finance - Menú Central");
-                        stage.setScene(new Scene(root));
-                        
-                        Stage currentStage = (Stage) tf_usuario.getScene().getWindow();
-                        currentStage.close();
-                        stage.setResizable(true);
-                        stage.setMaximized(true);
-                        stage.show();
-                        
-                    } catch (IOException e) {
-                        mostrarAlertaSimple("Error", "No se pudo cargar la vista del menú central.", Alert.AlertType.ERROR);
-                        e.printStackTrace();
+                // =========================================================================
+                // 3. CAMBIAMOS LA CONEXIÓN A LAS CREDENCIALES NATIVAS (DROPPING PRIVILEGES)
+                // =========================================================================
+                try {
+                    main.database.DBConnector.getInstance().changeCredentials(usernameInput, passwordInput);
+                    
+                    // Probamos que MariaDB sí nos deje entrar con este usuario nativo
+                    try (java.sql.Connection testCon = main.database.DBConnector.getInstance().getConnection()) {
+                        System.out.println("Acceso nativo a MariaDB concedido para: " + usernameInput);
                     }
-                } else {
-                    mostrarAlertaSimple("Información", "Acceso correcto. Vista no disponible para este rol.", Alert.AlertType.INFORMATION);
+                } catch (Exception e) {
+                    mostrarAlertaSimple("Bloqueo de Motor", "MariaDB rechazó tu usuario nativo. ¿Se creó correctamente en la base de datos?", Alert.AlertType.ERROR);
+                    // Si falla, revertimos a root para no bloquear futuros intentos de otros
+                    main.database.DBConnector.getInstance().resetCredentials();
+                    return;
+                }
+
+                // =========================================================================
+                // 4. ABRIR EL MENÚ (REUTILIZANDO LA MISMA VENTANA)
+                // =========================================================================
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/resources/gui/FXMLMenuCentralView.fxml"));
+                    Parent root = loader.load();
+                    
+                    // FIX: Tomamos la ventana actual del Login y la transformamos
+                    Stage stage = (Stage) tf_usuario.getScene().getWindow();
+                    
+                    stage.setTitle("Sistema Global Finance - Menú Central");
+                    stage.setScene(new Scene(root));
+                    stage.setResizable(true);
+                    stage.setMaximized(true); // Se expande automáticamente
+                    
+                } catch (IOException e) {
+                    mostrarAlertaSimple("Error", "No se pudo cargar la vista del menú central.", Alert.AlertType.ERROR);
+                    e.printStackTrace();
                 }
                 
             } else {
@@ -120,7 +120,7 @@ public class FXMLInicioSesionController implements Initializable {
             }
 
         } catch (UserDisplayableException e) {
-            mostrarAlertaSimple("Error", "Error del sistema", Alert.AlertType.ERROR);
+            mostrarAlertaSimple("Error", "Error del sistema al conectar con la base de datos", Alert.AlertType.ERROR);
         }
     }
 
