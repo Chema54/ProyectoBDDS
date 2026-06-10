@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #737373;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.application.FXMLRegistrarEntradasController">
+   <children>
+      <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+         <children>
+            <Label text="Registro de Facturas (Entrada a Inventario)" textFill="WHITE">
+               <font><Font name="System Bold" size="24.0" /></font>
+            </Label>
+            
+            <TitledPane text="1. Datos de la Factura" collapsible="false">
+               <content>
+                  <HBox spacing="15.0">
+                     <children>
+                        <TextField fx:id="txtFolio" promptText="Folio Factura" prefWidth="150.0" />
+                        <DatePicker fx:id="dpFecha" promptText="Fecha de Compra" prefWidth="150.0"/>
+                        <ComboBox fx:id="cbProveedor" promptText="Seleccionar Proveedor..." prefWidth="300.0" />
+                     </children>
+                  </HBox>
+               </content>
+            </TitledPane>
+
+            <TitledPane text="2. Agregar Artículos a Factura" collapsible="false">
+               <content>
+                  <HBox spacing="10.0" alignment="CENTER_LEFT">
+                     <children>
+                        <ComboBox fx:id="cbSucursal" promptText="Sucursal Destino..." prefWidth="200.0" />
+                        <ComboBox fx:id="cbArticulo" promptText="Artículo..." prefWidth="250.0" />
+                        <TextField fx:id="txtCantidad" promptText="Cant." prefWidth="80.0" />
+                        <TextField fx:id="txtCosto" promptText="Costo Unit. $" prefWidth="120.0" />
+                        <Button mnemonicParsing="false" onAction="#btnAgregarFila" text="Agregar a Lista" style="-fx-background-color: #007bff; -fx-text-fill: white;" />
+                        <Button mnemonicParsing="false" onAction="#btnQuitarFila" text="Quitar Seleccionado" style="-fx-background-color: #e63946; -fx-text-fill: white;" />
+                     </children>
+                  </HBox>
+               </content>
+            </TitledPane>
+
+            <TableView fx:id="tablaDetalles" VBox.vgrow="ALWAYS">
+              <columns>
+                <TableColumn fx:id="colSucursal" prefWidth="200.0" text="Sucursal Destino" />
+                <TableColumn fx:id="colArticulo" prefWidth="300.0" text="Artículo" />
+                <TableColumn fx:id="colCantidad" prefWidth="100.0" text="Cantidad" />
+                <TableColumn fx:id="colCosto" prefWidth="120.0" text="Costo Unitario" />
+                <TableColumn fx:id="colTotal" prefWidth="120.0" text="Importe Total" />
+              </columns>
+            </TableView>
+
+            <HBox alignment="CENTER_RIGHT" spacing="20.0">
+               <children>
+                  <Label fx:id="lblTotalFactura" text="Total Factura: $0.00" textFill="WHITE">
+                     <font><Font name="System Bold" size="20.0" /></font>
+                  </Label>
+                  <Button mnemonicParsing="false" onAction="#btnGuardarFactura" text="Guardar Factura Completa" style="-fx-background-color: #28c840; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;"/>
+               </children>
+            </HBox>
+
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

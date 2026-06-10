@@ -19,6 +19,7 @@
                         <TextField fx:id="txtDescripcion" promptText="Descripción detallada" HBox.hgrow="ALWAYS" />
                         <ComboBox fx:id="cbPartida" promptText="Seleccionar Partida..." prefWidth="250.0" />
                         <Button mnemonicParsing="false" onAction="#btnGuardar" text="Registrar" style="-fx-background-color: #28c840; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                        <Button mnemonicParsing="false" onAction="#btnDarDeBaja" text="Dar de Baja Artículo" style="-fx-background-color: #e63946; -fx-text-fill: white;"/>
                     </children>
                 </HBox>
             

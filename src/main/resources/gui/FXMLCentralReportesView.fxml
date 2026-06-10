@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #737373;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.application.FXMLCentralReportesController">
+   <children>
+      <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+         <children>
+            <Label text="Central de Reportes y Auditoría" textFill="WHITE">
+               <font><Font name="System Bold" size="24.0" /></font>
+            </Label>
+            
+            <TabPane VBox.vgrow="ALWAYS" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab text="Ingresos (Entradas)">
+                  <content>
+                    <VBox spacing="10.0" style="-fx-background-color: white; -fx-padding: 15;">
+                        <HBox spacing="15.0" alignment="CENTER_LEFT">
+                            <Label text="Desde:" /> <DatePicker fx:id="dpInicioIngresos" />
+                            <Label text="Hasta:" /> <DatePicker fx:id="dpFinIngresos" />
+                            <Button mnemonicParsing="false" onAction="#btnFiltrarIngresos" text="Filtrar" style="-fx-background-color: #007bff; -fx-text-fill: white;"/>
+                            <Pane HBox.hgrow="ALWAYS" />
+                            <Button mnemonicParsing="false" onAction="#btnExportarIngresosPDF" text="Exportar a PDF" style="-fx-background-color: #e63946; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                        </HBox>
+                        <TableView fx:id="tablaIngresos" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colPartidaIngreso" prefWidth="250.0" text="Partida Presupuestal" />
+                                <TableColumn fx:id="colArticuloIngreso" prefWidth="250.0" text="Artículo" />
+                                <TableColumn fx:id="colFechaIngreso" prefWidth="100.0" text="Fecha" />
+                                <TableColumn fx:id="colCantIngreso" prefWidth="80.0" text="Cant." />
+                                <TableColumn fx:id="colCostoIngreso" prefWidth="100.0" text="Costo Unit." />
+                            </columns>
+                        </TableView>
+                    </VBox>
+                  </content>
+                </Tab>
+                
+                <Tab text="Egresos (Salidas)">
+                  <content>
+                    <VBox spacing="10.0" style="-fx-background-color: white; -fx-padding: 15;">
+                        <HBox spacing="15.0" alignment="CENTER_LEFT">
+                            <Label text="Desde:" /> <DatePicker fx:id="dpInicioEgresos" />
+                            <Label text="Hasta:" /> <DatePicker fx:id="dpFinEgresos" />
+                            <Button mnemonicParsing="false" onAction="#btnFiltrarEgresos" text="Filtrar" style="-fx-background-color: #007bff; -fx-text-fill: white;"/>
+                            <Pane HBox.hgrow="ALWAYS" />
+                            <Button mnemonicParsing="false" onAction="#btnExportarEgresosPDF" text="Exportar a PDF" style="-fx-background-color: #e63946; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                        </HBox>
+                        <TableView fx:id="tablaEgresos" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colPartidaEgreso" prefWidth="250.0" text="Partida Presupuestal" />
+                                <TableColumn fx:id="colArticuloEgreso" prefWidth="250.0" text="Artículo" />
+                                <TableColumn fx:id="colFechaEgreso" prefWidth="100.0" text="Fecha" />
+                                <TableColumn fx:id="colCantEgreso" prefWidth="80.0" text="Cant." />
+                                <TableColumn fx:id="colCostoEgreso" prefWidth="100.0" text="Costo Promedio" />
+                            </columns>
+                        </TableView>
+                    </VBox>
+                  </content>
+                </Tab>
+
+                <Tab text="Bitácora de Pedidos (Stock Mínimo)">
+                  <content>
+                    <VBox spacing="10.0" style="-fx-background-color: white; -fx-padding: 15;">
+                        <HBox spacing="15.0" alignment="CENTER_LEFT" style="-fx-background-color: #f4f4f4; -fx-padding: 10px; -fx-border-color: #dcdcdc;">
+                            <Label text="Agregar Ítem Libre:" style="-fx-font-weight: bold;"/>
+                            <TextField fx:id="txtArticuloFantasma" promptText="Nombre del artículo nuevo" prefWidth="250.0" />
+                            <TextField fx:id="txtCantidadFantasma" promptText="Cant." prefWidth="80.0" />
+                            <Button mnemonicParsing="false" onAction="#btnAgregarFantasma" text="Añadir a la Lista" style="-fx-background-color: #007bff; -fx-text-fill: white;"/>
+                            <Pane HBox.hgrow="ALWAYS" />
+                            <Button mnemonicParsing="false" onAction="#btnExportarPedidosExcel" text="Exportar a Excel (Y Vaciar Bitácora)" style="-fx-background-color: #28c840; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                        </HBox>
+                        <TableView fx:id="tablaPedidos" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colArticuloPedido" prefWidth="300.0" text="Artículo" />
+                                <TableColumn fx:id="colCantPedido" prefWidth="150.0" text="Cant. a Pedir" />
+                                <TableColumn fx:id="colFechaPedido" prefWidth="150.0" text="Fecha de Alerta" />
+                            </columns>
+                        </TableView>
+                    </VBox>
+                  </content>
+                </Tab>
+                
+                <Tab text="Bitácora de Bajas">
+                  <content>
+                    <VBox spacing="10.0" style="-fx-background-color: white; -fx-padding: 15;">
+                        <TableView fx:id="tablaBajas" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colArticuloBaja" prefWidth="200.0" text="Artículo" />
+                                <TableColumn fx:id="colFechaBaja" prefWidth="100.0" text="Fecha" />
+                                <TableColumn fx:id="colMotivoBaja" prefWidth="400.0" text="Motivo de Baja" />
+                                <TableColumn fx:id="colRestanteBaja" prefWidth="100.0" text="Stock Restante" />
+                            </columns>
+                        </TableView>
+                    </VBox>
+                  </content>
+                </Tab>
+              </tabs>
+            </TabPane>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

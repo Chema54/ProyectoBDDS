@@ -29,7 +29,7 @@ public class ArticuloDAO extends CompleteDAOShape<ArticuloDTO, Integer> {
     private static final String CREATE_QUERY = 
         "INSERT INTO Articulo (descripcion, id_partida, estado, nombre) VALUES (?, ?, ?, ?)";
     private static final String GET_ALL_QUERY = 
-        "SELECT * FROM Articulo";
+            "SELECT * FROM Articulo;";
     private static final String GET_QUERY = 
         "SELECT * FROM Articulo WHERE id_articulo = ?";
     private static final String UPDATE_QUERY = 
@@ -129,5 +129,68 @@ public class ArticuloDAO extends CompleteDAOShape<ArticuloDTO, Integer> {
         } catch (SQLException e) {
             throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible eliminar el articulo.");
         }
+    }
+    public void darDeBaja(int idArticulo, String motivo) throws UserDisplayableException {
+        // Query 1: Obtener cantidad global que queda del artículo en todas las sucursales
+        String queryStock = "SELECT IFNULL(SUM(cantidad), 0) FROM Inventario WHERE id_articulo = ?";
+        // Query 2: Cambiar estado a inactivo
+        String updateEstado = "UPDATE Articulo SET estado = 'inactivo' WHERE id_articulo = ?";
+        // Query 3: Insertar en bitácora
+        String insertBitacora = "INSERT INTO BitacoraBaja (id_articulo, fecha, motivo, cantidad_restante) VALUES (?, CURDATE(), ?, ?)";
+
+        try (Connection conn = DBConnector.getInstance().getConnection()) {
+            conn.setAutoCommit(false); // Empezamos transacción segura
+            
+            try {
+                int cantidadRestante = 0;
+                try (PreparedStatement psStock = conn.prepareStatement(queryStock)) {
+                    psStock.setInt(1, idArticulo);
+                    ResultSet rs = psStock.executeQuery();
+                    if(rs.next()) cantidadRestante = rs.getInt(1);
+                }
+
+                try (PreparedStatement psUpdate = conn.prepareStatement(updateEstado)) {
+                    psUpdate.setInt(1, idArticulo);
+                    psUpdate.executeUpdate();
+                }
+
+                try (PreparedStatement psInsert = conn.prepareStatement(insertBitacora)) {
+                    psInsert.setInt(1, idArticulo);
+                    psInsert.setString(2, motivo);
+                    psInsert.setInt(3, cantidadRestante);
+                    psInsert.executeUpdate();
+                }
+                
+                conn.commit(); // Todo salió bien, guardamos
+            } catch (SQLException ex) {
+                conn.rollback(); // Si falla, cancelamos
+                throw ex;
+            } finally {
+                conn.setAutoCommit(true);
+            }
+        } catch (SQLException e) {
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "Error al dar de baja el artículo y registrar bitácora.");
+        }
+    }
+    // Nuevo método exclusivo para los ComboBox operativos
+    public List<ArticuloDTO> getAllActivos() throws UserDisplayableException {
+        String query = "SELECT * FROM Articulo WHERE estado = 'activo'";
+        List<ArticuloDTO> list = new ArrayList<>();
+        try (Connection connection = DBConnector.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                list.add(new ArticuloDTO.ArticuloBuilder()
+                    .setIDArticulo(resultSet.getInt("id_articulo"))
+                    .setDescripcion(resultSet.getString("descripcion"))
+                    .setIdPartida(resultSet.getInt("id_partida"))
+                    .setEstado(resultSet.getString("estado"))
+                    .setNombre(resultSet.getString("nombre"))
+                    .build());
+            }
+        } catch (SQLException e) {
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "Error al cargar artículos activos.");
+        }
+        return list;
     }
 }

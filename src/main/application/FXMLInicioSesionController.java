@@ -13,9 +13,16 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
+// IMPORTACIONES PARA RASTREAR LA SUCURSAL
+import main.business.dao.DepartamentoDAO;
+import main.business.dao.EmpleadoDAO;
 import main.business.dao.UsuarioDAO;
+import main.business.dto.DepartamentoDTO;
+import main.business.dto.EmpleadoDTO;
 import main.business.dto.UsuarioDTO;
 import main.business.dto.enumeraiones.UsuarioRol;
+import main.common.SesionGlobal;
 import main.common.UserDisplayableException;
 import static main.common.Utilidades.mostrarAlertaSimple;
 
@@ -34,7 +41,6 @@ public class FXMLInicioSesionController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        
     }    
 
     @FXML
@@ -58,6 +64,34 @@ public class FXMLInicioSesionController implements Initializable {
 
             if (usuario.hasPasswordMatch(passwordInput + "@Password")) {
                 
+                // =========================================================================
+                // INICIO DE RASTREO Y GUARDADO DE SESIÓN GLOBAL (SIN HARDCODE)
+                // =========================================================================
+                try {
+                    EmpleadoDAO empleadoDAO = new EmpleadoDAO();
+                    DepartamentoDAO deptoDAO = new DepartamentoDAO();
+
+                    // 1. Solo sacamos el idEmpleado (que es el único ID que tiene tu UsuarioDTO)
+                    int idEmpleadoAsociado = usuario.getIdEmpleado();
+
+                    // 2. Rastreamos la ruta: Empleado -> Departamento -> Sucursal
+                    EmpleadoDTO empleado = empleadoDAO.getOne(idEmpleadoAsociado);
+                    DepartamentoDTO departamento = deptoDAO.getOne(empleado.getIDDepartamento());
+
+                    // 3. Guardamos la sesión usando el idEmpleado como identificador principal
+                    SesionGlobal.getInstance().iniciarSesion(
+                            idEmpleadoAsociado, 
+                            departamento.getIDSucursal(), 
+                            usuario.getRol().name() 
+                    );
+                } catch (Exception e) {
+                    mostrarAlertaSimple("Error Crítico", "Fallo al rastrear la sucursal del empleado en la base de datos.", Alert.AlertType.ERROR);
+                    return; // Bloqueamos la entrada para que nadie entre con sucursal "0"
+                }
+                // =========================================================================
+                // FIN DE GUARDADO DE SESIÓN
+                // =========================================================================
+
                 if (usuario.getRol() == UsuarioRol.CENTRAL) {
                     try {
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/resources/gui/FXMLMenuCentralView.fxml"));

@@ -1,10 +1,3 @@
-
-
-/**
- * FXML Controller class
- *
- * @author leninrevan
- */
 package main.application;
 
 import java.io.IOException;
@@ -15,16 +8,57 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
+import main.common.SesionGlobal;
 import main.common.VentanaInterna;
 
+/**
+ * FXML Controller class
+ *
+ * @author leninrevan
+ */
 public class FXMLMenuCentralController implements Initializable {
     
     @FXML private AnchorPane pane_Escritorio;
+    
+    // Inyecciones para ocultar menús
+    @FXML private Menu menuUsuarios;
+    @FXML private Menu menuEmpleados;
+    @FXML private Menu menuDepartamentos;
+    @FXML private Menu menuArticulos;
+    
+    @FXML private MenuItem miCrearSolicitud;
+    @FXML private MenuItem miAprobarSalidas;
+    @FXML private MenuItem miRegistrarEntradas;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Inicialización
+        
+        // ==========================================
+        // LÓGICA DE ROLES (Ocultar botones)
+        // ==========================================
+        String rolActual = SesionGlobal.getInstance().getRolActual();
+        
+        if (rolActual != null && !rolActual.equals("CENTRAL")) {
+            
+            // Ocultamos todos los catálogos a quienes no son de Central
+            menuUsuarios.setVisible(false);
+            menuEmpleados.setVisible(false);
+            menuDepartamentos.setVisible(false);
+            menuArticulos.setVisible(false);
+            
+            // Filtramos Logística
+            if (rolActual.equals("DEPARTAMENTO")) {
+                miAprobarSalidas.setVisible(false);
+                miRegistrarEntradas.setVisible(false);
+                
+            } else if (rolActual.equals("SALIDAS")) {
+                miCrearSolicitud.setVisible(false);
+                miRegistrarEntradas.setVisible(false);
+            }
+        }
     }    
 
     // ==========================================
@@ -102,5 +136,28 @@ public class FXMLMenuCentralController implements Initializable {
     @FXML
     private void irGestionArticulos(ActionEvent event) {
         abrirVentanaFlotante("Catálogo de Artículos", "/main/resources/gui/FXMLGestionArticulosView.fxml");
+    }
+
+    // ==========================================
+    // ACCIONES DEL MENÚ: LOGÍSTICA
+    // ==========================================
+    @FXML
+    private void irCrearSolicitud(ActionEvent event) {
+        abrirVentanaFlotante("Punto de Venta - Solicitudes", "/main/resources/gui/FXMLCrearSolicitudView.fxml");
+    }
+
+    @FXML
+    private void irAprobarSalidas(ActionEvent event) {
+        abrirVentanaFlotante("Bandeja de Aprobación", "/main/resources/gui/FXMLAprobarSalidasView.fxml");
+    }
+
+    @FXML
+    private void irRegistrarEntradas(ActionEvent event) {
+        abrirVentanaFlotante("Registro de Compras (Facturas)", "/main/resources/gui/FXMLRegistrarEntradasView.fxml");
+    }
+
+    @FXML
+    private void irCentralReportes(ActionEvent event) {
+        abrirVentanaFlotante("Reportes", "/main/resources/gui/FXMLCentralReportesView.fxml");
     }
 }

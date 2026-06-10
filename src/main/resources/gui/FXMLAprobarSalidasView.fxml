@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #737373;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.application.FXMLAprobarSalidasController">
+    <children>
+        <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+            <children>
+                <Label text="Bandeja de Aprobación de Salidas" textFill="WHITE">
+                    <font>
+                        <Font name="System Bold" size="24.0" />
+                    </font>
+                </Label>
+            
+                <TableView fx:id="tablaAprobar" VBox.vgrow="ALWAYS" onMouseClicked="#seleccionarFila">
+                    <columns>
+                        <TableColumn fx:id="colId" prefWidth="50.0" text="Folio" />
+                        <TableColumn fx:id="colEmpleado" prefWidth="200.0" text="Empleado" />
+                        <TableColumn fx:id="colArticulo" prefWidth="200.0" text="Artículo" />
+                        <TableColumn fx:id="colCantidadPedida" prefWidth="100.0" text="Pedida" />
+                        <TableColumn fx:id="colStock" prefWidth="100.0" text="Stock Actual" /> 
+                        <TableColumn fx:id="colUso" prefWidth="250.0" text="Uso Destino" />
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                </TableView>
+
+                <HBox alignment="CENTER_RIGHT" spacing="15.0" style="-fx-background-color: #5c5c5c; -fx-padding: 10px; -fx-background-radius: 5px;">
+                    <children>
+                        <Label text="Cant. a Entregar:" textFill="WHITE">
+                            <font>
+                                <Font size="16.0" />
+                            </font>
+                        </Label>
+                        <TextField fx:id="txtCantidadReal" prefWidth="100.0" promptText="Ej. 50" />
+                        <Button mnemonicParsing="false" onAction="#btnRechazarSalida" style="-fx-background-color: #ff5f56; -fx-text-fill: white; -fx-font-weight: bold;" text="Rechazar Petición" />
+                        <Button mnemonicParsing="false" onAction="#btnAprobarYGenerarPDF" style="-fx-background-color: #28c840; -fx-text-fill: white; -fx-font-weight: bold;" text="Aprobar Salida y Generar Acuse PDF" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

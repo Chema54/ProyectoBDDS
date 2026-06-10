@@ -98,10 +98,6 @@ public class ProveedorDTO {
 
     @Override
     public String toString() {
-        return "Proveedor: " + idProveedor
-                + ", Razón social: " + razonSocial
-                + ", RFC: " + rfc
-                + ", Domicilio fiscal: " + domicilioFiscal
-                + ", Teléfono: " + telefono;
+        return razonSocial;
     }
 }

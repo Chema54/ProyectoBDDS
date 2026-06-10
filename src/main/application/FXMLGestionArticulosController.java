@@ -106,4 +106,41 @@ public class FXMLGestionArticulosController implements Initializable {
             Utilidades.mostrarAlertaSimple("Error", "No se pudo registrar.", Alert.AlertType.ERROR);
         }
     }
+
+    @FXML
+    private void btnDarDeBaja(ActionEvent event) {
+        ArticuloDTO seleccionado = tablaArticulos.getSelectionModel().getSelectedItem();
+        if (seleccionado == null) {
+            Utilidades.mostrarAlertaSimple("Advertencia", "Selecciona un artículo de la tabla para dar de baja.", Alert.AlertType.WARNING);
+            return;
+        }
+
+        // ==========================================
+        // FIX: PROTECCIÓN ANTI-DOBLE BAJA
+        // ==========================================
+        if (seleccionado.getEstado().equalsIgnoreCase("inactivo")) {
+            Utilidades.mostrarAlertaSimple("Advertencia", "Este artículo ya se encuentra dado de baja.", Alert.AlertType.WARNING);
+            return;
+        }
+
+        // Usamos un TextInputDialog nativo de JavaFX para pedir el motivo
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Dar de Baja Artículo");
+        dialog.setHeaderText("Vas a desactivar: " + seleccionado.getNombre());
+        dialog.setContentText("Escribe el motivo de la baja (Ej. Dañado, Obsoleto):");
+
+        dialog.showAndWait().ifPresent(motivo -> {
+            if (motivo.trim().isEmpty()) {
+                Utilidades.mostrarAlertaSimple("Error", "El motivo es obligatorio.", Alert.AlertType.ERROR);
+            } else {
+                try {
+                    articuloDAO.darDeBaja(seleccionado.getIDArticulo(), motivo);
+                    Utilidades.mostrarAlertaSimple("Éxito", "Artículo dado de baja correctamente.", Alert.AlertType.INFORMATION);
+                    cargarArticulos(); // Recarga la tabla para ver el cambio a "inactivo"
+                } catch (UserDisplayableException e) {
+                    Utilidades.mostrarAlertaSimple("Error", "No se pudo realizar la baja.", Alert.AlertType.ERROR);
+                }
+            }
+        });
+    }
 }
