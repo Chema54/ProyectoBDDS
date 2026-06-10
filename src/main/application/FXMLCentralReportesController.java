@@ -3,7 +3,6 @@ package main.application;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -42,7 +41,7 @@ public class FXMLCentralReportesController implements Initializable {
     @FXML private TableColumn<ReporteKardexDTO, Integer> colCantEgreso;
     @FXML private TableColumn<ReporteKardexDTO, Double> colCostoEgreso;
 
-    // PEDIDOS Y ARTÍCULOS FANTASMA
+    // PEDIDOS
     @FXML private TextField txtArticuloFantasma;
     @FXML private TextField txtCantidadFantasma;
     @FXML private TableView<ReportePedidoDTO> tablaPedidos;
@@ -58,12 +57,44 @@ public class FXMLCentralReportesController implements Initializable {
     @FXML private TableColumn<ReporteBajaDTO, Integer> colRestanteBaja;
 
     private ReportesDAO reportesDAO = new ReportesDAO();
+    @FXML
+    private ComboBox<?> cbArticuloKardex;
+    @FXML
+    private TableView<?> tablaKardex;
+    @FXML
+    private TableColumn<?, ?> colFechaK;
+    @FXML
+    private TableColumn<?, ?> colTipoK;
+    @FXML
+    private TableColumn<?, ?> colCantK;
+    @FXML
+    private TableColumn<?, ?> colCostoUnitK;
+    @FXML
+    private TableColumn<?, ?> colCostoPromK;
+    @FXML
+    private TableColumn<?, ?> colRefK;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         configurarColumnas();
         cargarBitacoraBajas();
         cargarBitacoraPedidos();
+
+        // ==========================================
+        // AUTO-CARGAR LOS MOVIMIENTOS DE HOY
+        // ==========================================
+        
+        // 1. Ponemos la fecha de la computadora en los 4 DatePickers
+        java.time.LocalDate hoy = java.time.LocalDate.now();
+        
+        dpInicioIngresos.setValue(hoy);
+        dpFinIngresos.setValue(hoy);
+        dpInicioEgresos.setValue(hoy);
+        dpFinEgresos.setValue(hoy);
+
+        // 2. Simulamos el "Clic" en los botones para que se llene la tabla
+        btnFiltrarIngresos(null);
+        btnFiltrarEgresos(null);
     }
 
     private void configurarColumnas() {
@@ -99,31 +130,42 @@ public class FXMLCentralReportesController implements Initializable {
         catch (UserDisplayableException e) { Utilidades.mostrarAlertaSimple("Error", "Error al cargar pedidos.", Alert.AlertType.ERROR); }
     }
 
+    // ==========================================
+    // FIX: EXCEPCIONES MANEJADAS Y VISIBLES
+    // ==========================================
     @FXML
     private void btnFiltrarIngresos(ActionEvent event) {
-        if (dpInicioIngresos.getValue() == null || dpFinIngresos.getValue() == null) return;
+        if (dpInicioIngresos.getValue() == null || dpFinIngresos.getValue() == null) {
+            Utilidades.mostrarAlertaSimple("Advertencia", "Selecciona fecha de inicio y fin.", Alert.AlertType.WARNING);
+            return;
+        }
         try {
             tablaIngresos.setItems(FXCollections.observableArrayList(reportesDAO.getMovimientosKardex("entrada", java.sql.Date.valueOf(dpInicioIngresos.getValue()), java.sql.Date.valueOf(dpFinIngresos.getValue()))));
-        } catch (UserDisplayableException e) {}
+        } catch (UserDisplayableException e) {
+            Utilidades.mostrarAlertaSimple("Error BD", "Problema de lectura en el Kardex de Ingresos.", Alert.AlertType.ERROR);
+            e.printStackTrace();
+        }
     }
 
     @FXML
     private void btnFiltrarEgresos(ActionEvent event) {
-        if (dpInicioEgresos.getValue() == null || dpFinEgresos.getValue() == null) return;
+        if (dpInicioEgresos.getValue() == null || dpFinEgresos.getValue() == null) {
+            Utilidades.mostrarAlertaSimple("Advertencia", "Selecciona fecha de inicio y fin.", Alert.AlertType.WARNING);
+            return;
+        }
         try {
             tablaEgresos.setItems(FXCollections.observableArrayList(reportesDAO.getMovimientosKardex("salida", java.sql.Date.valueOf(dpInicioEgresos.getValue()), java.sql.Date.valueOf(dpFinEgresos.getValue()))));
-        } catch (UserDisplayableException e) {}
+        } catch (UserDisplayableException e) {
+            Utilidades.mostrarAlertaSimple("Error BD", "Problema de lectura en el Kardex de Egresos.", Alert.AlertType.ERROR);
+            e.printStackTrace();
+        }
     }
 
-    // ==========================================
-    // REGLA: AÑADIR ÍTEMS QUE NO TENEMOS EN BASE AL EXCEL
-    // ==========================================
     @FXML
     private void btnAgregarFantasma(ActionEvent event) {
         if (txtArticuloFantasma.getText().isEmpty() || txtCantidadFantasma.getText().isEmpty()) return;
         try {
             int cant = Integer.parseInt(txtCantidadFantasma.getText());
-            // Insertamos la fila fantasma directamente en la tabla de la interfaz (sin tocar la BD)
             tablaPedidos.getItems().add(new ReportePedidoDTO(txtArticuloFantasma.getText(), cant, new java.sql.Date(System.currentTimeMillis())));
             txtArticuloFantasma.clear();
             txtCantidadFantasma.clear();
@@ -132,61 +174,63 @@ public class FXMLCentralReportesController implements Initializable {
         }
     }
 
-    // ==========================================
-    // EXPORTACIONES A ARCHIVOS FÍSICOS
-    // ==========================================
     @FXML
     private void btnExportarIngresosPDF(ActionEvent event) {
-        if (tablaIngresos.getItems().isEmpty()) return;
+        if (tablaIngresos.getItems().isEmpty()) {
+            Utilidades.mostrarAlertaSimple("Aviso", "No hay ingresos para exportar.", Alert.AlertType.WARNING); return;
+        }
         File archivo = pedirRutaGuardado("Reporte_Ingresos.pdf", "Archivos PDF (*.pdf)", "*.pdf");
         if (archivo != null) {
             try {
                 GeneradorReportes.generarReporteKardex(archivo.getAbsolutePath(), "Ingresos", new ArrayList<>(tablaIngresos.getItems()));
-                Utilidades.mostrarAlertaSimple("Éxito", "PDF de Ingresos guardado correctamente.", Alert.AlertType.INFORMATION);
-            } catch (Exception e) { Utilidades.mostrarAlertaSimple("Error", "No se pudo generar el PDF.", Alert.AlertType.ERROR); }
+                Utilidades.mostrarAlertaSimple("Éxito", "PDF de Ingresos generado.", Alert.AlertType.INFORMATION);
+            } catch (Exception e) { Utilidades.mostrarAlertaSimple("Error", "Fallo al crear PDF.", Alert.AlertType.ERROR); }
         }
     }
 
     @FXML
     private void btnExportarEgresosPDF(ActionEvent event) {
-        if (tablaEgresos.getItems().isEmpty()) return;
+        if (tablaEgresos.getItems().isEmpty()) {
+            Utilidades.mostrarAlertaSimple("Aviso", "No hay egresos para exportar.", Alert.AlertType.WARNING); return;
+        }
         File archivo = pedirRutaGuardado("Reporte_Egresos.pdf", "Archivos PDF (*.pdf)", "*.pdf");
         if (archivo != null) {
             try {
                 GeneradorReportes.generarReporteKardex(archivo.getAbsolutePath(), "Egresos", new ArrayList<>(tablaEgresos.getItems()));
-                Utilidades.mostrarAlertaSimple("Éxito", "PDF de Egresos guardado correctamente.", Alert.AlertType.INFORMATION);
-            } catch (Exception e) { Utilidades.mostrarAlertaSimple("Error", "No se pudo generar el PDF.", Alert.AlertType.ERROR); }
+                Utilidades.mostrarAlertaSimple("Éxito", "PDF de Egresos generado.", Alert.AlertType.INFORMATION);
+            } catch (Exception e) { Utilidades.mostrarAlertaSimple("Error", "Fallo al crear PDF.", Alert.AlertType.ERROR); }
         }
     }
 
     @FXML
     private void btnExportarPedidosExcel(ActionEvent event) {
         if (tablaPedidos.getItems().isEmpty()) {
-            Utilidades.mostrarAlertaSimple("Aviso", "No hay pedidos para exportar.", Alert.AlertType.WARNING);
-            return;
+            Utilidades.mostrarAlertaSimple("Aviso", "No hay pedidos.", Alert.AlertType.WARNING); return;
         }
         File archivo = pedirRutaGuardado("Bitacora_Pedidos.xlsx", "Archivos Excel (*.xlsx)", "*.xlsx");
         if (archivo != null) {
             try {
-                // 1. Exporta lo que está en la tabla (incluyendo fantasmas) a Excel
                 GeneradorReportes.generarBitacoraPedidosExcel(archivo.getAbsolutePath(), new ArrayList<>(tablaPedidos.getItems()));
-                
-                // 2. REGLA CUMPLIDA: Vaciar la bitácora real de la base de datos
                 reportesDAO.vaciarBitacoraPedidos();
-                
-                Utilidades.mostrarAlertaSimple("Éxito", "Excel guardado. La bitácora en base de datos ha sido vaciada.", Alert.AlertType.INFORMATION);
-                cargarBitacoraPedidos(); // Recarga la tabla para verla en blanco
-                
-            } catch (Exception e) { Utilidades.mostrarAlertaSimple("Error", "No se pudo generar el Excel.", Alert.AlertType.ERROR); }
+                Utilidades.mostrarAlertaSimple("Éxito", "Excel generado y bitácora limpiada.", Alert.AlertType.INFORMATION);
+                cargarBitacoraPedidos();
+            } catch (Exception e) { Utilidades.mostrarAlertaSimple("Error", "Fallo al exportar Excel.", Alert.AlertType.ERROR); }
         }
     }
 
-    // Método que levanta la ventanita de Windows/Linux para elegir dónde guardar
     private File pedirRutaGuardado(String nombrePorDefecto, String descFiltro, String extFiltro) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Guardar Reporte");
         fileChooser.setInitialFileName(nombrePorDefecto);
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(descFiltro, extFiltro));
         return fileChooser.showSaveDialog(tablaIngresos.getScene().getWindow());
+    }
+
+    @FXML
+    private void btnGenerarKardex(ActionEvent event) {
+    }
+
+    @FXML
+    private void btnExportarKardexPDF(ActionEvent event) {
     }
 }

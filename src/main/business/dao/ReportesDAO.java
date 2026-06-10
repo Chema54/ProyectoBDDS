@@ -17,11 +17,12 @@ public class ReportesDAO {
 
     // Obtiene Ingresos o Egresos (Kardex) filtrados por fecha
     public List<ReporteKardexDTO> getMovimientosKardex(String tipoMovimiento, Date inicio, Date fin) throws UserDisplayableException {
+        // FIX: Envolver k.fecha en DATE() obliga a MariaDB a ignorar las horas y zonas horarias
         String query = "SELECT k.fecha, k.cantidad, k.costo, k.costo_promedio, a.nombre AS articulo, p.descripcion AS partida " +
                        "FROM Kardex k " +
                        "JOIN Articulo a ON k.id_articulo = a.id_articulo " +
                        "LEFT JOIN PartidaPresupuestal p ON a.id_partida = p.id_partida " +
-                       "WHERE k.tipo_movimiento = ? AND k.fecha BETWEEN ? AND ? " +
+                       "WHERE k.tipo_movimiento = ? AND DATE(k.fecha) BETWEEN ? AND ? " +
                        "ORDER BY p.descripcion, k.fecha";
         
         List<ReporteKardexDTO> lista = new ArrayList<>();
@@ -30,14 +31,21 @@ public class ReportesDAO {
             ps.setString(1, tipoMovimiento);
             ps.setDate(2, inicio);
             ps.setDate(3, fin);
+            
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
+                    String nombrePartida = rs.getString("partida");
                     lista.add(new ReporteKardexDTO(
-                        rs.getString("articulo"), rs.getString("partida"), rs.getDate("fecha"),
-                        rs.getInt("cantidad"), rs.getDouble("costo"), rs.getDouble("costo_promedio")
+                        rs.getString("articulo"), 
+                        nombrePartida != null ? nombrePartida : "Sin Partida", // Previene nulos en la tabla
+                        rs.getDate("fecha"),
+                        rs.getInt("cantidad"), 
+                        rs.getDouble("costo"), 
+                        rs.getDouble("costo_promedio")
                     ));
                 }
             }
+            System.out.println("KARDEX - Encontrados " + lista.size() + " movimientos de tipo: " + tipoMovimiento);
         } catch (SQLException e) {
             throw ExceptionHandler.handleSQLException(LOGGER, e, "Error al cargar el Kardex.");
         }
@@ -68,7 +76,6 @@ public class ReportesDAO {
         return lista;
     }
 
-    // El método maestro que limpia la tabla de pedidos DESPUÉS de exportar a Excel
     public void vaciarBitacoraPedidos() throws UserDisplayableException {
         try (Connection conn = DBConnector.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement("DELETE FROM BitacoraPedido")) {
