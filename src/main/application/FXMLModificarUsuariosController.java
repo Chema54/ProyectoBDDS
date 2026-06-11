@@ -17,28 +17,29 @@ import main.common.Utilidades;
 
 public class FXMLModificarUsuariosController implements Initializable {
 
-    @FXML private ComboBox<UsuarioDTO> cbBuscarUsuario;
-    @FXML private PasswordField txtNuevaPassword;
-    @FXML private ComboBox<UsuarioRol> cbRol;
-    @FXML private ComboBox<String> cbEstado;
+    @FXML
+    private ComboBox<UsuarioDTO> cbBuscarUsuario;
+    @FXML
+    private PasswordField txtNuevaPassword;
+    @FXML
+    private ComboBox<UsuarioRol> cbRol;
+    @FXML
+    private ComboBox<String> cbEstado;
 
     private UsuarioDAO usuarioDAO = new UsuarioDAO();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Llenamos la lista de Estados (Activo/Inactivo)
         cbEstado.setItems(FXCollections.observableArrayList("Activo", "Inactivo"));
         cargarListas();
-        
-        // Cuando seleccionas una cuenta, se carga su Rol y su Estado
         cbBuscarUsuario.valueProperty().addListener((obs, oldVal, usuarioSeleccionado) -> {
             if (usuarioSeleccionado != null) {
                 cbRol.setValue(usuarioSeleccionado.getRol());
                 cbEstado.setValue(usuarioSeleccionado.isTieneAcceso() ? "Activo" : "Inactivo");
-                txtNuevaPassword.clear(); // Limpiamos la contraseña por seguridad
+                txtNuevaPassword.clear();
             }
         });
-    }    
+    }
 
     private void cargarListas() {
         try {
@@ -52,18 +53,16 @@ public class FXMLModificarUsuariosController implements Initializable {
     @FXML
     private void btnGuardarCambios(ActionEvent event) {
         UsuarioDTO usuarioOriginal = cbBuscarUsuario.getValue();
-        
+
         if (usuarioOriginal == null || cbRol.getValue() == null || cbEstado.getValue() == null) {
             Utilidades.mostrarAlertaSimple("Advertencia", "Seleccione un usuario y complete los campos obligatorios.", Alert.AlertType.WARNING);
             return;
         }
 
         try {
-            // Si el usuario escribió una nueva contraseña, la ciframos con Bcrypt. 
-            // Si la dejó en blanco, conservamos la que ya tenía en la base de datos.
-            String passwordFinal = txtNuevaPassword.getText().isEmpty() ? 
-                                   usuarioOriginal.getContraseña() : 
-                                   UsuarioDTO.getGeneratedHashedPassword(txtNuevaPassword.getText());
+            String passwordFinal = txtNuevaPassword.getText().isEmpty()
+                    ? usuarioOriginal.getContraseña()
+                    : UsuarioDTO.getGeneratedHashedPassword(txtNuevaPassword.getText());
 
             boolean acceso = cbEstado.getValue().equals("Activo");
 
@@ -75,18 +74,14 @@ public class FXMLModificarUsuariosController implements Initializable {
                     acceso
             );
 
-            // Mandamos a la base de datos (Esto actualizará su estado y su contraseña)
             usuarioDAO.updateOne(usuarioActualizado);
-            
-            // Opcional: Como extra, aquí podrías ejecutar los comandos DDL (GRANT) si les cambias el rol,
-            // pero para los alcances del sistema, con actualizar la tabla lógica basta.
-            
+
             Utilidades.mostrarAlertaSimple("Éxito", "Cuenta de sistema actualizada correctamente.", Alert.AlertType.INFORMATION);
-            
+
             cbBuscarUsuario.setValue(null);
             txtNuevaPassword.clear();
             cargarListas();
-            
+
         } catch (UserDisplayableException e) {
             Utilidades.mostrarAlertaSimple("Error", "No se pudo actualizar el usuario en la Base de Datos.", Alert.AlertType.ERROR);
         }

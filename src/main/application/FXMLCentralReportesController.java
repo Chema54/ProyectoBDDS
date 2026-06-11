@@ -23,54 +23,87 @@ import main.common.Utilidades;
 
 public class FXMLCentralReportesController implements Initializable {
 
-    // NUEVO: KARDEX HISTÓRICO
-    @FXML private ComboBox<ArticuloDTO> cbArticuloKardex;
-    @FXML private TableView<ReporteKardexDTO> tablaKardex;
-    @FXML private TableColumn<ReporteKardexDTO, java.sql.Date> colFechaK;
-    @FXML private TableColumn<ReporteKardexDTO, String> colTipoK;
-    @FXML private TableColumn<ReporteKardexDTO, Integer> colCantK;
-    @FXML private TableColumn<ReporteKardexDTO, Double> colCostoUnitK;
-    @FXML private TableColumn<ReporteKardexDTO, Double> colCostoPromK;
-    @FXML private TableColumn<ReporteKardexDTO, String> colRefK;
+    @FXML
+    private ComboBox<ArticuloDTO> cbArticuloKardex;
+    @FXML
+    private TableView<ReporteKardexDTO> tablaKardex;
+    @FXML
+    private TableColumn<ReporteKardexDTO, java.sql.Date> colFechaK;
+    @FXML
+    private TableColumn<ReporteKardexDTO, String> colTipoK;
+    @FXML
+    private TableColumn<ReporteKardexDTO, Integer> colCantK;
+    @FXML
+    private TableColumn<ReporteKardexDTO, Double> colCostoUnitK;
+    @FXML
+    private TableColumn<ReporteKardexDTO, Double> colCostoPromK;
+    @FXML
+    private TableColumn<ReporteKardexDTO, String> colRefK;
 
-    // INGRESOS
-    @FXML private DatePicker dpInicioIngresos;
-    @FXML private DatePicker dpFinIngresos;
-    @FXML private TableView<ReporteKardexDTO> tablaIngresos;
-    @FXML private TableColumn<ReporteKardexDTO, String> colPartidaIngreso;
-    @FXML private TableColumn<ReporteKardexDTO, String> colArticuloIngreso;
-    @FXML private TableColumn<ReporteKardexDTO, java.sql.Date> colFechaIngreso;
-    @FXML private TableColumn<ReporteKardexDTO, Integer> colCantIngreso;
-    @FXML private TableColumn<ReporteKardexDTO, Double> colCostoIngreso;
+    @FXML
+    private DatePicker dpInicioIngresos;
+    @FXML
+    private DatePicker dpFinIngresos;
+    @FXML
+    private TableView<ReporteKardexDTO> tablaIngresos;
+    @FXML
+    private TableColumn<ReporteKardexDTO, String> colPartidaIngreso;
+    @FXML
+    private TableColumn<ReporteKardexDTO, String> colArticuloIngreso;
+    @FXML
+    private TableColumn<ReporteKardexDTO, java.sql.Date> colFechaIngreso;
+    @FXML
+    private TableColumn<ReporteKardexDTO, Integer> colCantIngreso;
+    @FXML
+    private TableColumn<ReporteKardexDTO, Double> colCostoIngreso;
 
-    // EGRESOS
-    @FXML private DatePicker dpInicioEgresos;
-    @FXML private DatePicker dpFinEgresos;
-    @FXML private TableView<ReporteKardexDTO> tablaEgresos;
-    @FXML private TableColumn<ReporteKardexDTO, String> colPartidaEgreso;
-    @FXML private TableColumn<ReporteKardexDTO, String> colArticuloEgreso;
-    @FXML private TableColumn<ReporteKardexDTO, java.sql.Date> colFechaEgreso;
-    @FXML private TableColumn<ReporteKardexDTO, Integer> colCantEgreso;
-    @FXML private TableColumn<ReporteKardexDTO, Double> colCostoEgreso;
+    @FXML
+    private DatePicker dpInicioEgresos;
+    @FXML
+    private DatePicker dpFinEgresos;
+    @FXML
+    private TableView<ReporteKardexDTO> tablaEgresos;
+    @FXML
+    private TableColumn<ReporteKardexDTO, String> colPartidaEgreso;
+    @FXML
+    private TableColumn<ReporteKardexDTO, String> colArticuloEgreso;
+    @FXML
+    private TableColumn<ReporteKardexDTO, java.sql.Date> colFechaEgreso;
+    @FXML
+    private TableColumn<ReporteKardexDTO, Integer> colCantEgreso;
+    @FXML
+    private TableColumn<ReporteKardexDTO, Double> colCostoEgreso;
 
     // PEDIDOS
-    @FXML private TextField txtArticuloFantasma;
-    @FXML private TextField txtCantidadFantasma;
-    @FXML private TableView<ReportePedidoDTO> tablaPedidos;
-    @FXML private TableColumn<ReportePedidoDTO, String> colArticuloPedido;
-    @FXML private TableColumn<ReportePedidoDTO, Integer> colCantPedido;
-    @FXML private TableColumn<ReportePedidoDTO, java.sql.Date> colFechaPedido;
+    @FXML
+    private TextField txtArticuloFantasma;
+    @FXML
+    private TextField txtCantidadFantasma;
+    @FXML
+    private TableView<ReportePedidoDTO> tablaPedidos;
+    @FXML
+    private TableColumn<ReportePedidoDTO, String> colArticuloPedido;
+    @FXML
+    private TableColumn<ReportePedidoDTO, Integer> colCantPedido;
+    @FXML
+    private TableColumn<ReportePedidoDTO, java.sql.Date> colFechaPedido;
 
     // BAJAS
-    @FXML private TableView<ReporteBajaDTO> tablaBajas;
-    @FXML private TableColumn<ReporteBajaDTO, String> colArticuloBaja;
-    @FXML private TableColumn<ReporteBajaDTO, java.sql.Date> colFechaBaja;
-    @FXML private TableColumn<ReporteBajaDTO, String> colMotivoBaja;
-    @FXML private TableColumn<ReporteBajaDTO, Integer> colRestanteBaja;
+    @FXML
+    private TableView<ReporteBajaDTO> tablaBajas;
+    @FXML
+    private TableColumn<ReporteBajaDTO, String> colArticuloBaja;
+    @FXML
+    private TableColumn<ReporteBajaDTO, java.sql.Date> colFechaBaja;
+    @FXML
+    private TableColumn<ReporteBajaDTO, String> colMotivoBaja;
+    @FXML
+    private TableColumn<ReporteBajaDTO, Integer> colRestanteBaja;
 
     private ReportesDAO reportesDAO = new ReportesDAO();
     private ArticuloDAO articuloDAO = new ArticuloDAO();
-    @FXML private TextField txtBuscarBaja;
+    @FXML
+    private TextField txtBuscarBaja;
     private javafx.collections.ObservableList<ReporteBajaDTO> listaBajasOriginal; // Memoria caché para buscar rápido
 
     @Override
@@ -78,27 +111,23 @@ public class FXMLCentralReportesController implements Initializable {
         configurarColumnas();
         cargarBitacoraBajas();
         cargarBitacoraPedidos();
-        
-        // ==========================================
-        // CARGA DE ARTÍCULOS PARA KARDEX
-        // ==========================================
-        try { 
-            cbArticuloKardex.setItems(FXCollections.observableArrayList(articuloDAO.getAll())); 
-            
-            // FIX UX: Seleccionar el primero automáticamente si hay elementos
+
+        try {
+            cbArticuloKardex.setItems(FXCollections.observableArrayList(articuloDAO.getAll()));
             if (!cbArticuloKardex.getItems().isEmpty()) {
                 cbArticuloKardex.getSelectionModel().selectFirst();
-                btnGenerarKardex(null); // Simulamos el clic para que la tabla no empiece vacía
+                btnGenerarKardex(null);
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
 
-        // ==========================================
-        // AUTO-CARGAR LOS MOVIMIENTOS DE HOY
-        // ==========================================
         java.time.LocalDate hoy = java.time.LocalDate.now();
-        dpInicioIngresos.setValue(hoy); dpFinIngresos.setValue(hoy);
-        dpInicioEgresos.setValue(hoy); dpFinEgresos.setValue(hoy);
-        btnFiltrarIngresos(null); btnFiltrarEgresos(null);
+        dpInicioIngresos.setValue(hoy);
+        dpFinIngresos.setValue(hoy);
+        dpInicioEgresos.setValue(hoy);
+        dpFinEgresos.setValue(hoy);
+        btnFiltrarIngresos(null);
+        btnFiltrarEgresos(null);
     }
 
     private void configurarColumnas() {
@@ -132,118 +161,161 @@ public class FXMLCentralReportesController implements Initializable {
     }
 
     private void cargarBitacoraBajas() {
-        try { 
+        try {
             listaBajasOriginal = FXCollections.observableArrayList(reportesDAO.getBajas());
-            tablaBajas.setItems(listaBajasOriginal); 
-        } catch (UserDisplayableException e) { 
-            Utilidades.mostrarAlertaSimple("Error", "Error al cargar bajas.", Alert.AlertType.ERROR); 
+            tablaBajas.setItems(listaBajasOriginal);
+        } catch (UserDisplayableException e) {
+            Utilidades.mostrarAlertaSimple("Error", "Error al cargar bajas.", Alert.AlertType.ERROR);
         }
     }
 
     private void cargarBitacoraPedidos() {
-        try { tablaPedidos.setItems(FXCollections.observableArrayList(reportesDAO.getPedidos())); } 
-        catch (UserDisplayableException e) { Utilidades.mostrarAlertaSimple("Error", "Error al cargar pedidos.", Alert.AlertType.ERROR); }
+        try {
+            tablaPedidos.setItems(FXCollections.observableArrayList(reportesDAO.getPedidos()));
+        } catch (UserDisplayableException e) {
+            Utilidades.mostrarAlertaSimple("Error", "Error al cargar pedidos.", Alert.AlertType.ERROR);
+        }
     }
 
-    // ACCIONES KARDEX
     @FXML
     private void btnGenerarKardex(ActionEvent event) {
         if (cbArticuloKardex.getValue() == null) {
-            Utilidades.mostrarAlertaSimple("Advertencia", "Selecciona un artículo.", Alert.AlertType.WARNING); return;
+            Utilidades.mostrarAlertaSimple("Advertencia", "Selecciona un artículo.", Alert.AlertType.WARNING);
+            return;
         }
-        try { tablaKardex.setItems(FXCollections.observableArrayList(reportesDAO.getKardexArticulo(cbArticuloKardex.getValue().getIDArticulo()))); } 
-        catch (UserDisplayableException e) { Utilidades.mostrarAlertaSimple("Error BD", "Problema al cargar el Kardex.", Alert.AlertType.ERROR); }
+        try {
+            tablaKardex.setItems(FXCollections.observableArrayList(reportesDAO.getKardexArticulo(cbArticuloKardex.getValue().getIDArticulo())));
+        } catch (UserDisplayableException e) {
+            Utilidades.mostrarAlertaSimple("Error BD", "Problema al cargar el Kardex.", Alert.AlertType.ERROR);
+        }
     }
 
     @FXML
     private void btnExportarKardexPDF(ActionEvent event) {
-        if (tablaKardex.getItems().isEmpty()) { Utilidades.mostrarAlertaSimple("Aviso", "No hay datos.", Alert.AlertType.WARNING); return; }
+        if (tablaKardex.getItems().isEmpty()) {
+            Utilidades.mostrarAlertaSimple("Aviso", "No hay datos.", Alert.AlertType.WARNING);
+            return;
+        }
         File archivo = pedirRutaGuardado("Tarjeta_Kardex_" + cbArticuloKardex.getValue().getNombre() + ".pdf", "Archivos PDF (*.pdf)", "*.pdf");
         if (archivo != null) {
-            try { GeneradorReportes.generarKardexArticuloPDF(archivo.getAbsolutePath(), cbArticuloKardex.getValue().getNombre(), new ArrayList<>(tablaKardex.getItems())); Utilidades.mostrarAlertaSimple("Éxito", "Kardex PDF generado.", Alert.AlertType.INFORMATION); } 
-            catch (Exception e) { Utilidades.mostrarAlertaSimple("Error", "Fallo al crear PDF.", Alert.AlertType.ERROR); }
+            try {
+                GeneradorReportes.generarKardexArticuloPDF(archivo.getAbsolutePath(), cbArticuloKardex.getValue().getNombre(), new ArrayList<>(tablaKardex.getItems()));
+                Utilidades.mostrarAlertaSimple("Éxito", "Kardex PDF generado.", Alert.AlertType.INFORMATION);
+            } catch (Exception e) {
+                Utilidades.mostrarAlertaSimple("Error", "Fallo al crear PDF.", Alert.AlertType.ERROR);
+            }
         }
     }
 
-    // ACCIONES INGRESOS/EGRESOS
     @FXML
     private void btnFiltrarIngresos(ActionEvent event) {
-        if (dpInicioIngresos.getValue() == null || dpFinIngresos.getValue() == null) return;
-        try { tablaIngresos.setItems(FXCollections.observableArrayList(reportesDAO.getMovimientosKardex("entrada", java.sql.Date.valueOf(dpInicioIngresos.getValue()), java.sql.Date.valueOf(dpFinIngresos.getValue())))); } 
-        catch (UserDisplayableException e) {}
+        if (dpInicioIngresos.getValue() == null || dpFinIngresos.getValue() == null) {
+            return;
+        }
+        try {
+            tablaIngresos.setItems(FXCollections.observableArrayList(reportesDAO.getMovimientosKardex("entrada", java.sql.Date.valueOf(dpInicioIngresos.getValue()), java.sql.Date.valueOf(dpFinIngresos.getValue()))));
+        } catch (UserDisplayableException e) {
+        }
     }
 
     @FXML
     private void btnFiltrarEgresos(ActionEvent event) {
-        if (dpInicioEgresos.getValue() == null || dpFinEgresos.getValue() == null) return;
-        try { tablaEgresos.setItems(FXCollections.observableArrayList(reportesDAO.getMovimientosKardex("salida", java.sql.Date.valueOf(dpInicioEgresos.getValue()), java.sql.Date.valueOf(dpFinEgresos.getValue())))); } 
-        catch (UserDisplayableException e) {}
+        if (dpInicioEgresos.getValue() == null || dpFinEgresos.getValue() == null) {
+            return;
+        }
+        try {
+            tablaEgresos.setItems(FXCollections.observableArrayList(reportesDAO.getMovimientosKardex("salida", java.sql.Date.valueOf(dpInicioEgresos.getValue()), java.sql.Date.valueOf(dpFinEgresos.getValue()))));
+        } catch (UserDisplayableException e) {
+        }
     }
 
     @FXML
     private void btnAgregarFantasma(ActionEvent event) {
-        if (txtArticuloFantasma.getText().isEmpty() || txtCantidadFantasma.getText().isEmpty()) return;
+        if (txtArticuloFantasma.getText().isEmpty() || txtCantidadFantasma.getText().isEmpty()) {
+            return;
+        }
         try {
             int cant = Integer.parseInt(txtCantidadFantasma.getText());
             tablaPedidos.getItems().add(new ReportePedidoDTO(txtArticuloFantasma.getText(), cant, new java.sql.Date(System.currentTimeMillis())));
-            txtArticuloFantasma.clear(); txtCantidadFantasma.clear();
-        } catch (NumberFormatException e) { Utilidades.mostrarAlertaSimple("Error", "La cantidad debe ser número.", Alert.AlertType.ERROR); }
+            txtArticuloFantasma.clear();
+            txtCantidadFantasma.clear();
+        } catch (NumberFormatException e) {
+            Utilidades.mostrarAlertaSimple("Error", "La cantidad debe ser número.", Alert.AlertType.ERROR);
+        }
     }
 
     @FXML
     private void btnExportarIngresosPDF(ActionEvent event) {
-        if (tablaIngresos.getItems().isEmpty()) return;
+        if (tablaIngresos.getItems().isEmpty()) {
+            return;
+        }
         File archivo = pedirRutaGuardado("Reporte_Ingresos.pdf", "Archivos PDF (*.pdf)", "*.pdf");
         if (archivo != null) {
-            try { GeneradorReportes.generarReporteKardex(archivo.getAbsolutePath(), "Ingresos", new ArrayList<>(tablaIngresos.getItems())); Utilidades.mostrarAlertaSimple("Éxito", "PDF generado.", Alert.AlertType.INFORMATION); } 
-            catch (Exception e) { Utilidades.mostrarAlertaSimple("Error", "Fallo al crear PDF.", Alert.AlertType.ERROR); }
+            try {
+                GeneradorReportes.generarReporteKardex(archivo.getAbsolutePath(), "Ingresos", new ArrayList<>(tablaIngresos.getItems()));
+                Utilidades.mostrarAlertaSimple("Éxito", "PDF generado.", Alert.AlertType.INFORMATION);
+            } catch (Exception e) {
+                Utilidades.mostrarAlertaSimple("Error", "Fallo al crear PDF.", Alert.AlertType.ERROR);
+            }
         }
     }
 
     @FXML
     private void btnExportarEgresosPDF(ActionEvent event) {
-        if (tablaEgresos.getItems().isEmpty()) return;
+        if (tablaEgresos.getItems().isEmpty()) {
+            return;
+        }
         File archivo = pedirRutaGuardado("Reporte_Egresos.pdf", "Archivos PDF (*.pdf)", "*.pdf");
         if (archivo != null) {
-            try { GeneradorReportes.generarReporteKardex(archivo.getAbsolutePath(), "Egresos", new ArrayList<>(tablaEgresos.getItems())); Utilidades.mostrarAlertaSimple("Éxito", "PDF generado.", Alert.AlertType.INFORMATION); } 
-            catch (Exception e) { Utilidades.mostrarAlertaSimple("Error", "Fallo al crear PDF.", Alert.AlertType.ERROR); }
+            try {
+                GeneradorReportes.generarReporteKardex(archivo.getAbsolutePath(), "Egresos", new ArrayList<>(tablaEgresos.getItems()));
+                Utilidades.mostrarAlertaSimple("Éxito", "PDF generado.", Alert.AlertType.INFORMATION);
+            } catch (Exception e) {
+                Utilidades.mostrarAlertaSimple("Error", "Fallo al crear PDF.", Alert.AlertType.ERROR);
+            }
         }
     }
 
     @FXML
     private void btnExportarPedidosExcel(ActionEvent event) {
-        if (tablaPedidos.getItems().isEmpty()) return;
+        if (tablaPedidos.getItems().isEmpty()) {
+            return;
+        }
         File archivo = pedirRutaGuardado("Bitacora_Pedidos.xlsx", "Archivos Excel (*.xlsx)", "*.xlsx");
         if (archivo != null) {
-            try { GeneradorReportes.generarBitacoraPedidosExcel(archivo.getAbsolutePath(), new ArrayList<>(tablaPedidos.getItems())); reportesDAO.vaciarBitacoraPedidos(); Utilidades.mostrarAlertaSimple("Éxito", "Excel generado y bitácora limpiada.", Alert.AlertType.INFORMATION); cargarBitacoraPedidos(); } 
-            catch (Exception e) { Utilidades.mostrarAlertaSimple("Error", "Fallo al exportar Excel.", Alert.AlertType.ERROR); }
+            try {
+                GeneradorReportes.generarBitacoraPedidosExcel(archivo.getAbsolutePath(), new ArrayList<>(tablaPedidos.getItems()));
+                reportesDAO.vaciarBitacoraPedidos();
+                Utilidades.mostrarAlertaSimple("Éxito", "Excel generado y bitácora limpiada.", Alert.AlertType.INFORMATION);
+                cargarBitacoraPedidos();
+            } catch (Exception e) {
+                Utilidades.mostrarAlertaSimple("Error", "Fallo al exportar Excel.", Alert.AlertType.ERROR);
+            }
         }
     }
 
     private File pedirRutaGuardado(String nombrePorDefecto, String descFiltro, String extFiltro) {
-        FileChooser fileChooser = new FileChooser(); fileChooser.setTitle("Guardar Reporte");
-        fileChooser.setInitialFileName(nombrePorDefecto); fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(descFiltro, extFiltro));
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Guardar Reporte");
+        fileChooser.setInitialFileName(nombrePorDefecto);
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(descFiltro, extFiltro));
         return fileChooser.showSaveDialog(tablaIngresos.getScene().getWindow());
     }
 
-    // ==========================================
-    // BÚSQUEDA Y EXPORTACIÓN DE BAJAS
-    // ==========================================
     @FXML
     private void btnBuscarBaja(ActionEvent event) {
         String filtro = txtBuscarBaja.getText().toLowerCase().trim();
-        
+
         if (filtro.isEmpty()) {
-            tablaBajas.setItems(listaBajasOriginal); // Si está vacío, mostramos todo
+            tablaBajas.setItems(listaBajasOriginal);
             return;
         }
-        
-        // Filtramos en la memoria RAM buscando que el nombre contenga lo que se escribió
-        javafx.collections.transformation.FilteredList<ReporteBajaDTO> filtrada = 
-                new javafx.collections.transformation.FilteredList<>(listaBajasOriginal, b -> 
-            b.getArticulo() != null && b.getArticulo().toLowerCase().contains(filtro)
-        );
-        
+
+        javafx.collections.transformation.FilteredList<ReporteBajaDTO> filtrada
+                = new javafx.collections.transformation.FilteredList<>(listaBajasOriginal, b
+                        -> b.getArticulo() != null && b.getArticulo().toLowerCase().contains(filtro)
+                );
+
         tablaBajas.setItems(filtrada);
     }
 
@@ -257,19 +329,19 @@ public class FXMLCentralReportesController implements Initializable {
     private void btnExportarBajasExcel(ActionEvent event) {
         if (tablaBajas.getItems().isEmpty()) {
             Utilidades.mostrarAlertaSimple("Aviso", "No hay registros de bajas para exportar.", Alert.AlertType.WARNING);
-            return; 
+            return;
         }
-        
+
         File archivo = pedirRutaGuardado("Bitacora_Bajas.xlsx", "Archivos Excel (*.xlsx)", "*.xlsx");
-        
+
         if (archivo != null) {
-            try { 
-                GeneradorReportes.generarBitacoraBajasExcel(archivo.getAbsolutePath(), new ArrayList<>(tablaBajas.getItems())); 
-                Utilidades.mostrarAlertaSimple("Éxito", "Excel de Bajas generado correctamente.", Alert.AlertType.INFORMATION); 
-            } catch (Exception e) { 
-                Utilidades.mostrarAlertaSimple("Error", "Fallo al exportar el Excel de Bajas.", Alert.AlertType.ERROR); 
+            try {
+                GeneradorReportes.generarBitacoraBajasExcel(archivo.getAbsolutePath(), new ArrayList<>(tablaBajas.getItems()));
+                Utilidades.mostrarAlertaSimple("Éxito", "Excel de Bajas generado correctamente.", Alert.AlertType.INFORMATION);
+            } catch (Exception e) {
+                Utilidades.mostrarAlertaSimple("Error", "Fallo al exportar el Excel de Bajas.", Alert.AlertType.ERROR);
             }
         }
     }
-    
+
 }

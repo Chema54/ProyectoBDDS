@@ -1,10 +1,5 @@
 package main.business.dto;
 
-/**
- *
- * @author josem
- */
-
 public class ArticuloDTO {
     private final int idArticulo;
     private final String descripcion;

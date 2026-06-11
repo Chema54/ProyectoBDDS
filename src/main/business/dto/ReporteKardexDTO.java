@@ -9,8 +9,8 @@ public class ReporteKardexDTO {
     private int cantidad;
     private double costo;
     private double costoPromedio;
-    private String tipoMovimiento; // NUEVO
-    private String referencia;     // NUEVO
+    private String tipoMovimiento;
+    private String referencia;
 
     public ReporteKardexDTO(String articulo, String partida, Date fecha, int cantidad, double costo, double costoPromedio, String tipoMovimiento, String referencia) {
         this.articulo = articulo;

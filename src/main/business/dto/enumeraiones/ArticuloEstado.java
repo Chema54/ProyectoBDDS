@@ -4,10 +4,6 @@
  */
 package main.business.dto.enumeraiones;
 
-/**
- *
- * @author josem
- */
 public enum ArticuloEstado {
     ACTIVO("Activo"),   
     INACTIVO("Inactivo");  

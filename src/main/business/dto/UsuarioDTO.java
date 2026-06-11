@@ -1,16 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package main.business.dto;
 
 import main.business.dto.enumeraiones.UsuarioRol;
 import org.mindrot.jbcrypt.BCrypt;
 
-/**
- *
- * @author josem
- */
 public class UsuarioDTO {
 
     private int idEmpleado; 
@@ -19,7 +11,6 @@ public class UsuarioDTO {
     private UsuarioRol rol;
     private boolean tieneAcceso;
 
-    // Actualizamos el constructor para recibirlo
     public UsuarioDTO(int idEmpleado, String usuario, String contraseña, UsuarioRol rol, boolean tieneAcceso) {
         this.idEmpleado = idEmpleado;
         this.usuario = usuario;
@@ -28,7 +19,6 @@ public class UsuarioDTO {
         this.tieneAcceso = tieneAcceso;
     }
 
-    // Su respectivo Getter para que el DAO lo pueda leer
     public int getIdEmpleado() {
         return idEmpleado;
     }

@@ -16,7 +16,6 @@ import org.apache.logging.log4j.Logger;
 
 public class PartidaPresupuestalDAO extends CompleteDAOShape<PartidaPresupuestalDTO, Integer> {
     
-    // 1. Aquí declaramos el LOGGER de la forma correcta para tu proyecto
     private static final Logger LOGGER = LogManager.getLogger(PartidaPresupuestalDAO.class);
 
     @Override
@@ -28,7 +27,6 @@ public class PartidaPresupuestalDAO extends CompleteDAOShape<PartidaPresupuestal
             ps.setString(2, dto.getDescripcion());
             ps.executeUpdate();
         } catch (SQLException e) {
-            // 2. Usamos el LOGGER directamente sin forzar el cast
             throw ExceptionHandler.handleSQLException(LOGGER, e, "Error al crear la partida.");
         }
     }
@@ -79,5 +77,5 @@ public class PartidaPresupuestalDAO extends CompleteDAOShape<PartidaPresupuestal
     }
 
     @Override
-    public void deleteOne(Integer id) throws UserDisplayableException {} // Opcional por ahora
+    public void deleteOne(Integer id) throws UserDisplayableException {}
 }

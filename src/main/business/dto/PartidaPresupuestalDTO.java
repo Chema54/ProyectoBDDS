@@ -1,6 +1,7 @@
 package main.business.dto;
 
 public class PartidaPresupuestalDTO {
+
     private final int idPartida;
     private final String clave;
     private final String descripcion;
@@ -11,9 +12,17 @@ public class PartidaPresupuestalDTO {
         this.descripcion = descripcion;
     }
 
-    public int getIdPartida() { return idPartida; }
-    public String getClave() { return clave; }
-    public String getDescripcion() { return descripcion; }
+    public int getIdPartida() {
+        return idPartida;
+    }
+
+    public String getClave() {
+        return clave;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
 
     @Override
     public String toString() {

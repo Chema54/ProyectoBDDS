@@ -52,19 +52,13 @@ public class FXMLModificarDepartamentoController implements Initializable {
     }
 
     private void configurarListeners() {
-        // Al seleccionar sucursal, cargamos solo sus departamentos y sus empleados
         cbSucursal.valueProperty().addListener((obs, oldV, sucursal) -> {
             if (sucursal != null) {
-                // 1. Filtrar Departamentos de esta sucursal
                 List<DepartamentoDTO> deptosValidos = todosLosDeptos.stream()
                         .filter(d -> d.getIDSucursal() == sucursal.getIDSucursal())
                         .collect(Collectors.toList());
-
-                // 2. Extraer los IDs de esos departamentos
                 List<Integer> idsDeptosValidos = deptosValidos.stream()
                         .map(DepartamentoDTO::getIDDepartamento).collect(Collectors.toList());
-
-                // 3. Filtrar Empleados que pertenecen a esos departamentos (SOLO DE ESTA SUCURSAL)
                 List<EmpleadoDTO> empleadosValidos = todosLosEmpleados.stream()
                         .filter(e -> idsDeptosValidos.contains(e.getIDDepartamento()))
                         .collect(Collectors.toList());
@@ -89,7 +83,6 @@ public class FXMLModificarDepartamentoController implements Initializable {
         }
 
         try {
-            // Se asume que tu método updateOne de DepartamentoDAO actualiza el id_encargado
             deptoSeleccionado.setIdEncargado(encargadoSeleccionado.getIDEmpleado());
             deptoDAO.updateOne(deptoSeleccionado);
             Utilidades.mostrarAlertaSimple("Éxito", "Encargado asignado correctamente.", Alert.AlertType.INFORMATION);

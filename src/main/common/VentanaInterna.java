@@ -18,7 +18,6 @@ public class VentanaInterna extends BorderPane {
     private boolean minimizada = false;
     private boolean maximizada = false;
 
-    // Guardaremos el tamaño base para restaurar correctamente
     private final double widthBase = 800;
     private final double heightBase = 600;
 
@@ -32,110 +31,99 @@ public class VentanaInterna extends BorderPane {
     public VentanaInterna(String titulo, Node contenido) {
 
         this.contenido = contenido;
-        
-        // =========================
-        // ESTILO GENERAL
-        // =========================
+
         this.setStyle(
-            "-fx-background-color: #ffffff;" +
-            "-fx-border-color: #404040;" +
-            "-fx-border-width: 2px;" +
-            "-fx-background-radius: 4px;" +
-            "-fx-border-radius: 4px;"
+                "-fx-background-color: #ffffff;"
+                + "-fx-border-color: #404040;"
+                + "-fx-border-width: 2px;"
+                + "-fx-background-radius: 4px;"
+                + "-fx-border-radius: 4px;"
         );
 
         this.setPrefSize(widthBase, heightBase);
 
-        // =========================
-        // BARRA TITULO Y ESPACIADOR
-        // =========================
         HBox barraTitulo = new HBox();
         barraTitulo.setAlignment(Pos.CENTER_LEFT);
         barraTitulo.setPadding(new Insets(5));
         barraTitulo.setStyle(
-            "-fx-background-color: #2b2b2b;" +
-            "-fx-background-radius: 4px 4px 0 0;"
+                "-fx-background-color: #2b2b2b;"
+                + "-fx-background-radius: 4px 4px 0 0;"
         );
-        
+
         Label lblTitulo = new Label(titulo);
         lblTitulo.setStyle(
-            "-fx-text-fill: white;" +
-            "-fx-font-weight: bold;"
+                "-fx-text-fill: white;"
+                + "-fx-font-weight: bold;"
         );
-        
+
         Pane espaciador = new Pane();
         HBox.setHgrow(espaciador, Priority.ALWAYS);
 
-        // =========================
-        // DRAG PARA REDIMENSIONAR (Lo creamos antes para poder ocultarlo)
-        // =========================
         Label resizeHandle = new Label(" ↘ ");
         resizeHandle.setStyle("-fx-text-fill: #a0a0a0; -fx-font-size: 16px; -fx-cursor: se-resize;");
-        
+
         HBox bottomPane = new HBox(resizeHandle);
         bottomPane.setAlignment(Pos.BOTTOM_RIGHT);
         bottomPane.setStyle("-fx-background-color: #e0e0e0; -fx-background-radius: 0 0 4px 4px;");
 
         final double[] dragDelta = new double[2];
-        
+
         resizeHandle.setOnMousePressed(e -> {
             dragDelta[0] = this.getPrefWidth() - e.getScreenX();
             dragDelta[1] = this.getPrefHeight() - e.getScreenY();
         });
-        
+
         resizeHandle.setOnMouseDragged(e -> {
             if (!maximizada) {
                 double newWidth = e.getScreenX() + dragDelta[0];
                 double newHeight = e.getScreenY() + dragDelta[1];
-                if (newWidth > 300) this.setPrefWidth(newWidth);
-                if (newHeight > 200) this.setPrefHeight(newHeight);
+                if (newWidth > 300) {
+                    this.setPrefWidth(newWidth);
+                }
+                if (newHeight > 200) {
+                    this.setPrefHeight(newHeight);
+                }
             }
         });
 
-        // =========================
-        // BOTON MINIMIZAR
-        // =========================
         Button btnMin = new Button("—");
         btnMin.setStyle(
-            "-fx-background-color: #fdbc40;" +
-            "-fx-text-fill: black;" +
-            "-fx-font-weight: bold;" +
-            "-fx-background-radius: 10;"
+                "-fx-background-color: #fdbc40;"
+                + "-fx-text-fill: black;"
+                + "-fx-font-weight: bold;"
+                + "-fx-background-radius: 10;"
         );
         btnMin.setOnAction(e -> {
             minimizada = !minimizada;
             if (minimizada) {
-                // AQUÍ ESTÁ LA MAGIA: Oculta contenido Y la barra inferior
                 this.setCenter(null);
-                this.setBottom(null); 
-                
+                this.setBottom(null);
+
                 this.setPrefHeight(35);
                 this.setMinHeight(35);
                 this.setMaxHeight(35);
             } else {
-                // Restaurar contenido Y la barra inferior
                 this.setCenter(contenido);
-                this.setBottom(bottomPane); 
-                
+                this.setBottom(bottomPane);
+
                 this.setPrefHeight(maximizada ? Region.USE_COMPUTED_SIZE : prevH != 0 ? prevH : heightBase);
                 this.setMinHeight(Region.USE_COMPUTED_SIZE);
                 this.setMaxHeight(Region.USE_COMPUTED_SIZE);
             }
         });
-        
-        // =========================
-        // BOTON MAXIMIZAR
-        // =========================
+
         Button btnMax = new Button("□");
         btnMax.setStyle(
-            "-fx-background-color: #28c840;" +
-            "-fx-text-fill: white;" +
-            "-fx-font-weight: bold;" +
-            "-fx-background-radius: 10;"
+                "-fx-background-color: #28c840;"
+                + "-fx-text-fill: white;"
+                + "-fx-font-weight: bold;"
+                + "-fx-background-radius: 10;"
         );
         btnMax.setOnAction(e -> {
             Pane escritorioPadre = (Pane) this.getParent();
-            if (escritorioPadre == null) return;
+            if (escritorioPadre == null) {
+                return;
+            }
 
             maximizada = !maximizada;
 
@@ -156,16 +144,13 @@ public class VentanaInterna extends BorderPane {
                 this.setPrefHeight(prevH != 0 ? prevH : heightBase);
             }
         });
-        
-        // =========================
-        // BOTON CERRAR
-        // =========================
+
         Button btnCerrar = new Button("X");
         btnCerrar.setStyle(
-            "-fx-background-color: #ff5f56;" +
-            "-fx-text-fill: white;" +
-            "-fx-font-weight: bold;" +
-            "-fx-background-radius: 10;"
+                "-fx-background-color: #ff5f56;"
+                + "-fx-text-fill: white;"
+                + "-fx-font-weight: bold;"
+                + "-fx-background-radius: 10;"
         );
         btnCerrar.setOnAction(e -> {
             Pane escritorioPadre = (Pane) this.getParent();
@@ -173,32 +158,28 @@ public class VentanaInterna extends BorderPane {
                 escritorioPadre.getChildren().remove(this);
             }
         });
-        
-        // =========================
-        // ENSAMBLAR
-        // =========================
+
         barraTitulo.getChildren().addAll(lblTitulo, espaciador, btnMin, btnMax, btnCerrar);
-        
+
         barraTitulo.setOnMousePressed(event -> {
             xOffset = event.getSceneX() - this.getLayoutX();
             yOffset = event.getSceneY() - this.getLayoutY();
             this.toFront();
         });
-        
+
         barraTitulo.setOnMouseDragged(event -> {
             if (!maximizada) {
                 this.setLayoutX(event.getSceneX() - xOffset);
                 this.setLayoutY(event.getSceneY() - yOffset);
             }
         });
-        
+
         this.setOnMousePressed(event -> this.toFront());
-        
+
         this.setTop(barraTitulo);
         this.setCenter(contenido);
         BorderPane.setMargin(contenido, new Insets(10));
-        
-        // Asignar barra inferior por defecto
-        this.setBottom(bottomPane); 
+
+        this.setBottom(bottomPane);
     }
 }

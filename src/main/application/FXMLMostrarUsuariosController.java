@@ -67,26 +67,20 @@ public class FXMLMostrarUsuariosController implements Initializable {
     }
 
     private void configurarColumnas() {
-        // Datos directos del UsuarioDTO
         colUsername.setCellValueFactory(new PropertyValueFactory<>("usuario"));
-        
-        // Conversión del Enum a String
         colRol.setCellValueFactory(cellData -> 
             new SimpleStringProperty(cellData.getValue().getRol().name())
         );
 
-        // Conversión de Booleano a Estado String
         colAcceso.setCellValueFactory(cellData -> 
             new SimpleStringProperty(cellData.getValue().isTieneAcceso() ? "Activo" : "Inactivo")
         );
 
-        // Cruce: Encontrar el nombre completo del Empleado usando el caché
         colEmpleado.setCellValueFactory(cellData -> {
             EmpleadoDTO emp = mapaEmpleados.get(cellData.getValue().getIdEmpleado());
             return new SimpleStringProperty(emp != null ? emp.getNombre() + " " + emp.getApellidos() : "Desconocido");
         });
 
-        // Cruce profundo: Usuario -> Empleado -> Departamento -> Sucursal
         colSucursal.setCellValueFactory(cellData -> {
             EmpleadoDTO emp = mapaEmpleados.get(cellData.getValue().getIdEmpleado());
             if (emp != null) {
@@ -128,21 +122,17 @@ public class FXMLMostrarUsuariosController implements Initializable {
     }
 
     private void filtrarPorSucursal(int idSucursalFiltro) {
-        // Todo el filtrado se hace en RAM. ¡Súper rápido!
-        
-        // 1. Qué departamentos pertenecen a esta sucursal?
+
         List<Integer> deptosValidos = mapaDepartamentos.values().stream()
                 .filter(d -> d.getIDSucursal() == idSucursalFiltro)
                 .map(DepartamentoDTO::getIDDepartamento)
                 .collect(Collectors.toList());
 
-        // 2. Qué empleados trabajan en esos departamentos?
         List<Integer> empleadosValidos = mapaEmpleados.values().stream()
                 .filter(e -> deptosValidos.contains(e.getIDDepartamento()))
                 .map(EmpleadoDTO::getIDEmpleado)
                 .collect(Collectors.toList());
 
-        // 3. Qué usuarios corresponden a esos empleados?
         ObservableList<UsuarioDTO> filtrados = FXCollections.observableArrayList();
         for (UsuarioDTO u : listaTodosLosUsuarios) {
             if (empleadosValidos.contains(u.getIdEmpleado())) {

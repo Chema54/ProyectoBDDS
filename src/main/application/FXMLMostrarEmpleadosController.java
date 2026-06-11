@@ -45,14 +45,13 @@ public class FXMLMostrarEmpleadosController implements Initializable {
     private DepartamentoDAO deptoDAO = new DepartamentoDAO();
     private UsuarioDAO usuarioDAO = new UsuarioDAO();
 
-    // MAPAS PARA CACHÉ EN MEMORIA (¡La solución al congelamiento!)
     private Map<Integer, DepartamentoDTO> mapaDepartamentos = new HashMap<>();
     private Map<Integer, SucursalDTO> mapaSucursales = new HashMap<>();
     private Map<Integer, String> mapaUsuarios = new HashMap<>();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        cargarCachesAuxiliares(); // <--- Vamos a la BD una sola vez
+        cargarCachesAuxiliares();
         configurarColumnas();
         cargarSucursales();
         cargarTodosLosEmpleados();
@@ -61,15 +60,12 @@ public class FXMLMostrarEmpleadosController implements Initializable {
 
     private void cargarCachesAuxiliares() {
         try {
-            // 1. Guardar todos los departamentos en la memoria RAM
             for (DepartamentoDTO d : deptoDAO.getAll()) {
                 mapaDepartamentos.put(d.getIDDepartamento(), d);
             }
-            // 2. Guardar todas las sucursales
             for (SucursalDTO s : sucursalDAO.getAll()) {
                 mapaSucursales.put(s.getIDSucursal(), s);
             }
-            // 3. Guardar a todos los usuarios vinculándolos con su idEmpleado
             for (UsuarioDTO u : usuarioDAO.getAll()) {
                 mapaUsuarios.put(u.getIdEmpleado(), u.getUsuario());
             }
@@ -83,7 +79,6 @@ public class FXMLMostrarEmpleadosController implements Initializable {
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colApellidos.setCellValueFactory(new PropertyValueFactory<>("apellidos"));
 
-        // AHORA LAS CELDAS LEEN DE LA MEMORIA RAM (Es instantáneo y no congela)
         colDepartamento.setCellValueFactory(cellData -> {
             DepartamentoDTO depto = mapaDepartamentos.get(cellData.getValue().getIDDepartamento());
             return new SimpleStringProperty(depto != null ? depto.getNombreDepartamento() : "Sin Depto");

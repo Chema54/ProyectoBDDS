@@ -25,9 +25,6 @@ public class SesionGlobal {
     public int getIdUsuarioActual() { return idUsuarioActual; }
     public String getRolActual() { return rolActual; }
 
-    // ==========================================
-    // FIX: LIMPIEZA DE MEMORIA RAM AL SALIR
-    // ==========================================
     public void cerrarSesion() {
         this.idUsuarioActual = 0;
         this.idSucursalActual = 0;

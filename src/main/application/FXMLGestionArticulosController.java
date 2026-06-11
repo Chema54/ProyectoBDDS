@@ -115,15 +115,11 @@ public class FXMLGestionArticulosController implements Initializable {
             return;
         }
 
-        // ==========================================
-        // FIX: PROTECCIÓN ANTI-DOBLE BAJA
-        // ==========================================
         if (seleccionado.getEstado().equalsIgnoreCase("inactivo")) {
             Utilidades.mostrarAlertaSimple("Advertencia", "Este artículo ya se encuentra dado de baja.", Alert.AlertType.WARNING);
             return;
         }
 
-        // Usamos un TextInputDialog nativo de JavaFX para pedir el motivo
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Dar de Baja Artículo");
         dialog.setHeaderText("Vas a desactivar: " + seleccionado.getNombre());
@@ -136,7 +132,7 @@ public class FXMLGestionArticulosController implements Initializable {
                 try {
                     articuloDAO.darDeBaja(seleccionado.getIDArticulo(), motivo);
                     Utilidades.mostrarAlertaSimple("Éxito", "Artículo dado de baja correctamente.", Alert.AlertType.INFORMATION);
-                    cargarArticulos(); // Recarga la tabla para ver el cambio a "inactivo"
+                    cargarArticulos();
                 } catch (UserDisplayableException e) {
                     Utilidades.mostrarAlertaSimple("Error", "No se pudo realizar la baja.", Alert.AlertType.ERROR);
                 }

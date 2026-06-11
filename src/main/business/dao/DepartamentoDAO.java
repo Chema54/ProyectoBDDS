@@ -17,7 +17,7 @@ import org.apache.logging.log4j.Logger;
 public class DepartamentoDAO extends CompleteDAOShape<DepartamentoDTO, Integer> {
 
     private static final Logger LOGGER = LogManager.getLogger(DepartamentoDAO.class);
-    
+
     private static final String CREATE_QUERY
             = "INSERT INTO Departamento (nombre_departamento, id_sucursal, id_encargado) VALUES (?, ?, ?)";
     private static final String GET_ALL_QUERY
@@ -32,18 +32,16 @@ public class DepartamentoDAO extends CompleteDAOShape<DepartamentoDTO, Integer> 
     @Override
     public void createOne(DepartamentoDTO departamentoDTO) throws UserDisplayableException {
         try (
-                Connection connection = DBConnector.getInstance().getConnection(); 
-                PreparedStatement statement = connection.prepareStatement(CREATE_QUERY)
-        ) {
+                Connection connection = DBConnector.getInstance().getConnection(); PreparedStatement statement = connection.prepareStatement(CREATE_QUERY)) {
             statement.setString(1, departamentoDTO.getNombreDepartamento());
             statement.setInt(2, departamentoDTO.getIDSucursal());
-            
+
             if (departamentoDTO.getIdEncargado() != null) {
                 statement.setInt(3, departamentoDTO.getIdEncargado());
             } else {
                 statement.setNull(3, java.sql.Types.INTEGER);
             }
-            
+
             statement.executeUpdate();
         } catch (SQLException e) {
             throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible crear el departamento.");
@@ -53,10 +51,7 @@ public class DepartamentoDAO extends CompleteDAOShape<DepartamentoDTO, Integer> 
     @Override
     public List<DepartamentoDTO> getAll() throws UserDisplayableException {
         try (
-                Connection connection = DBConnector.getInstance().getConnection(); 
-                PreparedStatement statement = connection.prepareStatement(GET_ALL_QUERY); 
-                ResultSet resultSet = statement.executeQuery()
-        ) {
+                Connection connection = DBConnector.getInstance().getConnection(); PreparedStatement statement = connection.prepareStatement(GET_ALL_QUERY); ResultSet resultSet = statement.executeQuery()) {
 
             List<DepartamentoDTO> list = new ArrayList<>();
             while (resultSet.next()) {
@@ -77,9 +72,7 @@ public class DepartamentoDAO extends CompleteDAOShape<DepartamentoDTO, Integer> 
     @Override
     public DepartamentoDTO getOne(Integer id) throws UserDisplayableException {
         try (
-                Connection connection = DBConnector.getInstance().getConnection(); 
-                PreparedStatement statement = connection.prepareStatement(GET_QUERY)
-        ) {
+                Connection connection = DBConnector.getInstance().getConnection(); PreparedStatement statement = connection.prepareStatement(GET_QUERY)) {
             statement.setInt(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
@@ -100,18 +93,16 @@ public class DepartamentoDAO extends CompleteDAOShape<DepartamentoDTO, Integer> 
     @Override
     public void updateOne(DepartamentoDTO departamentoDTO) throws UserDisplayableException {
         try (
-                Connection connection = DBConnector.getInstance().getConnection(); 
-                PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)
-        ) {
+                Connection connection = DBConnector.getInstance().getConnection(); PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)) {
             statement.setString(1, departamentoDTO.getNombreDepartamento());
             statement.setInt(2, departamentoDTO.getIDSucursal());
-            
+
             if (departamentoDTO.getIdEncargado() != null) {
                 statement.setInt(3, departamentoDTO.getIdEncargado());
             } else {
                 statement.setNull(3, java.sql.Types.INTEGER);
             }
-            
+
             statement.setInt(4, departamentoDTO.getIDDepartamento());
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -122,9 +113,7 @@ public class DepartamentoDAO extends CompleteDAOShape<DepartamentoDTO, Integer> 
     @Override
     public void deleteOne(Integer id) throws UserDisplayableException {
         try (
-                Connection connection = DBConnector.getInstance().getConnection(); 
-                PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)
-        ) {
+                Connection connection = DBConnector.getInstance().getConnection(); PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
             statement.setInt(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -132,13 +121,10 @@ public class DepartamentoDAO extends CompleteDAOShape<DepartamentoDTO, Integer> 
         }
     }
 
-    // Este es el método especial que ocupamos para los ComboBox anidados
     public static List<DepartamentoDTO> obtenerDepartamentoPorSucursal(int idSucursal) throws SQLException, UserDisplayableException {
         String query = "SELECT * FROM Departamento WHERE id_sucursal = ?";
         try (
-            Connection connection = DBConnector.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(query)
-        ) {
+                Connection connection = DBConnector.getInstance().getConnection(); PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, idSucursal);
             try (ResultSet resultSet = statement.executeQuery()) {
                 List<DepartamentoDTO> departamentos = new ArrayList<>();

@@ -1,13 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package main.business.dto;
 
-/**
- *
- * @author josem
- */
 public class FacturaDTO {
 
     private final int idFactura;
@@ -40,8 +32,12 @@ public class FacturaDTO {
 
     @Override
     public boolean equals(Object instance) {
-        if (this == instance) return true;
-        if (instance == null || getClass() != instance.getClass()) return false;
+        if (this == instance) {
+            return true;
+        }
+        if (instance == null || getClass() != instance.getClass()) {
+            return false;
+        }
 
         FacturaDTO that = (FacturaDTO) instance;
 

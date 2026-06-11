@@ -1,6 +1,7 @@
 package main.business.dto;
 
 public class VistaInventarioDTO {
+
     private int idSucursal;
     private int idArticulo;
     private String nombreArticulo;
@@ -17,10 +18,27 @@ public class VistaInventarioDTO {
         this.stockMaximo = stockMaximo;
     }
 
-    public int getIdSucursal() { return idSucursal; }
-    public int getIdArticulo() { return idArticulo; }
-    public String getNombreArticulo() { return nombreArticulo; }
-    public int getStockActual() { return stockActual; }
-    public int getStockMinimo() { return stockMinimo; }
-    public int getStockMaximo() { return stockMaximo; }
+    public int getIdSucursal() {
+        return idSucursal;
+    }
+
+    public int getIdArticulo() {
+        return idArticulo;
+    }
+
+    public String getNombreArticulo() {
+        return nombreArticulo;
+    }
+
+    public int getStockActual() {
+        return stockActual;
+    }
+
+    public int getStockMinimo() {
+        return stockMinimo;
+    }
+
+    public int getStockMaximo() {
+        return stockMaximo;
+    }
 }

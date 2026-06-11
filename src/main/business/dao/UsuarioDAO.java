@@ -16,31 +16,29 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mindrot.jbcrypt.BCrypt;
 
-/**
- * @author josem
- */
 public class UsuarioDAO extends CompleteDAOShape<UsuarioDTO, String> {
+
     private static final Logger LOGGER = LogManager.getLogger(UsuarioDAO.class);
-    
-    private static final String GET_QUERY = 
-        "SELECT u.*, ur.id_rol FROM Usuario u " +
-        "INNER JOIN Usuario_Rol ur ON u.id_usuario = ur.id_usuario " +
-        "WHERE u.nombre_usuario = ?";
-        
-    private static final String GET_ALL_QUERY = 
-        "SELECT u.*, ur.id_rol FROM Usuario u " +
-        "INNER JOIN Usuario_Rol ur ON u.id_usuario = ur.id_usuario";
-        
-    private static final String UPDATE_QUERY = 
-        "UPDATE Usuario SET password = ?, estado = ? WHERE nombre_usuario = ?";
-        
-    private static final String DELETE_QUERY = 
-        "DELETE FROM Usuario WHERE nombre_usuario = ?";
+
+    private static final String GET_QUERY
+            = "SELECT u.*, ur.id_rol FROM Usuario u "
+            + "INNER JOIN Usuario_Rol ur ON u.id_usuario = ur.id_usuario "
+            + "WHERE u.nombre_usuario = ?";
+
+    private static final String GET_ALL_QUERY
+            = "SELECT u.*, ur.id_rol FROM Usuario u "
+            + "INNER JOIN Usuario_Rol ur ON u.id_usuario = ur.id_usuario";
+
+    private static final String UPDATE_QUERY
+            = "UPDATE Usuario SET password = ?, estado = ? WHERE nombre_usuario = ?";
+
+    private static final String DELETE_QUERY
+            = "DELETE FROM Usuario WHERE nombre_usuario = ?";
 
     public UsuarioDTO getDTOInstanceFromResultSet(ResultSet resultSet) throws SQLException {
         int idRolDB = resultSet.getInt("id_rol");
-        UsuarioRol rolEnum = UsuarioRol.CENTRAL; 
-        
+        UsuarioRol rolEnum = UsuarioRol.CENTRAL;
+
         if (idRolDB == 2) {
             rolEnum = UsuarioRol.SUCURSAL;
         } else if (idRolDB == 3) {
@@ -48,11 +46,11 @@ public class UsuarioDAO extends CompleteDAOShape<UsuarioDTO, String> {
         }
 
         return new UsuarioDTO(
-            resultSet.getInt("id_empleado"),
-            resultSet.getString("nombre_usuario"),
-            resultSet.getString("password"),
-            rolEnum,
-            resultSet.getString("estado").equalsIgnoreCase("activo")
+                resultSet.getInt("id_empleado"),
+                resultSet.getString("nombre_usuario"),
+                resultSet.getString("password"),
+                rolEnum,
+                resultSet.getString("estado").equalsIgnoreCase("activo")
         );
     }
 
@@ -68,14 +66,14 @@ public class UsuarioDAO extends CompleteDAOShape<UsuarioDTO, String> {
 
         try {
             con = DBConnector.getInstance().getConnection();
-            con.setAutoCommit(false); 
+            con.setAutoCommit(false);
 
             psUsuario = con.prepareStatement(queryUsuario, java.sql.Statement.RETURN_GENERATED_KEYS);
             psUsuario.setInt(1, usuario.getIdEmpleado());
             psUsuario.setString(2, usuario.getUsuario());
-            psUsuario.setString(3, UsuarioDTO.getGeneratedHashedPassword(usuario.getContraseña())); 
-            psUsuario.setDate(4, java.sql.Date.valueOf(java.time.LocalDate.now())); 
-            psUsuario.setString(5, usuario.isTieneAcceso() ? "activo" : "inactivo"); 
+            psUsuario.setString(3, UsuarioDTO.getGeneratedHashedPassword(usuario.getContraseña()));
+            psUsuario.setDate(4, java.sql.Date.valueOf(java.time.LocalDate.now()));
+            psUsuario.setString(5, usuario.isTieneAcceso() ? "activo" : "inactivo");
             psUsuario.executeUpdate();
 
             rs = psUsuario.getGeneratedKeys();
@@ -86,18 +84,15 @@ public class UsuarioDAO extends CompleteDAOShape<UsuarioDTO, String> {
 
             psRol = con.prepareStatement(queryRol);
             psRol.setInt(1, idUsuarioGenerado);
-            psRol.setInt(2, usuario.getRol().getIdRol()); // Asegúrate que devuelva el int correcto (1=Central, 2=Sucursal, etc.)
+            psRol.setInt(2, usuario.getRol().getIdRol());
             psRol.executeUpdate();
 
-            con.commit(); 
+            con.commit();
 
-            // =========================================================================
-            // CREACIÓN DE USUARIO NATIVO EN MARIADB (RÚBRICA PUNTO 6)
-            // =========================================================================
             try (java.sql.Statement st = con.createStatement()) {
                 // 1. Crear el usuario en el motor
                 st.execute("CREATE USER IF NOT EXISTS '" + usuario.getUsuario() + "'@'%' IDENTIFIED BY '" + usuario.getContraseña() + "'");
-                
+
                 // 2. Otorgar permisos según su Rol estricto
                 if (usuario.getRol() == UsuarioRol.CENTRAL) {
                     st.execute("GRANT ALL PRIVILEGES ON global_finance.* TO '" + usuario.getUsuario() + "'@'%'");
@@ -117,81 +112,100 @@ public class UsuarioDAO extends CompleteDAOShape<UsuarioDTO, String> {
             } catch (SQLException nativeEx) {
                 LOGGER.warn("El usuario lógico se creó, pero el usuario nativo tuvo un detalle: " + nativeEx.getMessage());
             }
-            // =========================================================================
-
         } catch (SQLException e) {
             if (con != null) {
-                try { con.rollback(); } catch (SQLException ex) { LOGGER.error(ex); }
+                try {
+                    con.rollback();
+                } catch (SQLException ex) {
+                    LOGGER.error(ex);
+                }
             }
             throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible crear la cuenta.");
         } finally {
-            try { if (rs != null) rs.close(); } catch (SQLException e) { LOGGER.error(e); }
-            try { if (psUsuario != null) psUsuario.close(); } catch (SQLException e) { LOGGER.error(e); }
-            try { if (psRol != null) psRol.close(); } catch (SQLException e) { LOGGER.error(e); }
-            try { if (con != null) con.close(); } catch (SQLException e) { LOGGER.error(e); }
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                LOGGER.error(e);
+            }
+            try {
+                if (psUsuario != null) {
+                    psUsuario.close();
+                }
+            } catch (SQLException e) {
+                LOGGER.error(e);
+            }
+            try {
+                if (psRol != null) {
+                    psRol.close();
+                }
+            } catch (SQLException e) {
+                LOGGER.error(e);
+            }
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                LOGGER.error(e);
+            }
         }
     }
-    
+
     @Override
     public List<UsuarioDTO> getAll() throws UserDisplayableException {
         try (
-          Connection connection = DBConnector.getInstance().getConnection();
-          PreparedStatement statement = connection.prepareStatement(GET_ALL_QUERY);
-          ResultSet resultSet = statement.executeQuery()
-        ) {
-          List<UsuarioDTO> list = new ArrayList<>();
+                Connection connection = DBConnector.getInstance().getConnection(); PreparedStatement statement = connection.prepareStatement(GET_ALL_QUERY); ResultSet resultSet = statement.executeQuery()) {
+            List<UsuarioDTO> list = new ArrayList<>();
 
-          while (resultSet.next()) {
-            list.add(getDTOInstanceFromResultSet(resultSet));
-          }
+            while (resultSet.next()) {
+                list.add(getDTOInstanceFromResultSet(resultSet));
+            }
 
-          return list;
+            return list;
         } catch (SQLException e) {
-          throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible cargar las cuentas.");
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible cargar las cuentas.");
         }
     }
 
     @Override
     public UsuarioDTO getOne(String nombreUsuario) throws UserDisplayableException {
         try (
-          Connection connection = DBConnector.getInstance().getConnection();
-          PreparedStatement statement = connection.prepareStatement(GET_QUERY)
-        ) {
-          statement.setString(1, nombreUsuario);
-          UsuarioDTO accountDTO = null;
+                Connection connection = DBConnector.getInstance().getConnection(); PreparedStatement statement = connection.prepareStatement(GET_QUERY)) {
+            statement.setString(1, nombreUsuario);
+            UsuarioDTO accountDTO = null;
 
-          try (ResultSet resultSet = statement.executeQuery()) {
-            if (resultSet.next()) {
-              accountDTO = getDTOInstanceFromResultSet(resultSet); // Corregido el nombre del método
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    accountDTO = getDTOInstanceFromResultSet(resultSet); 
+                }
             }
-          }
 
-          return accountDTO;
+            return accountDTO;
         } catch (SQLException e) {
-          throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible cargar la cuenta.");
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible cargar la cuenta.");
         }
     }
 
     @Override
     public void updateOne(UsuarioDTO usuarioDTO) throws UserDisplayableException {
         try (
-          Connection connection = DBConnector.getInstance().getConnection();
-          PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)
-        ) {
-          statement.setString(1, usuarioDTO.getContraseña());
-          statement.setString(2, usuarioDTO.isTieneAcceso() ? "activo" : "inactivo");
-          statement.setString(3, usuarioDTO.getUsuario());
-          statement.executeUpdate();
-          
-          String updateRolQuery = "UPDATE Usuario_Rol ur INNER JOIN Usuario u ON u.id_usuario = ur.id_usuario SET ur.id_rol = ? WHERE u.nombre_usuario = ?";
-          try (PreparedStatement statementRol = connection.prepareStatement(updateRolQuery)) {
-              statementRol.setInt(1, usuarioDTO.getRol().getIdRol());
-              statementRol.setString(2, usuarioDTO.getUsuario());
-              statementRol.executeUpdate();
-          }
-          
+                Connection connection = DBConnector.getInstance().getConnection(); PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)) {
+            statement.setString(1, usuarioDTO.getContraseña());
+            statement.setString(2, usuarioDTO.isTieneAcceso() ? "activo" : "inactivo");
+            statement.setString(3, usuarioDTO.getUsuario());
+            statement.executeUpdate();
+
+            String updateRolQuery = "UPDATE Usuario_Rol ur INNER JOIN Usuario u ON u.id_usuario = ur.id_usuario SET ur.id_rol = ? WHERE u.nombre_usuario = ?";
+            try (PreparedStatement statementRol = connection.prepareStatement(updateRolQuery)) {
+                statementRol.setInt(1, usuarioDTO.getRol().getIdRol());
+                statementRol.setString(2, usuarioDTO.getUsuario());
+                statementRol.executeUpdate();
+            }
+
         } catch (SQLException e) {
-          throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible actualizar la cuenta.");
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible actualizar la cuenta.");
         }
     }
 
@@ -199,17 +213,14 @@ public class UsuarioDAO extends CompleteDAOShape<UsuarioDTO, String> {
     public void deleteOne(String nombreUsuario) throws UserDisplayableException {
         String deleteRolQuery = "DELETE ur FROM Usuario_Rol ur INNER JOIN Usuario u ON u.id_usuario = ur.id_usuario WHERE u.nombre_usuario = ?";
         try (
-          Connection connection = DBConnector.getInstance().getConnection();
-          PreparedStatement statementRol = connection.prepareStatement(deleteRolQuery);
-          PreparedStatement statementUser = connection.prepareStatement(DELETE_QUERY)
-        ) {
-          statementRol.setString(1, nombreUsuario);
-          statementRol.executeUpdate();
-          
-          statementUser.setString(1, nombreUsuario);
-          statementUser.executeUpdate();
+                Connection connection = DBConnector.getInstance().getConnection(); PreparedStatement statementRol = connection.prepareStatement(deleteRolQuery); PreparedStatement statementUser = connection.prepareStatement(DELETE_QUERY)) {
+            statementRol.setString(1, nombreUsuario);
+            statementRol.executeUpdate();
+
+            statementUser.setString(1, nombreUsuario);
+            statementUser.executeUpdate();
         } catch (SQLException e) {
-          throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible eliminar la cuenta.");
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible eliminar la cuenta.");
         }
     }
 }

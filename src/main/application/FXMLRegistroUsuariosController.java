@@ -20,7 +20,7 @@ import main.common.Utilidades;
 
 public class FXMLRegistroUsuariosController implements Initializable {
 
-    @FXML private ComboBox<EmpleadoDTO> cbEmpleado; // ¡Asegúrate de agregar este ComboBox en tu FXML!
+    @FXML private ComboBox<EmpleadoDTO> cbEmpleado;
     @FXML private TextField tfNombreUsuario;
     @FXML private ComboBox<UsuarioRol> cbRol;
     @FXML private PasswordField pwPassword;
@@ -35,10 +35,7 @@ public class FXMLRegistroUsuariosController implements Initializable {
 
     private void cargarCombos() {
         try {
-            // Cargar los empleados para ligarlos a la cuenta
             cbEmpleado.setItems(FXCollections.observableArrayList(empleadoDAO.getAll()));
-            
-            // Cargar todos los roles del Enum
             cbRol.setItems(FXCollections.observableArrayList(UsuarioRol.values()));
         } catch (UserDisplayableException e) {
             Utilidades.mostrarAlertaSimple("Error", "No se pudieron cargar los catálogos.", Alert.AlertType.ERROR);
@@ -53,21 +50,16 @@ public class FXMLRegistroUsuariosController implements Initializable {
         }
 
         try {
-            // 1. Construimos el DTO con la contraseña en Texto Plano (el DAO se encargará de cifrarla)
             UsuarioDTO nuevoUsuario = new UsuarioDTO(
                 cbEmpleado.getValue().getIDEmpleado(),
                 tfNombreUsuario.getText().trim(),
                 pwPassword.getText(),
                 cbRol.getValue(),
-                true // tieneAcceso = true por defecto al crearlo
+                true
             );
-
-            // 2. Mandamos a guardar a BD (Y crear en MariaDB)
             usuarioDAO.createOne(nuevoUsuario);
 
             Utilidades.mostrarAlertaSimple("Éxito", "Usuario de Sistema y Motor de Base de Datos creado correctamente.", Alert.AlertType.INFORMATION);
-            
-            // Limpiar formulario
             cbEmpleado.setValue(null);
             cbRol.setValue(null);
             tfNombreUsuario.clear();

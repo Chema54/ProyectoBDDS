@@ -59,7 +59,6 @@ public class FXMLCrearSolicitudController implements Initializable {
     }
 
     private void cargarMisPeticiones() {
-        // FIX: Ahora pasamos la sucursal desde la sesión global para que el DAO no marque error
         int idSucursal = SesionGlobal.getInstance().getIdSucursalActual();
         try {
             tablaPendientes.setItems(FXCollections.observableArrayList(carritoDAO.getPendientes(idSucursal)));
@@ -83,7 +82,7 @@ public class FXMLCrearSolicitudController implements Initializable {
             carritoDAO.registrarPeticion(dto);
             Utilidades.mostrarAlertaSimple("Éxito", "Enviado a Salidas.", Alert.AlertType.INFORMATION);
             txtCantidad.clear(); txtUso.clear(); cbArticulo.setValue(null);
-            cargarMisPeticiones(); // Se recarga la tabla correctamente
+            cargarMisPeticiones();
         } catch (Exception e) {
             Utilidades.mostrarAlertaSimple("Error", "Revisa la cantidad.", Alert.AlertType.ERROR);
         }

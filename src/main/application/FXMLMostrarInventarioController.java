@@ -45,7 +45,6 @@ public class FXMLMostrarInventarioController implements Initializable {
         colMinimo.setCellValueFactory(new PropertyValueFactory<>("stockMinimo"));
         colMaximo.setCellValueFactory(new PropertyValueFactory<>("stockMaximo"));
         
-        // FIX RÚBRICA: Alertas visuales para Stock Mínimo y Máximo
         colStock.setCellFactory(column -> new javafx.scene.control.TableCell<VistaInventarioDTO, Integer>() {
             @Override
             protected void updateItem(Integer item, boolean empty) {
@@ -57,15 +56,12 @@ public class FXMLMostrarInventarioController implements Initializable {
                     setText(String.valueOf(item));
                     VistaInventarioDTO fila = getTableView().getItems().get(getIndex());
                     
-                    // Alerta: Por debajo del mínimo (Rojo) - Punto 14 de la Rúbrica
                     if (item < fila.getStockMinimo()) {
                         setStyle("-fx-background-color: #ffcccc; -fx-text-fill: #990000; -fx-font-weight: bold;");
                     } 
-                    // Alerta: Por encima del máximo (Naranja/Amarillo) - Punto 15 de la Rúbrica
                     else if (item > fila.getStockMaximo()) {
                         setStyle("-fx-background-color: #ffe5b4; -fx-text-fill: #cc7a00; -fx-font-weight: bold;");
                     } 
-                    // Stock normal
                     else {
                         setStyle("");
                     }
@@ -78,8 +74,6 @@ public class FXMLMostrarInventarioController implements Initializable {
         try {
             int idSucursal = SesionGlobal.getInstance().getIdSucursalActual();
             String rol = SesionGlobal.getInstance().getRolActual();
-            
-            // Si es Central, manda "0" para traer todas. Si es Sucursal, manda su propio ID.
             Integer filtro = (rol.equals("CENTRAL") || rol.equals("SALIDAS")) ? 0 : idSucursal;
             
             listaOriginal = FXCollections.observableArrayList(inventarioDAO.getVistaInventario(filtro));
@@ -97,7 +91,6 @@ public class FXMLMostrarInventarioController implements Initializable {
             tablaInventario.setItems(listaOriginal);
             return;
         }
-        
         FilteredList<VistaInventarioDTO> filtrada = new FilteredList<>(listaOriginal, v -> 
             v.getNombreArticulo() != null && v.getNombreArticulo().toLowerCase().contains(filtro)
         );
@@ -109,32 +102,24 @@ public class FXMLMostrarInventarioController implements Initializable {
         txtBuscar.clear();
         tablaInventario.setItems(listaOriginal);
     }
-
-    // =========================================================================
-    // FILTROS DE RÚBRICA: EXISTENCIAS EXTREMAS
-    // =========================================================================
     
     @FXML
     private void btnFiltroFaltantes(ActionEvent event) {
         if (listaOriginal == null) return;
-        
-        // Filtramos para mostrar SOLO los que están por debajo del mínimo
         FilteredList<VistaInventarioDTO> filtrada = new FilteredList<>(listaOriginal, v -> 
             v.getStockActual() < v.getStockMinimo()
         );
         tablaInventario.setItems(filtrada);
-        txtBuscar.clear(); // Limpiamos el texto de búsqueda manual para evitar confusiones
+        txtBuscar.clear();
     }
 
     @FXML
     private void btnFiltroExcedentes(ActionEvent event) {
         if (listaOriginal == null) return;
-        
-        // Filtramos para mostrar SOLO los que superan el máximo
         FilteredList<VistaInventarioDTO> filtrada = new FilteredList<>(listaOriginal, v -> 
             v.getStockActual() > v.getStockMaximo()
         );
         tablaInventario.setItems(filtrada);
-        txtBuscar.clear(); // Limpiamos el texto de búsqueda manual para evitar confusiones
+        txtBuscar.clear();
     }
 }

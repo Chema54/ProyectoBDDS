@@ -1,14 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package main.business.dto;
 
-/**
- *
- * @author josem
- */
 public class SucursalDTO {
+
     private final int idSucursal;
     private final String nombre;
     private final String direccion;
@@ -33,15 +26,20 @@ public class SucursalDTO {
 
     @Override
     public boolean equals(Object instance) {
-        if (this == instance) return true;
-        if (instance == null || getClass() != instance.getClass()) return false;
+        if (this == instance) {
+            return true;
+        }
+        if (instance == null || getClass() != instance.getClass()) {
+            return false;
+        }
 
         SucursalDTO that = (SucursalDTO) instance;
 
         return idSucursal == that.idSucursal && nombre.equals(that.nombre) && direccion.equals(that.direccion);
-        }
+    }
 
     public static class SucursalBuilder {
+
         protected int idSucursal;
         protected String nombre;
         protected String direccion;
@@ -65,16 +63,10 @@ public class SucursalDTO {
             return new SucursalDTO(this);
         }
     }
-    /*
-    @Override
-    public String toString() {
-        return "Sucursal: " + idSucursal + ", Nombre: " + nombre + ", Direccion" + direccion;
-    }
-    */
 
     @Override
     public String toString() {
         return nombre;
     }
-    
+
 }

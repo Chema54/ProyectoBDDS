@@ -66,7 +66,7 @@ public class FXMLGestionPartidasController implements Initializable {
             Utilidades.mostrarAlertaSimple("Éxito", "Partida registrada correctamente.", Alert.AlertType.INFORMATION);
             txtClave.clear();
             txtDescripcion.clear();
-            cargarPartidas(); // Recargar la tabla
+            cargarPartidas();
         } catch (UserDisplayableException e) {
             Utilidades.mostrarAlertaSimple("Error", "La clave podría estar duplicada.", Alert.AlertType.ERROR);
         }

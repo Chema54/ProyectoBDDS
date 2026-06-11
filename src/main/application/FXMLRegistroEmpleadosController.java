@@ -27,9 +27,9 @@ public class FXMLRegistroEmpleadosController implements Initializable {
 
     @FXML private TextField tfNombreEmpleado;
     @FXML private TextField tfApellidosEmpleado;
-    @FXML private TextField tfNumPersonal; // NUEVO
-    @FXML private TextField tfTelefono;    // NUEVO
-    @FXML private TextField tfCorreo;      // NUEVO
+    @FXML private TextField tfNumPersonal;
+    @FXML private TextField tfTelefono;
+    @FXML private TextField tfCorreo;
     @FXML private ComboBox<SucursalDTO> cbSucursal;
     @FXML private ComboBox<DepartamentoDTO> cbDepartamento;
 
@@ -89,7 +89,6 @@ public class FXMLRegistroEmpleadosController implements Initializable {
                     .setNombre(tfNombreEmpleado.getText().trim())
                     .setApellidos(tfApellidosEmpleado.getText().trim())
                     .setIDDepartamento(cbDepartamento.getSelectionModel().getSelectedItem().getIDDepartamento())
-                    // AGREGAMOS LOS CAMPOS NUEVOS AL BUILDER
                     .setNumeroPersonal(tfNumPersonal.getText().trim())
                     .setTelefono(tfTelefono.getText().trim())
                     .setCorreo(tfCorreo.getText().trim())

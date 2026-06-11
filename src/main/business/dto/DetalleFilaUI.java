@@ -1,6 +1,7 @@
 package main.business.dto;
 
 public class DetalleFilaUI {
+
     private final int idArticulo;
     private final String articuloNombre;
     private final int idSucursal;
@@ -17,11 +18,31 @@ public class DetalleFilaUI {
         this.costo = costo;
     }
 
-    public int getIdArticulo() { return idArticulo; }
-    public String getArticuloNombre() { return articuloNombre; }
-    public int getIdSucursal() { return idSucursal; }
-    public String getSucursalNombre() { return sucursalNombre; }
-    public int getCantidad() { return cantidad; }
-    public double getCosto() { return costo; }
-    public double getTotal() { return cantidad * costo; } // Campo calculado para la tabla
+    public int getIdArticulo() {
+        return idArticulo;
+    }
+
+    public String getArticuloNombre() {
+        return articuloNombre;
+    }
+
+    public int getIdSucursal() {
+        return idSucursal;
+    }
+
+    public String getSucursalNombre() {
+        return sucursalNombre;
+    }
+
+    public int getCantidad() {
+        return cantidad;
+    }
+
+    public double getCosto() {
+        return costo;
+    }
+
+    public double getTotal() {
+        return cantidad * costo;
+    }
 }

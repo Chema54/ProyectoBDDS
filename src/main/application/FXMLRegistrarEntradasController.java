@@ -92,7 +92,6 @@ public class FXMLRegistrarEntradasController implements Initializable {
             listaDetalles.add(fila);
             actualizarTotalFactura();
             
-            // Limpiar para el siguiente
             cbArticulo.setValue(null); txtCantidad.clear(); txtCosto.clear();
         } catch (NumberFormatException e) {
             Utilidades.mostrarAlertaSimple("Error", "Cantidad o Costo inválidos (Solo números).", Alert.AlertType.ERROR);
@@ -115,15 +114,10 @@ public class FXMLRegistrarEntradasController implements Initializable {
             String folio = txtFolio.getText().trim();
             java.sql.Date fechaSql = Common.fromLocalDateTime(dpFecha.getValue().atStartOfDay());
             int idProveedor = cbProveedor.getValue().getIDProveedor();
-
-            // Guardamos cada fila llamando al Procedimiento Almacenado
             for (DetalleFilaUI fila : listaDetalles) {
                 entradasDAO.registrarEntradaKardex(folio, fechaSql, idProveedor, fila.getIdSucursal(), fila.getIdArticulo(), fila.getCantidad(), fila.getCosto());
             }
-
             Utilidades.mostrarAlertaSimple("Éxito", "Factura, Inventarios y Kardex actualizados correctamente.", Alert.AlertType.INFORMATION);
-            
-            // Limpiar pantalla
             txtFolio.clear(); dpFecha.setValue(null); cbProveedor.setValue(null);
             listaDetalles.clear(); actualizarTotalFactura();
             
@@ -137,7 +131,7 @@ public class FXMLRegistrarEntradasController implements Initializable {
         DetalleFilaUI seleccionado = tablaDetalles.getSelectionModel().getSelectedItem();
         if (seleccionado != null) {
             listaDetalles.remove(seleccionado);
-            actualizarTotalFactura(); // Recalcula el dinero total
+            actualizarTotalFactura();
         } else {
             main.common.Utilidades.mostrarAlertaSimple("Advertencia", "Selecciona una fila de la tabla para quitarla.", javafx.scene.control.Alert.AlertType.WARNING);
         }
