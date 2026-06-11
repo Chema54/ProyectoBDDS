@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -7,6 +8,13 @@
     <children>
         <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <menus>
+            <Menu fx:id="menuSucursales" mnemonicParsing="false" text="Sucursales">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#irRegistrarSucursales" text="Registrar" />
+                  <MenuItem mnemonicParsing="false" onAction="#irTablaModificarSucursales" text="Modificar" />
+                  <MenuItem mnemonicParsing="false" onAction="#irAsignarDepartamentoASucursal" text="Asignar Departamento" />
+              </items>
+            </Menu>
                 <Menu fx:id="menuUsuarios" mnemonicParsing="false" text="Usuarios">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#irRegistrarUsuarios" text="Registrar" />
@@ -61,7 +69,7 @@
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#irAcercaDe" text="Acerca de Global Finance" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" onAction="#irCerrarSesion" text="Cerrar Sesión (Log Out)" style="-fx-text-fill: red; -fx-font-weight: bold;"/>
+                        <MenuItem mnemonicParsing="false" onAction="#irCerrarSesion" style="-fx-text-fill: red; -fx-font-weight: bold;" text="Cerrar Sesión (Log Out)" />
                     </items>
                 </Menu>
             </menus>

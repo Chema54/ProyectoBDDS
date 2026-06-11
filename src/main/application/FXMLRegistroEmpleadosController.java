@@ -1,11 +1,7 @@
 package main.application;
 
 import java.net.URL;
-import java.sql.SQLException;
-import java.util.List;
 import java.util.ResourceBundle;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,6 +16,8 @@ import main.business.dao.SucursalDAO;
 import main.business.dto.DepartamentoDTO;
 import main.business.dto.EmpleadoDTO;
 import main.business.dto.SucursalDTO;
+import main.business.dto.UsuarioDTO;
+import main.common.SesionGlobal;
 import main.common.UserDisplayableException;
 import main.common.Utilidades;
 
@@ -40,10 +38,31 @@ public class FXMLRegistroEmpleadosController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         sucursalesDAO = new SucursalDAO();
-        cargarInformacionSucursales();
         configurarSeleccionarSucursal();
+        cargarInformacionSucursales();
+        
+        verificarRolUsuario();
     }
 
+    private void verificarRolUsuario() {
+        SesionGlobal sesion = SesionGlobal.getInstance();
+        String rolUsuario = sesion.getRolActual();
+        int idSucursalAsignada = sesion.getIdSucursalActual();
+        if (rolUsuario != null && "SUCURSAL".equalsIgnoreCase(rolUsuario.trim())) {
+            if (sucursales != null && !sucursales.isEmpty()) {
+                SucursalDTO sucursalAsignada = sucursales.stream()
+                        .filter(s -> s.getIDSucursal() == idSucursalAsignada)
+                        .findFirst()
+                        .orElse(null);
+
+                if (sucursalAsignada != null) {
+                    cbSucursal.getSelectionModel().select(sucursalAsignada);
+                    cbSucursal.setDisable(true);
+                }
+            }
+        }
+    }
+    
     @FXML
     private void btnGuardar(ActionEvent event) {
         if (tfNombreEmpleado.getText().trim().isEmpty() || tfApellidosEmpleado.getText().trim().isEmpty()) {
@@ -51,7 +70,7 @@ public class FXMLRegistroEmpleadosController implements Initializable {
             return;
         }
         if (cbSucursal.getSelectionModel().getSelectedItem() == null || cbDepartamento.getSelectionModel().getSelectedItem() == null) {
-            Utilidades.mostrarAlertaSimple( "Selección requerida", "Debes seleccionar Sucursal y Departamento.",Alert.AlertType.WARNING);
+            Utilidades.mostrarAlertaSimple("Selección requerida", "Debes seleccionar Sucursal y Departamento.", Alert.AlertType.WARNING);
             return;
         }
         guardarEmpleado();
@@ -110,6 +129,9 @@ public class FXMLRegistroEmpleadosController implements Initializable {
         tfTelefono.clear();
         tfCorreo.clear();
         cbDepartamento.getSelectionModel().clearSelection();
-        cbSucursal.getSelectionModel().clearSelection();        
+        String rolUsuario = SesionGlobal.getInstance().getRolActual();
+        if (rolUsuario == null || !"SUCURSAL".equalsIgnoreCase(rolUsuario)) {
+            cbSucursal.getSelectionModel().clearSelection();        
+        }
     }
 }

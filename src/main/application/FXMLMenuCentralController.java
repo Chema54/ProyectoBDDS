@@ -34,6 +34,8 @@ public class FXMLMenuCentralController implements Initializable {
     private Menu menuArticulos;
     @FXML
     private Menu menuReportes;
+    @FXML
+    private Menu menuSucursales;
 
     @FXML
     private MenuItem miCrearSolicitud;
@@ -60,6 +62,7 @@ public class FXMLMenuCentralController implements Initializable {
                 menuDepartamentos.setVisible(false);
                 miCrearSolicitud.setVisible(false);
                 miRegistrarEntradas.setVisible(false);
+                menuSucursales.setVisible(false);
 
             } else if (rolActual.equals("DEPARTAMENTO")) {
                 menuEmpleados.setVisible(false);
@@ -183,5 +186,20 @@ public class FXMLMenuCentralController implements Initializable {
     @FXML
     private void irConsultarInventario(ActionEvent event) {
         abrirVentanaFlotante("Inventario Actual", "/main/resources/gui/FXMLMostrarInventarioView.fxml");
+    }
+    
+    @FXML
+    private void irRegistrarSucursales(ActionEvent event) {
+        abrirVentanaFlotante("Registrar Sucursal", "/main/resources/gui/FXMLRegistroSucursalView.fxml");
+    }
+    
+    @FXML
+    private void irTablaModificarSucursales(ActionEvent event) {
+        abrirVentanaFlotante("Registrar Sucursal", "/main/resources/gui/FXMLTablaModificarSucursalView.fxml");
+    }
+    
+    @FXML
+    private void irAsignarDepartamentoASucursal(ActionEvent event) {
+        abrirVentanaFlotante("Registrar Sucursal", "/main/resources/gui/FXMLRegistroDepartamentoView.fxml");
     }
 }

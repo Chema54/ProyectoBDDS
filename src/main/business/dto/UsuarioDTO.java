@@ -65,9 +65,6 @@ public class UsuarioDTO {
         return BCrypt.hashpw(plain + "@Password", BCrypt.gensalt());
     }
     
-    // ==========================================
-    // FIX: PARA QUE SE VEA BIEN EN EL COMBOBOX
-    // ==========================================
     @Override
     public String toString() {
         return this.usuario + " (" + this.rol.name() + ")";
