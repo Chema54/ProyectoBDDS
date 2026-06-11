@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import main.business.dao.shape.CompleteDAOShape;
+import main.business.dto.DirectorioEmpleadoDTO;
 import main.business.dto.EmpleadoDTO;
 import main.common.ExceptionHandler;
 import main.common.UserDisplayableException;
@@ -120,7 +121,7 @@ public class EmpleadoDAO extends CompleteDAOShape<EmpleadoDTO, Integer> {
         }
     }
 
-    public List<main.business.dto.DirectorioEmpleadoDTO> getVistaDirectorio() throws UserDisplayableException {
+    public List<DirectorioEmpleadoDTO> getVistaDirectorio() throws UserDisplayableException {
         String query = "SELECT * FROM Vista_Directorio_Empleados";
         List<main.business.dto.DirectorioEmpleadoDTO> list = new ArrayList<>();
 

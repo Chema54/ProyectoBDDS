@@ -89,31 +89,25 @@ public class UsuarioDAO extends CompleteDAOShape<UsuarioDTO, String> {
             con.commit();
 
             try (java.sql.Statement st = con.createStatement()) {
-                // 1. Crear el usuario en el motor
                 String passwordSegura = usuario.getContraseña().replace("'", "''"); //Para prevenir inyeccion
 
                 st.execute("CREATE USER IF NOT EXISTS '" + usuario.getUsuario() + "'@'%' IDENTIFIED BY '" + passwordSegura + "'");
 
-                // 2. Otorgar permisos según su Rol estricto
                 if (usuario.getRol() == UsuarioRol.CENTRAL) {
                     st.execute("GRANT ALL PRIVILEGES ON global_finance.* TO '" + usuario.getUsuario() + "'@'%'");
 
                 } else if (usuario.getRol() == UsuarioRol.SUCURSAL) {
-                    // Puede leer TODO (Artículos, Partidas, Inventario, etc.)
                     st.execute("GRANT SELECT ON global_finance.* TO '" + usuario.getUsuario() + "'@'%'");
-                    // Puede interactuar con sus catálogos locales y peticiones
                     st.execute("GRANT INSERT, UPDATE ON global_finance.CarritoSolicitud TO '" + usuario.getUsuario() + "'@'%'");
                     st.execute("GRANT INSERT, UPDATE ON global_finance.Empleado TO '" + usuario.getUsuario() + "'@'%'");
                     st.execute("GRANT INSERT, UPDATE ON global_finance.Departamento TO '" + usuario.getUsuario() + "'@'%'");
 
                 } else if (usuario.getRol() == UsuarioRol.SALIDAS) {
-                    // Puede leer TODO
                     st.execute("GRANT SELECT ON global_finance.* TO '" + usuario.getUsuario() + "'@'%'");
                     st.execute("GRANT UPDATE ON global_finance.CarritoSolicitud TO '" + usuario.getUsuario() + "'@'%'");
                     st.execute("GRANT EXECUTE ON PROCEDURE global_finance.SP_AprobarSalida TO '" + usuario.getUsuario() + "'@'%'");
 
                 } else if (usuario.getRol() == UsuarioRol.DEPARTAMENTO) {
-                    // Puede leer TODO (Para ver el catálogo de artículos al pedir)
                     st.execute("GRANT SELECT ON global_finance.* TO '" + usuario.getUsuario() + "'@'%'");
                     st.execute("GRANT INSERT ON global_finance.CarritoSolicitud TO '" + usuario.getUsuario() + "'@'%'");
                 }

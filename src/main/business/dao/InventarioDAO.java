@@ -79,14 +79,13 @@ public class InventarioDAO extends CompleteDAOShape<InventarioDTO, Integer> {
 
     @Override
     public InventarioDTO getOne(Integer id) throws UserDisplayableException {
-        // CORREGIDO: No se declara el ResultSet en el try-with-resources inicial
         try (
                 Connection connection = DBConnector.getInstance().getConnection(); 
                 PreparedStatement statement = connection.prepareStatement(GET_QUERY)) {
             
-            statement.setInt(1, id); // Primero asignamos el parámetro
+            statement.setInt(1, id);
             
-            try (ResultSet resultSet = statement.executeQuery()) { // Ejecutamos después
+            try (ResultSet resultSet = statement.executeQuery()) { 
                 if (resultSet.next()) {
                     return new InventarioDTO.InventarioBuilder()
                             .setIDSucursal(resultSet.getInt("id_sucursal"))
@@ -153,7 +152,7 @@ public class InventarioDAO extends CompleteDAOShape<InventarioDTO, Integer> {
                 while (rs.next()) {
                     list.add(new VistaInventarioDTO(
                             rs.getInt("id_sucursal"),
-                            rs.getString("nombre_sucursal"), // <- Agregado aquí
+                            rs.getString("nombre_sucursal"),
                             rs.getInt("id_articulo"),
                             rs.getString("nombre_articulo"),
                             rs.getInt("stock_actual"),
