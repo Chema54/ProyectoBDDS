@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -29,17 +30,19 @@ public class FXMLMostrarInventarioController implements Initializable {
     @FXML private TableColumn<VistaInventarioDTO, Integer> colMinimo;
     @FXML private TableColumn<VistaInventarioDTO, Integer> colMaximo;
 
-    private InventarioDAO inventarioDAO = new InventarioDAO();
+    private final InventarioDAO inventarioDAO = new InventarioDAO();
     private ObservableList<VistaInventarioDTO> listaOriginal;
+    private FilteredList<VistaInventarioDTO> listaFiltrada; // Estructura unificada para filtros
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         configurarColumnas();
         cargarInventario();
+        configurarBusquedaEnTiempoReal();
     }    
 
     private void configurarColumnas() {
-        colSucursal.setCellValueFactory(new PropertyValueFactory<>("idSucursal"));
+        colSucursal.setCellValueFactory(new PropertyValueFactory<>("nombreSucursal")); 
         colArticulo.setCellValueFactory(new PropertyValueFactory<>("nombreArticulo"));
         colStock.setCellValueFactory(new PropertyValueFactory<>("stockActual"));
         colMinimo.setCellValueFactory(new PropertyValueFactory<>("stockMinimo"));
@@ -52,9 +55,12 @@ public class FXMLMostrarInventarioController implements Initializable {
                 if (empty || item == null) {
                     setText(null); 
                     setStyle("");
-                } else {
-                    setText(String.valueOf(item));
-                    VistaInventarioDTO fila = getTableView().getItems().get(getIndex());
+                    return;
+                }
+                setText(String.valueOf(item));
+                TableRow<?> row = getTableRow();
+                if (row != null && row.getItem() instanceof VistaInventarioDTO) {
+                    VistaInventarioDTO fila = (VistaInventarioDTO) row.getItem();
                     
                     if (item < fila.getStockMinimo()) {
                         setStyle("-fx-background-color: #ffcccc; -fx-text-fill: #990000; -fx-font-weight: bold;");
@@ -65,6 +71,8 @@ public class FXMLMostrarInventarioController implements Initializable {
                     else {
                         setStyle("");
                     }
+                } else {
+                    setStyle("");
                 }
             }
         });
@@ -77,49 +85,55 @@ public class FXMLMostrarInventarioController implements Initializable {
             Integer filtro = (rol.equals("CENTRAL") || rol.equals("SALIDAS")) ? 0 : idSucursal;
             
             listaOriginal = FXCollections.observableArrayList(inventarioDAO.getVistaInventario(filtro));
-            tablaInventario.setItems(listaOriginal);
+            
+            listaFiltrada = new FilteredList<>(listaOriginal, p -> true);
+            tablaInventario.setItems(listaFiltrada);
             
         } catch (UserDisplayableException e) {
             Utilidades.mostrarAlertaSimple("Error BD", "Problema al cargar el Inventario.", Alert.AlertType.ERROR);
         }
     }
 
+    private void configurarBusquedaEnTiempoReal() {
+        txtBuscar.textProperty().addListener((observable, oldValue, newValue) -> {
+            filtrarLista();
+        });
+    }
+
+    private void filtrarLista() {
+        if (listaFiltrada == null) return;
+        
+        String texto = txtBuscar.getText().toLowerCase().trim();
+        listaFiltrada.setPredicate(v -> {
+            if (texto.isEmpty()) return true;
+            return v.getNombreArticulo() != null && v.getNombreArticulo().toLowerCase().contains(texto);
+        });
+    }
+
     @FXML
     private void btnBuscar(ActionEvent event) {
-        String filtro = txtBuscar.getText().toLowerCase().trim();
-        if (filtro.isEmpty()) {
-            tablaInventario.setItems(listaOriginal);
-            return;
-        }
-        FilteredList<VistaInventarioDTO> filtrada = new FilteredList<>(listaOriginal, v -> 
-            v.getNombreArticulo() != null && v.getNombreArticulo().toLowerCase().contains(filtro)
-        );
-        tablaInventario.setItems(filtrada);
+        filtrarLista();
     }
 
     @FXML
     private void btnLimpiar(ActionEvent event) {
         txtBuscar.clear();
-        tablaInventario.setItems(listaOriginal);
+        if (listaFiltrada != null) {
+            listaFiltrada.setPredicate(p -> true);
+        }
     }
     
     @FXML
     private void btnFiltroFaltantes(ActionEvent event) {
         if (listaOriginal == null) return;
-        FilteredList<VistaInventarioDTO> filtrada = new FilteredList<>(listaOriginal, v -> 
-            v.getStockActual() < v.getStockMinimo()
-        );
-        tablaInventario.setItems(filtrada);
         txtBuscar.clear();
+        listaFiltrada.setPredicate(v -> v.getStockActual() < v.getStockMinimo());
     }
 
     @FXML
     private void btnFiltroExcedentes(ActionEvent event) {
         if (listaOriginal == null) return;
-        FilteredList<VistaInventarioDTO> filtrada = new FilteredList<>(listaOriginal, v -> 
-            v.getStockActual() > v.getStockMaximo()
-        );
-        tablaInventario.setItems(filtrada);
-        txtBuscar.clear();
+        txtBuscar.clear(); 
+        listaFiltrada.setPredicate(v -> v.getStockActual() > v.getStockMaximo());
     }
 }

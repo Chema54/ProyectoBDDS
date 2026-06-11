@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import main.business.dao.shape.CompleteDAOShape;
 import main.business.dto.InventarioDTO;
+import main.business.dto.VistaInventarioDTO; // Importado para limpiar el código
 import main.common.ExceptionHandler;
 import main.common.UserDisplayableException;
 import main.database.DBConnector;
@@ -36,12 +37,16 @@ public class InventarioDAO extends CompleteDAOShape<InventarioDTO, Integer> {
     @Override
     public void createOne(InventarioDTO inventarioDTO) throws UserDisplayableException {
         try (
-                Connection connection = DBConnector.getInstance().getConnection(); PreparedStatement statement = connection.prepareStatement(CREATE_QUERY);) {
+                Connection connection = DBConnector.getInstance().getConnection(); 
+                PreparedStatement statement = connection.prepareStatement(CREATE_QUERY)) {
+            
             statement.setInt(1, inventarioDTO.getIDSucursal());
             statement.setInt(2, inventarioDTO.getIDArticulo());
+            // Nota: Cambiar a setInt si en la BD son enteros
             statement.setString(3, inventarioDTO.getCantidad());
             statement.setString(4, inventarioDTO.getStockMinimo());
             statement.setString(5, inventarioDTO.getStockMaximo());
+            
             statement.executeUpdate();
         } catch (SQLException e) {
             throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible crear el inventario.");
@@ -51,13 +56,16 @@ public class InventarioDAO extends CompleteDAOShape<InventarioDTO, Integer> {
     @Override
     public List<InventarioDTO> getAll() throws UserDisplayableException {
         try (
-                Connection connection = DBConnector.getInstance().getConnection(); PreparedStatement statement = connection.prepareStatement(GET_ALL_QUERY); ResultSet resultSet = statement.executeQuery();) {
+                Connection connection = DBConnector.getInstance().getConnection(); 
+                PreparedStatement statement = connection.prepareStatement(GET_ALL_QUERY); 
+                ResultSet resultSet = statement.executeQuery()) {
+            
             List<InventarioDTO> list = new ArrayList<>();
             while (resultSet.next()) {
                 InventarioDTO inventarioDTO = new InventarioDTO.InventarioBuilder()
                         .setIDSucursal(resultSet.getInt("id_sucursal"))
                         .setIDArticulo(resultSet.getInt("id_articulo"))
-                        .setCantidad(resultSet.getString("cantidad"))
+                        .setCantidad(resultSet.getString("cantidad")) // Cambiar a getInt si aplica
                         .setStockMinimo(resultSet.getString("stock_minimo"))
                         .setStockMaximo(resultSet.getString("stock_maximo"))
                         .build();
@@ -71,17 +79,23 @@ public class InventarioDAO extends CompleteDAOShape<InventarioDTO, Integer> {
 
     @Override
     public InventarioDTO getOne(Integer id) throws UserDisplayableException {
+        // CORREGIDO: No se declara el ResultSet en el try-with-resources inicial
         try (
-                Connection connection = DBConnector.getInstance().getConnection(); PreparedStatement statement = connection.prepareStatement(GET_QUERY); ResultSet resultSet = statement.executeQuery();) {
-            statement.setInt(1, id);
-            if (resultSet.next()) {
-                return new InventarioDTO.InventarioBuilder()
-                        .setIDSucursal(resultSet.getInt("id_sucursal"))
-                        .setIDArticulo(resultSet.getInt("id_articulo"))
-                        .setCantidad(resultSet.getString("cantidad"))
-                        .setStockMinimo(resultSet.getString("stock_minimo"))
-                        .setStockMaximo(resultSet.getString("stock_maximo"))
-                        .build();
+                Connection connection = DBConnector.getInstance().getConnection(); 
+                PreparedStatement statement = connection.prepareStatement(GET_QUERY)) {
+            
+            statement.setInt(1, id); // Primero asignamos el parámetro
+            
+            try (ResultSet resultSet = statement.executeQuery()) { // Ejecutamos después
+                if (resultSet.next()) {
+                    return new InventarioDTO.InventarioBuilder()
+                            .setIDSucursal(resultSet.getInt("id_sucursal"))
+                            .setIDArticulo(resultSet.getInt("id_articulo"))
+                            .setCantidad(resultSet.getString("cantidad"))
+                            .setStockMinimo(resultSet.getString("stock_minimo"))
+                            .setStockMaximo(resultSet.getString("stock_maximo"))
+                            .build();
+                }
             }
             return null;
         } catch (SQLException e) {
@@ -91,14 +105,16 @@ public class InventarioDAO extends CompleteDAOShape<InventarioDTO, Integer> {
 
     @Override
     public void updateOne(InventarioDTO inventarioDTO) throws UserDisplayableException {
-
         try (
-                Connection connection = DBConnector.getInstance().getConnection(); PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY);) {
+                Connection connection = DBConnector.getInstance().getConnection(); 
+                PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)) {
+            
             statement.setString(1, inventarioDTO.getCantidad());
             statement.setString(2, inventarioDTO.getStockMinimo());
             statement.setString(3, inventarioDTO.getStockMaximo());
             statement.setInt(4, inventarioDTO.getIDSucursal());
             statement.setInt(5, inventarioDTO.getIDArticulo());
+            
             statement.executeUpdate();
         } catch (SQLException e) {
             throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible actualizar el inventario.");
@@ -108,7 +124,9 @@ public class InventarioDAO extends CompleteDAOShape<InventarioDTO, Integer> {
     @Override
     public void deleteOne(Integer id) throws UserDisplayableException {
         try (
-                Connection connection = DBConnector.getInstance().getConnection(); PreparedStatement statement = connection.prepareStatement(DELETE_QUERY);) {
+                Connection connection = DBConnector.getInstance().getConnection(); 
+                PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
+            
             statement.setInt(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -116,23 +134,26 @@ public class InventarioDAO extends CompleteDAOShape<InventarioDTO, Integer> {
         }
     }
 
-    public List<main.business.dto.VistaInventarioDTO> getVistaInventario(Integer idSucursalFiltro) throws UserDisplayableException {
-        String query = "SELECT * FROM Vista_Inventario_Sucursales";
+    public List<VistaInventarioDTO> getVistaInventario(Integer idSucursalFiltro) throws UserDisplayableException {
+        StringBuilder query = new StringBuilder("SELECT * FROM Vista_Inventario_Sucursales");
         if (idSucursalFiltro != null && idSucursalFiltro > 0) {
-            query += " WHERE id_sucursal = ?";
+            query.append(" WHERE id_sucursal = ?");
         }
 
         try (
-                Connection connection = DBConnector.getInstance().getConnection(); PreparedStatement statement = connection.prepareStatement(query);) {
+                Connection connection = DBConnector.getInstance().getConnection(); 
+                PreparedStatement statement = connection.prepareStatement(query.toString())) {
+            
             if (idSucursalFiltro != null && idSucursalFiltro > 0) {
                 statement.setInt(1, idSucursalFiltro);
             }
 
-            List<main.business.dto.VistaInventarioDTO> list = new ArrayList<>();
+            List<VistaInventarioDTO> list = new ArrayList<>();
             try (ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
-                    list.add(new main.business.dto.VistaInventarioDTO(
+                    list.add(new VistaInventarioDTO(
                             rs.getInt("id_sucursal"),
+                            rs.getString("nombre_sucursal"), // <- Agregado aquí
                             rs.getInt("id_articulo"),
                             rs.getString("nombre_articulo"),
                             rs.getInt("stock_actual"),
