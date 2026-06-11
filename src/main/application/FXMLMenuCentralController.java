@@ -63,7 +63,6 @@ public class FXMLMenuCentralController implements Initializable {
 
             if (rolActual.equals("SUCURSAL")) {
                 miAprobarSalidas.setVisible(false);
-                // FIX: El admin de sucursal NO crea ni modifica sucursales
                 miRegistrarSucursal.setVisible(false);
                 miModificarSucursal.setVisible(false);
 
@@ -80,7 +79,7 @@ public class FXMLMenuCentralController implements Initializable {
                 menuArticulos.setVisible(false);
                 miAprobarSalidas.setVisible(false);
                 miRegistrarEntradas.setVisible(false);
-                menuSucursales.setVisible(false); // FIX: Ocultar menú Sucursales al Departamento
+                menuSucursales.setVisible(false);
             }
         }
     }

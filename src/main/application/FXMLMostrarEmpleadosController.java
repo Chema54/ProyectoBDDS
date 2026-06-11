@@ -22,16 +22,25 @@ import main.common.UserDisplayableException;
 
 public class FXMLMostrarEmpleadosController implements Initializable {
 
-    @FXML private ComboBox<SucursalDTO> cbSucursalFiltro;
-    @FXML private Button btnLimpiar;
-    
-    @FXML private TableView<DirectorioEmpleadoDTO> tablaEmpleados;
-    @FXML private TableColumn<DirectorioEmpleadoDTO, String> colNumPersonal;
-    @FXML private TableColumn<DirectorioEmpleadoDTO, String> colNombre;
-    @FXML private TableColumn<DirectorioEmpleadoDTO, String> colApellidos;
-    @FXML private TableColumn<DirectorioEmpleadoDTO, String> colDepartamento;
-    @FXML private TableColumn<DirectorioEmpleadoDTO, String> colSucursal;
-    @FXML private TableColumn<DirectorioEmpleadoDTO, String> colUsuario;
+    @FXML
+    private ComboBox<SucursalDTO> cbSucursalFiltro;
+    @FXML
+    private Button btnLimpiar;
+
+    @FXML
+    private TableView<DirectorioEmpleadoDTO> tablaEmpleados;
+    @FXML
+    private TableColumn<DirectorioEmpleadoDTO, String> colNumPersonal;
+    @FXML
+    private TableColumn<DirectorioEmpleadoDTO, String> colNombre;
+    @FXML
+    private TableColumn<DirectorioEmpleadoDTO, String> colApellidos;
+    @FXML
+    private TableColumn<DirectorioEmpleadoDTO, String> colDepartamento;
+    @FXML
+    private TableColumn<DirectorioEmpleadoDTO, String> colSucursal;
+    @FXML
+    private TableColumn<DirectorioEmpleadoDTO, String> colUsuario;
 
     private ObservableList<DirectorioEmpleadoDTO> listaOriginal;
     private SucursalDAO sucursalDAO = new SucursalDAO();
@@ -55,44 +64,36 @@ public class FXMLMostrarEmpleadosController implements Initializable {
 
     private void cargarDatos() {
         try {
-            // Cargar combo de sucursales
             cbSucursalFiltro.setItems(FXCollections.observableArrayList(sucursalDAO.getAll()));
-            
-            // Cargar la vista plana desde SQL
             listaOriginal = FXCollections.observableArrayList(empleadoDAO.getVistaDirectorio());
             tablaEmpleados.setItems(listaOriginal);
-            
+
         } catch (UserDisplayableException e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
 
     private void configurarFiltroYSeguridad() {
-        // Lógica de Filtrado en Memoria
         cbSucursalFiltro.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null) {
                 tablaEmpleados.setItems(listaOriginal);
             } else {
-                FilteredList<DirectorioEmpleadoDTO> filtrada = new FilteredList<>(listaOriginal, emp -> 
-                    emp.getIdSucursal() == newValue.getIDSucursal()
+                FilteredList<DirectorioEmpleadoDTO> filtrada = new FilteredList<>(listaOriginal, emp
+                        -> emp.getIdSucursal() == newValue.getIDSucursal()
                 );
                 tablaEmpleados.setItems(filtrada);
             }
         });
-
-        // Lógica de Seguridad (Roles)
         String rol = SesionGlobal.getInstance().getRolActual();
         if (rol != null && rol.equals("SUCURSAL")) {
             int idMiSucursal = SesionGlobal.getInstance().getIdSucursalActual();
-            
-            // Forzar selección de su propia sucursal
+
             for (SucursalDTO suc : cbSucursalFiltro.getItems()) {
                 if (suc.getIDSucursal() == idMiSucursal) {
                     cbSucursalFiltro.setValue(suc);
                     break;
                 }
             }
-            // Bloquear para que no pueda espiar a otras sucursales
             cbSucursalFiltro.setDisable(true);
             btnLimpiar.setDisable(true);
         }

@@ -18,8 +18,8 @@ public class Utilidades {
 
         javafx.stage.Stage stageAlerta = (javafx.stage.Stage) alerta.getDialogPane().getScene().getWindow();
         stageAlerta.setAlwaysOnTop(true);
-        stageAlerta.toFront(); 
-        
+        stageAlerta.toFront();
+
         alerta.showAndWait();
     }
 
