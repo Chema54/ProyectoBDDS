@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
@@ -14,18 +17,18 @@
             <HBox alignment="CENTER_LEFT" spacing="15.0" style="-fx-background-color: #555555; -fx-padding: 10;">
                <children>
                   <Label text="Buscar Artículo:" textFill="WHITE"><font><Font size="16.0" /></font></Label>
-                  <TextField fx:id="txtBuscar" promptText="Escribe el nombre..." prefWidth="300.0" />
-                  <Button mnemonicParsing="false" onAction="#btnBuscar" text="Buscar Rápido" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-weight: bold;"/>
-                  <Button mnemonicParsing="false" onAction="#btnLimpiar" text="Limpiar" style="-fx-background-color: #6c757d; -fx-text-fill: white;"/>
+                  <TextField fx:id="txtBuscar" prefWidth="300.0" promptText="Escribe el nombre..." />
+                  <Button mnemonicParsing="false" onAction="#btnBuscar" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-weight: bold;" text="Buscar Rápido" />
+                  <Button mnemonicParsing="false" onAction="#btnLimpiar" style="-fx-background-color: #6c757d; -fx-text-fill: white;" text="Limpiar" />
                   
                   <Pane HBox.hgrow="ALWAYS" />
                   
-                  <Button mnemonicParsing="false" onAction="#btnFiltroFaltantes" text="Ver &lt; Mínimo" style="-fx-background-color: #ff5f56; -fx-text-fill: white; -fx-font-weight: bold;">
+                  <Button mnemonicParsing="false" onAction="#btnFiltroFaltantes" style="-fx-background-color: #ff5f56; -fx-text-fill: white; -fx-font-weight: bold;" text="Ver &lt; Mínimo">
                      <tooltip>
                         <Tooltip text="Mostrar artículos por debajo del stock mínimo" />
                      </tooltip>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#btnFiltroExcedentes" text="Ver &gt; Máximo" style="-fx-background-color: #ffb84d; -fx-text-fill: white; -fx-font-weight: bold;">
+                  <Button mnemonicParsing="false" onAction="#btnFiltroExcedentes" style="-fx-background-color: #ffb84d; -fx-text-fill: white; -fx-font-weight: bold;" text="Ver &gt; Máximo">
                      <tooltip>
                         <Tooltip text="Mostrar artículos por encima del stock máximo" />
                      </tooltip>
@@ -35,11 +38,11 @@
 
             <TableView fx:id="tablaInventario" VBox.vgrow="ALWAYS">
               <columns>
-                <TableColumn fx:id="colSucursal" prefWidth="100.0" text="ID Sucursal" />
-                <TableColumn fx:id="colArticulo" prefWidth="350.0" text="Nombre del Artículo" />
-                <TableColumn fx:id="colStock" prefWidth="120.0" text="Stock Actual" />
-                <TableColumn fx:id="colMinimo" prefWidth="120.0" text="Stock Mínimo" />
-                <TableColumn fx:id="colMaximo" prefWidth="120.0" text="Stock Máximo" />
+                <TableColumn fx:id="colSucursal" prefWidth="236.0" text="Sucursal" />
+                <TableColumn fx:id="colArticulo" prefWidth="244.0" text="Nombre del Artículo" />
+                <TableColumn fx:id="colStock" prefWidth="121.0" text="Stock Actual" />
+                <TableColumn fx:id="colMinimo" prefWidth="112.0" text="Stock Mínimo" />
+                <TableColumn fx:id="colMaximo" prefWidth="126.0" text="Stock Máximo" />
               </columns>
             </TableView>
          </children>

@@ -72,6 +72,7 @@ public class FXMLMenuCentralController implements Initializable {
                 miCrearSolicitud.setVisible(false);
                 miRegistrarEntradas.setVisible(false);
                 menuSucursales.setVisible(false);
+                menuArticulos.setVisible(false);
 
             } else if (rolActual.equals("DEPARTAMENTO")) {
                 menuEmpleados.setVisible(false);
