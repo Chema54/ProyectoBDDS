@@ -88,20 +88,19 @@ public class ReportesDAO {
         }
     }
 
-    public java.util.List<main.business.dto.ReporteKardexDTO> getReporteAgrupadoPorPartida(String tipoMovimiento, java.sql.Date inicio, java.sql.Date fin) throws main.common.UserDisplayableException {
-        String query = "SELECT "
-                + "partida, "
-                + "'VARIOS (Agrupado)' AS articulo, "
-                + "MAX(fecha) AS fecha, "
-                + "SUM(cantidad) AS cantidad, "
-                + "SUM(importe_total) AS costo, "
-                + "0.0 AS costo_promedio, "
-                + "'Resumen por Partida' AS referencia "
-                + "FROM Vista_Kardex_Partidas "
-                + "WHERE tipo_movimiento = ? AND fecha BETWEEN ? AND ? "
-                + "GROUP BY partida";
-
-        java.util.List<main.business.dto.ReporteKardexDTO> lista = new java.util.ArrayList<>();
+    public java.util.List<ReporteKardexDTO> getReporteAgrupadoPorPartida(String tipoMovimiento, java.sql.Date inicio, java.sql.Date fin) throws main.common.UserDisplayableException {
+        String query = "SELECT " +
+                       "partida, " +
+                       "'VARIOS (Agrupado)' AS articulo, " + 
+                       "MAX(fecha) AS fecha, " +
+                       "SUM(cantidad) AS cantidad, " +
+                       "SUM(importe_total) AS costo, " + 
+                       "0.0 AS costo_promedio, " +
+                       "'Resumen por Partida' AS referencia " +
+                       "FROM Vista_Kardex_Partidas " +
+                       "WHERE tipo_movimiento = ? AND fecha BETWEEN ? AND ? " +
+                       "GROUP BY partida"; 
+        java.util.List<ReporteKardexDTO> lista = new java.util.ArrayList<>();
         try (java.sql.Connection con = main.database.DBConnector.getInstance().getConnection(); java.sql.PreparedStatement ps = con.prepareStatement(query)) {
 
             ps.setString(1, tipoMovimiento);

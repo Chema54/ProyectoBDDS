@@ -2,15 +2,15 @@ package main.business.dto;
 
 public class VistaInventarioDTO {
 
-    private int idSucursal;
+    private String nombreSucursal;
     private int idArticulo;
     private String nombreArticulo;
     private int stockActual;
     private int stockMinimo;
     private int stockMaximo;
 
-    public VistaInventarioDTO(int idSucursal, int idArticulo, String nombreArticulo, int stockActual, int stockMinimo, int stockMaximo) {
-        this.idSucursal = idSucursal;
+    public VistaInventarioDTO(String nombreSucursal, int idArticulo, String nombreArticulo, int stockActual, int stockMinimo, int stockMaximo) {
+        this.nombreSucursal = nombreSucursal;
         this.idArticulo = idArticulo;
         this.nombreArticulo = nombreArticulo;
         this.stockActual = stockActual;
@@ -18,8 +18,8 @@ public class VistaInventarioDTO {
         this.stockMaximo = stockMaximo;
     }
 
-    public int getIdSucursal() {
-        return idSucursal;
+    public String getNombreSucursal() {
+        return nombreSucursal;
     }
 
     public int getIdArticulo() {
