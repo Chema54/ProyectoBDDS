@@ -110,16 +110,22 @@ public class FXMLMenuCentralController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/resources/gui/FXMLInicioSesionView.fxml"));
             Parent root = loader.load();
             
-            // 3. Tomamos la ventana grandota actual y la encogemos al Login
-            Stage stage = (Stage) pane_Escritorio.getScene().getWindow();
+            // =========================================================
+            // FIX ARQUITECTÓNICO: Creamos una ventana nueva e inmaculada
+            // =========================================================
+            Stage loginStage = new Stage();
+            loginStage.setTitle("Global Finance - Iniciar Sesión");
+            loginStage.setScene(new Scene(root));
             
-            stage.setTitle("Global Finance - Iniciar Sesión");
-            stage.setScene(new Scene(root));
+            // La mostramos en el centro, con su tamaño natural
+            loginStage.centerOnScreen(); 
+            loginStage.show();
             
-            // FIX: "Computed Size" (sizeToScene) en lugar de números hardcodeados
-            stage.setMaximized(false); 
-            stage.sizeToScene(); // Hace que la ventana tome las dimensiones exactas del FXML
-            stage.centerOnScreen(); // Lo devolvemos al centro del monitor
+            // =========================================================
+            // 3. Destruimos la ventana maximizada vieja (Mata el bug de raíz)
+            // =========================================================
+            Stage menuStage = (Stage) pane_Escritorio.getScene().getWindow();
+            menuStage.close();
             
         } catch (Exception e) {
             Utilidades.mostrarAlertaSimple("Error", "Ocurrió un problema al cerrar sesión.", Alert.AlertType.ERROR);

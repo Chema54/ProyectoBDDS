@@ -109,6 +109,17 @@
                 <Tab text="Bitácora de Bajas">
                   <content>
                     <VBox spacing="10.0" style="-fx-background-color: white; -fx-padding: 15;">
+                        <HBox spacing="15.0" alignment="CENTER_LEFT" style="-fx-background-color: #f4f4f4; -fx-padding: 10px; -fx-border-color: #dcdcdc;">
+                            <Label text="Buscar Artículo:" style="-fx-font-weight: bold;"/>
+                            <TextField fx:id="txtBuscarBaja" promptText="Nombre del artículo..." prefWidth="250.0" />
+                            <Button mnemonicParsing="false" onAction="#btnBuscarBaja" text="Buscar" style="-fx-background-color: #007bff; -fx-text-fill: white;"/>
+                            <Button mnemonicParsing="false" onAction="#btnLimpiarFiltroBajas" text="Limpiar" style="-fx-background-color: #6c757d; -fx-text-fill: white;"/>
+                            
+                            <Pane HBox.hgrow="ALWAYS" />
+                            
+                            <Button mnemonicParsing="false" onAction="#btnExportarBajasExcel" text="Exportar a Excel" style="-fx-background-color: #28c840; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                        </HBox>
+                        
                         <TableView fx:id="tablaBajas" VBox.vgrow="ALWAYS">
                             <columns>
                                 <TableColumn fx:id="colArticuloBaja" prefWidth="200.0" text="Artículo" />

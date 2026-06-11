@@ -70,6 +70,8 @@ public class FXMLCentralReportesController implements Initializable {
 
     private ReportesDAO reportesDAO = new ReportesDAO();
     private ArticuloDAO articuloDAO = new ArticuloDAO();
+    @FXML private TextField txtBuscarBaja;
+    private javafx.collections.ObservableList<ReporteBajaDTO> listaBajasOriginal; // Memoria caché para buscar rápido
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -130,8 +132,12 @@ public class FXMLCentralReportesController implements Initializable {
     }
 
     private void cargarBitacoraBajas() {
-        try { tablaBajas.setItems(FXCollections.observableArrayList(reportesDAO.getBajas())); } 
-        catch (UserDisplayableException e) { Utilidades.mostrarAlertaSimple("Error", "Error al cargar bajas.", Alert.AlertType.ERROR); }
+        try { 
+            listaBajasOriginal = FXCollections.observableArrayList(reportesDAO.getBajas());
+            tablaBajas.setItems(listaBajasOriginal); 
+        } catch (UserDisplayableException e) { 
+            Utilidades.mostrarAlertaSimple("Error", "Error al cargar bajas.", Alert.AlertType.ERROR); 
+        }
     }
 
     private void cargarBitacoraPedidos() {
@@ -219,4 +225,51 @@ public class FXMLCentralReportesController implements Initializable {
         fileChooser.setInitialFileName(nombrePorDefecto); fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(descFiltro, extFiltro));
         return fileChooser.showSaveDialog(tablaIngresos.getScene().getWindow());
     }
+
+    // ==========================================
+    // BÚSQUEDA Y EXPORTACIÓN DE BAJAS
+    // ==========================================
+    @FXML
+    private void btnBuscarBaja(ActionEvent event) {
+        String filtro = txtBuscarBaja.getText().toLowerCase().trim();
+        
+        if (filtro.isEmpty()) {
+            tablaBajas.setItems(listaBajasOriginal); // Si está vacío, mostramos todo
+            return;
+        }
+        
+        // Filtramos en la memoria RAM buscando que el nombre contenga lo que se escribió
+        javafx.collections.transformation.FilteredList<ReporteBajaDTO> filtrada = 
+                new javafx.collections.transformation.FilteredList<>(listaBajasOriginal, b -> 
+            b.getArticulo() != null && b.getArticulo().toLowerCase().contains(filtro)
+        );
+        
+        tablaBajas.setItems(filtrada);
+    }
+
+    @FXML
+    private void btnLimpiarFiltroBajas(ActionEvent event) {
+        txtBuscarBaja.clear();
+        tablaBajas.setItems(listaBajasOriginal);
+    }
+
+    @FXML
+    private void btnExportarBajasExcel(ActionEvent event) {
+        if (tablaBajas.getItems().isEmpty()) {
+            Utilidades.mostrarAlertaSimple("Aviso", "No hay registros de bajas para exportar.", Alert.AlertType.WARNING);
+            return; 
+        }
+        
+        File archivo = pedirRutaGuardado("Bitacora_Bajas.xlsx", "Archivos Excel (*.xlsx)", "*.xlsx");
+        
+        if (archivo != null) {
+            try { 
+                GeneradorReportes.generarBitacoraBajasExcel(archivo.getAbsolutePath(), new ArrayList<>(tablaBajas.getItems())); 
+                Utilidades.mostrarAlertaSimple("Éxito", "Excel de Bajas generado correctamente.", Alert.AlertType.INFORMATION); 
+            } catch (Exception e) { 
+                Utilidades.mostrarAlertaSimple("Error", "Fallo al exportar el Excel de Bajas.", Alert.AlertType.ERROR); 
+            }
+        }
+    }
+    
 }

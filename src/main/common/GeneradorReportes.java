@@ -11,12 +11,14 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import java.util.ArrayList;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import main.business.dto.CarritoSolicitudDTO;
+import main.business.dto.ReporteBajaDTO;
 import main.business.dto.ReporteKardexDTO;
 import main.business.dto.ReportePedidoDTO;
 
@@ -106,5 +108,38 @@ public class GeneradorReportes {
     private static PdfPCell crearCeldaEncabezado(String texto) {
         PdfPCell cell = new PdfPCell(new Phrase(texto, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.WHITE)));
         cell.setBackgroundColor(BaseColor.DARK_GRAY); cell.setHorizontalAlignment(Element.ALIGN_CENTER); return cell;
+    }
+
+        public static void generarBitacoraBajasExcel(String rutaAbsoluta, java.util.List<ReporteBajaDTO> bajas) throws Exception {
+        org.apache.poi.ss.usermodel.Workbook workbook = new org.apache.poi.xssf.usermodel.XSSFWorkbook();
+        org.apache.poi.ss.usermodel.Sheet sheet = workbook.createSheet("Bitácora de Bajas");
+
+        // Fila de encabezados
+        org.apache.poi.ss.usermodel.Row headerRow = sheet.createRow(0);
+        headerRow.createCell(0).setCellValue("Artículo");
+        headerRow.createCell(1).setCellValue("Fecha de Baja");
+        headerRow.createCell(2).setCellValue("Motivo de Baja");
+        headerRow.createCell(3).setCellValue("Cantidad Restante (Pérdida)");
+
+        // Llenado de datos
+        int rowNum = 1;
+        for (ReporteBajaDTO baja : bajas) {
+            org.apache.poi.ss.usermodel.Row row = sheet.createRow(rowNum++);
+            row.createCell(0).setCellValue(baja.getArticulo());
+            row.createCell(1).setCellValue(baja.getFecha() != null ? baja.getFecha().toString() : "");
+            row.createCell(2).setCellValue(baja.getMotivo());
+            row.createCell(3).setCellValue(baja.getCantidadRestante());
+        }
+
+        // Autoajustar columnas
+        for (int i = 0; i < 4; i++) {
+            sheet.autoSizeColumn(i);
+        }
+
+        // Guardar archivo
+        try (java.io.FileOutputStream fileOut = new java.io.FileOutputStream(rutaAbsoluta)) {
+            workbook.write(fileOut);
+        }
+        workbook.close();
     }
 }

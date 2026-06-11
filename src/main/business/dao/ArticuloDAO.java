@@ -131,34 +131,25 @@ public class ArticuloDAO extends CompleteDAOShape<ArticuloDTO, Integer> {
         }
     }
     public void darDeBaja(int idArticulo, String motivo) throws UserDisplayableException {
-        // Query 1: Obtener cantidad global que queda del artículo en todas las sucursales
-        String queryStock = "SELECT IFNULL(SUM(cantidad), 0) FROM Inventario WHERE id_articulo = ?";
-        // Query 2: Cambiar estado a inactivo
+        // Query 1: Guardamos el motivo en la memoria de la sesión de MariaDB
+        String setMotivo = "SET @motivo_baja = ?";
+        // Query 2: Actualizamos. ¡Esto disparará automáticamente el Trigger TRG_BajaArticulo!
         String updateEstado = "UPDATE Articulo SET estado = 'inactivo' WHERE id_articulo = ?";
-        // Query 3: Insertar en bitácora
-        String insertBitacora = "INSERT INTO BitacoraBaja (id_articulo, fecha, motivo, cantidad_restante) VALUES (?, CURDATE(), ?, ?)";
 
         try (Connection conn = DBConnector.getInstance().getConnection()) {
             conn.setAutoCommit(false); // Empezamos transacción segura
             
             try {
-                int cantidadRestante = 0;
-                try (PreparedStatement psStock = conn.prepareStatement(queryStock)) {
-                    psStock.setInt(1, idArticulo);
-                    ResultSet rs = psStock.executeQuery();
-                    if(rs.next()) cantidadRestante = rs.getInt(1);
+                // 1. Inyectamos la variable invisible
+                try (PreparedStatement psMotivo = conn.prepareStatement(setMotivo)) {
+                    psMotivo.setString(1, motivo);
+                    psMotivo.execute();
                 }
 
+                // 2. Ejecutamos la baja (El Trigger atrapa la variable y guarda la bitácora)
                 try (PreparedStatement psUpdate = conn.prepareStatement(updateEstado)) {
                     psUpdate.setInt(1, idArticulo);
                     psUpdate.executeUpdate();
-                }
-
-                try (PreparedStatement psInsert = conn.prepareStatement(insertBitacora)) {
-                    psInsert.setInt(1, idArticulo);
-                    psInsert.setString(2, motivo);
-                    psInsert.setInt(3, cantidadRestante);
-                    psInsert.executeUpdate();
                 }
                 
                 conn.commit(); // Todo salió bien, guardamos
@@ -166,10 +157,15 @@ public class ArticuloDAO extends CompleteDAOShape<ArticuloDTO, Integer> {
                 conn.rollback(); // Si falla, cancelamos
                 throw ex;
             } finally {
+                // Por buena práctica de seguridad, borramos la variable de la memoria al terminar
+                try (java.sql.Statement st = conn.createStatement()) {
+                    st.execute("SET @motivo_baja = NULL");
+                } catch (Exception ignored) {}
+                
                 conn.setAutoCommit(true);
             }
         } catch (SQLException e) {
-            throw ExceptionHandler.handleSQLException(LOGGER, e, "Error al dar de baja el artículo y registrar bitácora.");
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "Error al dar de baja el artículo mediante Trigger.");
         }
     }
     // Nuevo método exclusivo para los ComboBox operativos
