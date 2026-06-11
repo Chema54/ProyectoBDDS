@@ -110,11 +110,31 @@ public class FXMLMostrarInventarioController implements Initializable {
         tablaInventario.setItems(listaOriginal);
     }
 
+    // =========================================================================
+    // FILTROS DE RÚBRICA: EXISTENCIAS EXTREMAS
+    // =========================================================================
+    
     @FXML
     private void btnFiltroFaltantes(ActionEvent event) {
+        if (listaOriginal == null) return;
+        
+        // Filtramos para mostrar SOLO los que están por debajo del mínimo
+        FilteredList<VistaInventarioDTO> filtrada = new FilteredList<>(listaOriginal, v -> 
+            v.getStockActual() < v.getStockMinimo()
+        );
+        tablaInventario.setItems(filtrada);
+        txtBuscar.clear(); // Limpiamos el texto de búsqueda manual para evitar confusiones
     }
 
     @FXML
     private void btnFiltroExcedentes(ActionEvent event) {
+        if (listaOriginal == null) return;
+        
+        // Filtramos para mostrar SOLO los que superan el máximo
+        FilteredList<VistaInventarioDTO> filtrada = new FilteredList<>(listaOriginal, v -> 
+            v.getStockActual() > v.getStockMaximo()
+        );
+        tablaInventario.setItems(filtrada);
+        txtBuscar.clear(); // Limpiamos el texto de búsqueda manual para evitar confusiones
     }
 }
