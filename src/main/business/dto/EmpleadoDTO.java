@@ -9,6 +9,7 @@ package main.business.dto;
  * @author josem
  */
 public class EmpleadoDTO {
+
     private final int idEmpleado;
     private final String nombre;
     private final String apellidos;
@@ -27,27 +28,52 @@ public class EmpleadoDTO {
         this.correo = builder.correo;
     }
 
-    public int getIDEmpleado() { return idEmpleado; }
-    public String getNombre() { return nombre; }
-    public String getApellidos() { return apellidos; }
-    public int getIDDepartamento() { return idDepartamento; }
-    public String getNumeroPersonal() { return numeroPersonal; }
-    public String getTelefono() { return telefono; }
-    public String getCorreo() { return correo; }
+    public int getIDEmpleado() {
+        return idEmpleado;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getApellidos() {
+        return apellidos;
+    }
+
+    public int getIDDepartamento() {
+        return idDepartamento;
+    }
+
+    public String getNumeroPersonal() {
+        return numeroPersonal;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
 
     @Override
     public boolean equals(Object instance) {
-        if (this == instance) return true;
-        if (instance == null || getClass() != instance.getClass()) return false;
+        if (this == instance) {
+            return true;
+        }
+        if (instance == null || getClass() != instance.getClass()) {
+            return false;
+        }
 
         EmpleadoDTO that = (EmpleadoDTO) instance;
-        return idEmpleado == that.idEmpleado 
-                && nombre.equals(that.nombre) 
+        return idEmpleado == that.idEmpleado
+                && nombre.equals(that.nombre)
                 && apellidos.equals(that.apellidos)
                 && idDepartamento == that.idDepartamento;
     }
 
     public static class EmpleadoBuilder {
+
         protected int idEmpleado;
         protected String nombre;
         protected String apellidos;
@@ -70,12 +96,12 @@ public class EmpleadoDTO {
             this.apellidos = apellidos;
             return this;
         }
-        
+
         public EmpleadoBuilder setIDDepartamento(int idDepartamento) {
             this.idDepartamento = idDepartamento;
             return this;
         }
-        
+
         public EmpleadoBuilder setNumeroPersonal(String numeroPersonal) {
             this.numeroPersonal = numeroPersonal;
             return this;
@@ -96,9 +122,6 @@ public class EmpleadoDTO {
         }
     }
 
-    // ==========================================
-    // FIX: PARA QUE SE VEA BIEN EN EL COMBOBOX
-    // ==========================================
     @Override
     public String toString() {
         return this.nombre + " " + this.apellidos + " - " + this.numeroPersonal;
