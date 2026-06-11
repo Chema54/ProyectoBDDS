@@ -37,37 +37,39 @@ public class FXMLMenuCentralController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
-        // ==========================================
-        // LÓGICA DE ROLES (Ocultar botones)
-        // ==========================================
         String rolActual = SesionGlobal.getInstance().getRolActual();
         
         if (rolActual != null && !rolActual.equals("CENTRAL")) {
             
-            // 1. Ocultamos todos los catálogos y reportes a quienes NO son de Central
+            // 1. Usuarios y Reportes son ESTRICTAMENTE de la Central
             menuUsuarios.setVisible(false);
-            menuEmpleados.setVisible(false);
-            menuDepartamentos.setVisible(false);
-            menuArticulos.setVisible(false);
             menuReportes.setVisible(false);
             
-            // 2. Filtramos la pestaña de Logística específicamente para cada uno
-            if (rolActual.equals("DEPARTAMENTO")) {
-                // El DEPARTAMENTO solo solicita. No ve nada más.
+            // 2. Filtramos la pestaña de Logística y Catálogos según el Rol
+            if (rolActual.equals("SUCURSAL")) {
+                // SUCURSAL: Puede registrar empleados/departamentos y ver inventario.
+                // En logística: Hace compras y pide, pero NO aprueba salidas.
                 miAprobarSalidas.setVisible(false);
-                miRegistrarEntradas.setVisible(false);
                 
             } else if (rolActual.equals("SALIDAS")) {
-                // El almacén (Salidas) solo aprueba salidas.
+                // SALIDAS (Almacén): No toca empleados ni departamentos.
+                menuEmpleados.setVisible(false);
+                menuDepartamentos.setVisible(false);
+                // SÍ ve el menú Artículos (para consultar el inventario)
+                // En logística: Solo aprueba salidas. No compra ni pide.
                 miCrearSolicitud.setVisible(false);
                 miRegistrarEntradas.setVisible(false);
                 
-            } else if (rolActual.equals("SUCURSAL")) {
-                // El admin de SUCURSAL hace las compras y puede pedir para sí mismo
+            } else if (rolActual.equals("DEPARTAMENTO")) {
+                // DEPARTAMENTO: Solo entra a pedir. Es el más restringido.
+                menuEmpleados.setVisible(false);
+                menuDepartamentos.setVisible(false);
+                menuArticulos.setVisible(false);
                 miAprobarSalidas.setVisible(false);
+                miRegistrarEntradas.setVisible(false);
             }
         }
-    }    
+    }
 
     // ==========================================
     // MÉTODO AYUDANTE (Evita repetir código)
@@ -95,7 +97,7 @@ public class FXMLMenuCentralController implements Initializable {
     @FXML
     private void irAcercaDe(ActionEvent event) {
         Utilidades.mostrarAlertaSimple("Acerca de Global Finance", 
-                "Sistema de Control de Almacén\nVersión 1.0\n\nDesarrollado para la Facultad de Estadística e Informática.\nCumplimiento de estándares DAO y roles de base de datos nativos.", 
+                "Sistema de Control de Almacén\nPor Lenin y Chema, llamenos si necesita ayuda", 
                 Alert.AlertType.INFORMATION);
     }
 
@@ -201,5 +203,10 @@ public class FXMLMenuCentralController implements Initializable {
     @FXML
     private void irCentralReportes(ActionEvent event) { 
         abrirVentanaFlotante("Reportes", "/main/resources/gui/FXMLCentralReportesView.fxml"); 
+    }
+
+    @FXML
+    private void irConsultarInventario(ActionEvent event) { 
+        abrirVentanaFlotante("Inventario Actual", "/main/resources/gui/FXMLMostrarInventarioView.fxml"); 
     }
 }

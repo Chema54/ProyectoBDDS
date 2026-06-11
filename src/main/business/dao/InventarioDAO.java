@@ -135,4 +135,40 @@ public class InventarioDAO extends CompleteDAOShape<InventarioDTO, Integer> {
             throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible eliminar el inventario.");
         }
     }
+    
+    // =========================================================================
+    // NUEVO: MÉTODO PARA LEER LA VISTA SQL NATIVA (Punto 7 de Rúbrica)
+    // =========================================================================
+    public List<main.business.dto.VistaInventarioDTO> getVistaInventario(Integer idSucursalFiltro) throws UserDisplayableException {
+        String query = "SELECT * FROM Vista_Inventario_Sucursales";
+        if (idSucursalFiltro != null && idSucursalFiltro > 0) {
+            query += " WHERE id_sucursal = ?";
+        }
+
+        try (
+            Connection connection = DBConnector.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(query);
+        ) {
+            if (idSucursalFiltro != null && idSucursalFiltro > 0) {
+                statement.setInt(1, idSucursalFiltro);
+            }
+
+            List<main.business.dto.VistaInventarioDTO> list = new ArrayList<>();
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new main.business.dto.VistaInventarioDTO(
+                        rs.getInt("id_sucursal"),
+                        rs.getInt("id_articulo"),
+                        rs.getString("nombre_articulo"),
+                        rs.getInt("stock_actual"),
+                        rs.getInt("stock_minimo"),
+                        rs.getInt("stock_maximo")
+                    ));
+                }
+            }
+            return list;
+        } catch (SQLException e) {
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "Error al leer la vista de Inventario.");
+        }
+    }
 }

@@ -11,7 +11,7 @@
 
 <AnchorPane id="AnchorPane" prefHeight="691.0" prefWidth="1280.0" style="-fx-background-color: #737373;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.application.FXMLRegistroEmpleadosController">
    <children>
-      <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" vgap="10" hgap="10">
         <columnConstraints>
             <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
@@ -22,42 +22,57 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
         </rowConstraints>
          <children>
-            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-               <GridPane.margin>
-                  <Insets left="50.0" />
-               </GridPane.margin>
-               <image>
-                  <Image url="@../img_empleados.png" />
-               </image>
+            <ImageView fitHeight="120.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="0">
+               <GridPane.margin><Insets left="50.0" /></GridPane.margin>
+               <image><Image url="@../img_empleados.png" /></image>
             </ImageView>
-            <TextField fx:id="tfNombreEmpleado" promptText="Ej: Lenin" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <font><Font size="20.0" /></font>
-               <GridPane.margin><Insets right="20.0" /></GridPane.margin>
-            </TextField>
+
             <Label text="Nombre" textFill="WHITE" GridPane.rowIndex="1">
-               <font><Font size="30.0" /></font>
-               <GridPane.margin><Insets left="50.0" /></GridPane.margin>
+               <font><Font size="26.0" /></font><GridPane.margin><Insets left="50.0" /></GridPane.margin>
             </Label>
+            <TextField fx:id="tfNombreEmpleado" promptText="Ej: Lenin" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <font><Font size="18.0" /></font><GridPane.margin><Insets right="20.0" /></GridPane.margin>
+            </TextField>
+            <Label text="Sucursal" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="1">
+               <font><Font size="26.0" /></font>
+            </Label>
+            <ComboBox fx:id="cbSucursal" prefHeight="40.0" prefWidth="250.0" promptText="Sucursal Plaza...." GridPane.columnIndex="3" GridPane.rowIndex="1" />
+
             <Label text="Apellidos" textFill="WHITE" GridPane.rowIndex="2">
-               <font><Font size="30.0" /></font>
-               <GridPane.margin><Insets left="50.0" /></GridPane.margin>
+               <font><Font size="26.0" /></font><GridPane.margin><Insets left="50.0" /></GridPane.margin>
             </Label>
             <TextField fx:id="tfApellidosEmpleado" promptText="Ej: Hernandez Ramirez" GridPane.columnIndex="1" GridPane.rowIndex="2">
-               <font><Font size="20.0" /></font>
-               <GridPane.margin><Insets right="20.0" /></GridPane.margin>
+               <font><Font size="18.0" /></font><GridPane.margin><Insets right="20.0" /></GridPane.margin>
             </TextField>
-            <ComboBox fx:id="cbSucursal" prefHeight="45.0" prefWidth="250.0" promptText="Sucursal Plaza...." GridPane.columnIndex="3" GridPane.rowIndex="1" />
-            <ComboBox fx:id="cbDepartamento" prefHeight="45.0" prefWidth="250.0" promptText="RRHH, Conta, etc." GridPane.columnIndex="3" GridPane.rowIndex="2" />
-            <Label text="Sucursal" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="1">
-               <font><Font size="30.0" /></font>
-            </Label>
             <Label text="Departamento" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="2">
-               <font><Font size="30.0" /></font>
+               <font><Font size="26.0" /></font>
             </Label>
-            <Button mnemonicParsing="false" onAction="#btnGuardar" prefHeight="60.0" prefWidth="150.0" style="-fx-background-color: #156600;" text="Guardar" textFill="WHITE" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+            <ComboBox fx:id="cbDepartamento" prefHeight="40.0" prefWidth="250.0" promptText="RRHH, Conta, etc." GridPane.columnIndex="3" GridPane.rowIndex="2" />
+
+            <Label text="Núm. Personal" textFill="WHITE" GridPane.rowIndex="3">
+               <font><Font size="26.0" /></font><GridPane.margin><Insets left="50.0" /></GridPane.margin>
+            </Label>
+            <TextField fx:id="tfNumPersonal" promptText="Ej: EMP-001" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <font><Font size="18.0" /></font><GridPane.margin><Insets right="20.0" /></GridPane.margin>
+            </TextField>
+            <Label text="Correo" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="3">
+               <font><Font size="26.0" /></font>
+            </Label>
+            <TextField fx:id="tfCorreo" promptText="correo@empresa.com" GridPane.columnIndex="3" GridPane.rowIndex="3">
+               <font><Font size="18.0" /></font><GridPane.margin><Insets right="20.0" /></GridPane.margin>
+            </TextField>
+
+            <Label text="Teléfono" textFill="WHITE" GridPane.rowIndex="4">
+               <font><Font size="26.0" /></font><GridPane.margin><Insets left="50.0" /></GridPane.margin>
+            </Label>
+            <TextField fx:id="tfTelefono" promptText="Ej: 2281234567" GridPane.columnIndex="1" GridPane.rowIndex="4">
+               <font><Font size="18.0" /></font><GridPane.margin><Insets right="20.0" /></GridPane.margin>
+            </TextField>
+            <Button mnemonicParsing="false" onAction="#btnGuardar" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #156600;" text="Guardar" textFill="WHITE" GridPane.columnIndex="3" GridPane.rowIndex="4" />
          </children>
       </GridPane>
    </children>

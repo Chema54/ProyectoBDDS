@@ -38,6 +38,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#irGestionPartidas" text="Gestión de Partidas" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#irGestionArticulos" text="Catálogo de Artículos" />
+                        <MenuItem mnemonicParsing="false" onAction="#irConsultarInventario" text="Consultar Inventario (Stock)" />
                     </items>
                 </Menu>
 
