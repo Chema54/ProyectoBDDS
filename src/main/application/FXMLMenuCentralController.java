@@ -38,6 +38,13 @@ public class FXMLMenuCentralController implements Initializable {
     private Menu menuSucursales;
 
     @FXML
+    private MenuItem miRegistrarSucursal;
+    @FXML
+    private MenuItem miModificarSucursal;
+    @FXML
+    private MenuItem miAsignarDepto;
+
+    @FXML
     private MenuItem miCrearSolicitud;
     @FXML
     private MenuItem miAprobarSalidas;
@@ -56,6 +63,9 @@ public class FXMLMenuCentralController implements Initializable {
 
             if (rolActual.equals("SUCURSAL")) {
                 miAprobarSalidas.setVisible(false);
+                // FIX: El admin de sucursal NO crea ni modifica sucursales
+                miRegistrarSucursal.setVisible(false);
+                miModificarSucursal.setVisible(false);
 
             } else if (rolActual.equals("SALIDAS")) {
                 menuEmpleados.setVisible(false);
@@ -70,6 +80,7 @@ public class FXMLMenuCentralController implements Initializable {
                 menuArticulos.setVisible(false);
                 miAprobarSalidas.setVisible(false);
                 miRegistrarEntradas.setVisible(false);
+                menuSucursales.setVisible(false); // FIX: Ocultar menú Sucursales al Departamento
             }
         }
     }
@@ -187,17 +198,17 @@ public class FXMLMenuCentralController implements Initializable {
     private void irConsultarInventario(ActionEvent event) {
         abrirVentanaFlotante("Inventario Actual", "/main/resources/gui/FXMLMostrarInventarioView.fxml");
     }
-    
+
     @FXML
     private void irRegistrarSucursales(ActionEvent event) {
         abrirVentanaFlotante("Registrar Sucursal", "/main/resources/gui/FXMLRegistroSucursalView.fxml");
     }
-    
+
     @FXML
     private void irTablaModificarSucursales(ActionEvent event) {
         abrirVentanaFlotante("Registrar Sucursal", "/main/resources/gui/FXMLTablaModificarSucursalView.fxml");
     }
-    
+
     @FXML
     private void irAsignarDepartamentoASucursal(ActionEvent event) {
         abrirVentanaFlotante("Registrar Sucursal", "/main/resources/gui/FXMLRegistroDepartamentoView.fxml");

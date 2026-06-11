@@ -44,17 +44,17 @@
                         <HBox spacing="15.0" alignment="CENTER_LEFT">
                             <Label text="Desde:" /> <DatePicker fx:id="dpInicioIngresos" />
                             <Label text="Hasta:" /> <DatePicker fx:id="dpFinIngresos" />
-                            <Button mnemonicParsing="false" onAction="#btnFiltrarIngresos" text="Filtrar" style="-fx-background-color: #007bff; -fx-text-fill: white;"/>
+                            <Button mnemonicParsing="false" onAction="#btnFiltrarIngresos" text="Filtrar Agrupado" style="-fx-background-color: #007bff; -fx-text-fill: white;"/>
                             <Pane HBox.hgrow="ALWAYS" />
                             <Button mnemonicParsing="false" onAction="#btnExportarIngresosPDF" text="Exportar a PDF" style="-fx-background-color: #e63946; -fx-text-fill: white; -fx-font-weight: bold;"/>
                         </HBox>
                         <TableView fx:id="tablaIngresos" VBox.vgrow="ALWAYS">
                             <columns>
                                 <TableColumn fx:id="colPartidaIngreso" prefWidth="250.0" text="Partida Presupuestal" />
-                                <TableColumn fx:id="colArticuloIngreso" prefWidth="250.0" text="Artículo" />
-                                <TableColumn fx:id="colFechaIngreso" prefWidth="100.0" text="Fecha" />
-                                <TableColumn fx:id="colCantIngreso" prefWidth="80.0" text="Cant." />
-                                <TableColumn fx:id="colCostoIngreso" prefWidth="100.0" text="Costo Unit." />
+                                <TableColumn fx:id="colArticuloIngreso" prefWidth="250.0" text="Concepto" />
+                                <TableColumn fx:id="colFechaIngreso" prefWidth="100.0" text="Último Mov." />
+                                <TableColumn fx:id="colCantIngreso" prefWidth="80.0" text="Cant. Total" />
+                                <TableColumn fx:id="colCostoIngreso" prefWidth="120.0" text="Dinero Total ($)" />
                             </columns>
                         </TableView>
                     </VBox>
@@ -67,17 +67,17 @@
                         <HBox spacing="15.0" alignment="CENTER_LEFT">
                             <Label text="Desde:" /> <DatePicker fx:id="dpInicioEgresos" />
                             <Label text="Hasta:" /> <DatePicker fx:id="dpFinEgresos" />
-                            <Button mnemonicParsing="false" onAction="#btnFiltrarEgresos" text="Filtrar" style="-fx-background-color: #007bff; -fx-text-fill: white;"/>
+                            <Button mnemonicParsing="false" onAction="#btnFiltrarEgresos" text="Filtrar Agrupado" style="-fx-background-color: #007bff; -fx-text-fill: white;"/>
                             <Pane HBox.hgrow="ALWAYS" />
                             <Button mnemonicParsing="false" onAction="#btnExportarEgresosPDF" text="Exportar a PDF" style="-fx-background-color: #e63946; -fx-text-fill: white; -fx-font-weight: bold;"/>
                         </HBox>
                         <TableView fx:id="tablaEgresos" VBox.vgrow="ALWAYS">
                             <columns>
                                 <TableColumn fx:id="colPartidaEgreso" prefWidth="250.0" text="Partida Presupuestal" />
-                                <TableColumn fx:id="colArticuloEgreso" prefWidth="250.0" text="Artículo" />
-                                <TableColumn fx:id="colFechaEgreso" prefWidth="100.0" text="Fecha" />
-                                <TableColumn fx:id="colCantEgreso" prefWidth="80.0" text="Cant." />
-                                <TableColumn fx:id="colCostoEgreso" prefWidth="100.0" text="Costo Promedio" />
+                                <TableColumn fx:id="colArticuloEgreso" prefWidth="250.0" text="Concepto" />
+                                <TableColumn fx:id="colFechaEgreso" prefWidth="100.0" text="Último Mov." />
+                                <TableColumn fx:id="colCantEgreso" prefWidth="80.0" text="Cant. Total" />
+                                <TableColumn fx:id="colCostoEgreso" prefWidth="120.0" text="Costo Total Salida ($)" />
                             </columns>
                         </TableView>
                     </VBox>

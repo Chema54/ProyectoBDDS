@@ -15,6 +15,11 @@ public class Utilidades {
         alerta.setTitle(titulo);
         alerta.setContentText(contenido);
         alerta.setHeaderText(null);
+
+        javafx.stage.Stage stageAlerta = (javafx.stage.Stage) alerta.getDialogPane().getScene().getWindow();
+        stageAlerta.setAlwaysOnTop(true);
+        stageAlerta.toFront(); 
+        
         alerta.showAndWait();
     }
 

@@ -1,155 +1,100 @@
 package main.application;
 
 import java.net.URL;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import main.business.dao.DepartamentoDAO;
 import main.business.dao.EmpleadoDAO;
 import main.business.dao.SucursalDAO;
-import main.business.dao.UsuarioDAO;
-import main.business.dto.DepartamentoDTO;
-import main.business.dto.EmpleadoDTO;
+import main.business.dto.DirectorioEmpleadoDTO;
 import main.business.dto.SucursalDTO;
-import main.business.dto.UsuarioDTO;
+import main.common.SesionGlobal;
 import main.common.UserDisplayableException;
 
 public class FXMLMostrarEmpleadosController implements Initializable {
 
     @FXML private ComboBox<SucursalDTO> cbSucursalFiltro;
-    @FXML private TableView<EmpleadoDTO> tablaEmpleados;
-    @FXML private TableColumn<EmpleadoDTO, Integer> colId;
-    @FXML private TableColumn<EmpleadoDTO, String> colNombre;
-    @FXML private TableColumn<EmpleadoDTO, String> colApellidos;
-    @FXML private TableColumn<EmpleadoDTO, String> colDepartamento;
-    @FXML private TableColumn<EmpleadoDTO, String> colIdSucursal;
-    @FXML private TableColumn<EmpleadoDTO, String> colSucursal;
-    @FXML private TableColumn<EmpleadoDTO, String> colUsuario;
+    @FXML private Button btnLimpiar;
+    
+    @FXML private TableView<DirectorioEmpleadoDTO> tablaEmpleados;
+    @FXML private TableColumn<DirectorioEmpleadoDTO, String> colNumPersonal;
+    @FXML private TableColumn<DirectorioEmpleadoDTO, String> colNombre;
+    @FXML private TableColumn<DirectorioEmpleadoDTO, String> colApellidos;
+    @FXML private TableColumn<DirectorioEmpleadoDTO, String> colDepartamento;
+    @FXML private TableColumn<DirectorioEmpleadoDTO, String> colSucursal;
+    @FXML private TableColumn<DirectorioEmpleadoDTO, String> colUsuario;
 
-    private ObservableList<EmpleadoDTO> listaTodosLosEmpleados = FXCollections.observableArrayList();
+    private ObservableList<DirectorioEmpleadoDTO> listaOriginal;
     private SucursalDAO sucursalDAO = new SucursalDAO();
     private EmpleadoDAO empleadoDAO = new EmpleadoDAO();
-    private DepartamentoDAO deptoDAO = new DepartamentoDAO();
-    private UsuarioDAO usuarioDAO = new UsuarioDAO();
-
-    private Map<Integer, DepartamentoDTO> mapaDepartamentos = new HashMap<>();
-    private Map<Integer, SucursalDTO> mapaSucursales = new HashMap<>();
-    private Map<Integer, String> mapaUsuarios = new HashMap<>();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        cargarCachesAuxiliares();
         configurarColumnas();
-        cargarSucursales();
-        cargarTodosLosEmpleados();
-        configurarFiltro();
-    }
-
-    private void cargarCachesAuxiliares() {
-        try {
-            for (DepartamentoDTO d : deptoDAO.getAll()) {
-                mapaDepartamentos.put(d.getIDDepartamento(), d);
-            }
-            for (SucursalDTO s : sucursalDAO.getAll()) {
-                mapaSucursales.put(s.getIDSucursal(), s);
-            }
-            for (UsuarioDTO u : usuarioDAO.getAll()) {
-                mapaUsuarios.put(u.getIdEmpleado(), u.getUsuario());
-            }
-        } catch (UserDisplayableException e) {
-            System.out.println("Error al cargar caches: " + e.getMessage());
-        }
+        cargarDatos();
+        configurarFiltroYSeguridad();
     }
 
     private void configurarColumnas() {
-        colId.setCellValueFactory(new PropertyValueFactory<>("IDEmpleado"));
+        colNumPersonal.setCellValueFactory(new PropertyValueFactory<>("numeroPersonal"));
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colApellidos.setCellValueFactory(new PropertyValueFactory<>("apellidos"));
-
-        colDepartamento.setCellValueFactory(cellData -> {
-            DepartamentoDTO depto = mapaDepartamentos.get(cellData.getValue().getIDDepartamento());
-            return new SimpleStringProperty(depto != null ? depto.getNombreDepartamento() : "Sin Depto");
-        });
-
-        colIdSucursal.setCellValueFactory(cellData -> {
-             DepartamentoDTO depto = mapaDepartamentos.get(cellData.getValue().getIDDepartamento());
-             return new SimpleStringProperty(depto != null ? String.valueOf(depto.getIDSucursal()) : "N/A");
-        });
-
-        colSucursal.setCellValueFactory(cellData -> {
-            DepartamentoDTO depto = mapaDepartamentos.get(cellData.getValue().getIDDepartamento());
-            if(depto != null) {
-                SucursalDTO suc = mapaSucursales.get(depto.getIDSucursal());
-                return new SimpleStringProperty(suc != null ? suc.getNombre() : "Sin Sucursal");
-            }
-            return new SimpleStringProperty("N/A");
-        });
-
-        colUsuario.setCellValueFactory(cellData -> {
-            String nombreUsuario = mapaUsuarios.get(cellData.getValue().getIDEmpleado());
-            return new SimpleStringProperty(nombreUsuario != null ? nombreUsuario : "Sin cuenta");
-        });
+        colDepartamento.setCellValueFactory(new PropertyValueFactory<>("departamento"));
+        colSucursal.setCellValueFactory(new PropertyValueFactory<>("sucursal"));
+        colUsuario.setCellValueFactory(new PropertyValueFactory<>("usuario"));
     }
 
-    private void cargarSucursales() {
+    private void cargarDatos() {
         try {
-            List<SucursalDTO> sucursalesBD = sucursalDAO.getAll();
-            cbSucursalFiltro.setItems(FXCollections.observableArrayList(sucursalesBD));
+            // Cargar combo de sucursales
+            cbSucursalFiltro.setItems(FXCollections.observableArrayList(sucursalDAO.getAll()));
+            
+            // Cargar la vista plana desde SQL
+            listaOriginal = FXCollections.observableArrayList(empleadoDAO.getVistaDirectorio());
+            tablaEmpleados.setItems(listaOriginal);
+            
         } catch (UserDisplayableException e) {
-            System.out.println("Error al cargar sucursales: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
-    private void cargarTodosLosEmpleados() {
-        try {
-            List<EmpleadoDTO> empleadosBD = empleadoDAO.getAll();
-            listaTodosLosEmpleados.setAll(empleadosBD);
-            tablaEmpleados.setItems(listaTodosLosEmpleados);
-        } catch (UserDisplayableException e) {
-            System.out.println("Error al cargar empleados: " + e.getMessage());
-        }
-    }
-
-    private void configurarFiltro() {
+    private void configurarFiltroYSeguridad() {
+        // Lógica de Filtrado en Memoria
         cbSucursalFiltro.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null) {
-                tablaEmpleados.setItems(listaTodosLosEmpleados);
+                tablaEmpleados.setItems(listaOriginal);
             } else {
-                filtrarPorSucursal(newValue.getIDSucursal());
+                FilteredList<DirectorioEmpleadoDTO> filtrada = new FilteredList<>(listaOriginal, emp -> 
+                    emp.getIdSucursal() == newValue.getIDSucursal()
+                );
+                tablaEmpleados.setItems(filtrada);
             }
         });
-    }
 
-    private void filtrarPorSucursal(int idSucursal) {
-        try {
-            List<DepartamentoDTO> deptosDeSucursal = DepartamentoDAO.obtenerDepartamentoPorSucursal(idSucursal);
-            List<Integer> idsValidos = deptosDeSucursal.stream()
-                    .map(DepartamentoDTO::getIDDepartamento)
-                    .collect(Collectors.toList());
-
-            ObservableList<EmpleadoDTO> empleadosFiltrados = FXCollections.observableArrayList();
-            for (EmpleadoDTO emp : listaTodosLosEmpleados) {
-                if (idsValidos.contains(emp.getIDDepartamento())) {
-                    empleadosFiltrados.add(emp);
+        // Lógica de Seguridad (Roles)
+        String rol = SesionGlobal.getInstance().getRolActual();
+        if (rol != null && rol.equals("SUCURSAL")) {
+            int idMiSucursal = SesionGlobal.getInstance().getIdSucursalActual();
+            
+            // Forzar selección de su propia sucursal
+            for (SucursalDTO suc : cbSucursalFiltro.getItems()) {
+                if (suc.getIDSucursal() == idMiSucursal) {
+                    cbSucursalFiltro.setValue(suc);
+                    break;
                 }
             }
-            tablaEmpleados.setItems(empleadosFiltrados);
-
-        } catch (SQLException | NullPointerException | UserDisplayableException e) {
-            System.out.println("Error al filtrar: " + e.getMessage());
+            // Bloquear para que no pueda espiar a otras sucursales
+            cbSucursalFiltro.setDisable(true);
+            btnLimpiar.setDisable(true);
         }
     }
 

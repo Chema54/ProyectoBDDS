@@ -74,7 +74,6 @@ public class FXMLCentralReportesController implements Initializable {
     @FXML
     private TableColumn<ReporteKardexDTO, Double> colCostoEgreso;
 
-    // PEDIDOS
     @FXML
     private TextField txtArticuloFantasma;
     @FXML
@@ -88,7 +87,6 @@ public class FXMLCentralReportesController implements Initializable {
     @FXML
     private TableColumn<ReportePedidoDTO, java.sql.Date> colFechaPedido;
 
-    // BAJAS
     @FXML
     private TableView<ReporteBajaDTO> tablaBajas;
     @FXML
@@ -104,7 +102,7 @@ public class FXMLCentralReportesController implements Initializable {
     private ArticuloDAO articuloDAO = new ArticuloDAO();
     @FXML
     private TextField txtBuscarBaja;
-    private javafx.collections.ObservableList<ReporteBajaDTO> listaBajasOriginal; // Memoria caché para buscar rápido
+    private javafx.collections.ObservableList<ReporteBajaDTO> listaBajasOriginal;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -148,7 +146,7 @@ public class FXMLCentralReportesController implements Initializable {
         colArticuloEgreso.setCellValueFactory(new PropertyValueFactory<>("articulo"));
         colFechaEgreso.setCellValueFactory(new PropertyValueFactory<>("fecha"));
         colCantEgreso.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
-        colCostoEgreso.setCellValueFactory(new PropertyValueFactory<>("costoPromedio"));
+        colCostoEgreso.setCellValueFactory(new PropertyValueFactory<>("costo"));
 
         colArticuloPedido.setCellValueFactory(new PropertyValueFactory<>("articulo"));
         colCantPedido.setCellValueFactory(new PropertyValueFactory<>("cantidadPedir"));
@@ -213,7 +211,7 @@ public class FXMLCentralReportesController implements Initializable {
             return;
         }
         try {
-            tablaIngresos.setItems(FXCollections.observableArrayList(reportesDAO.getMovimientosKardex("entrada", java.sql.Date.valueOf(dpInicioIngresos.getValue()), java.sql.Date.valueOf(dpFinIngresos.getValue()))));
+            tablaIngresos.setItems(FXCollections.observableArrayList(reportesDAO.getReporteAgrupadoPorPartida("entrada", java.sql.Date.valueOf(dpInicioIngresos.getValue()), java.sql.Date.valueOf(dpFinIngresos.getValue()))));
         } catch (UserDisplayableException e) {
         }
     }
@@ -224,7 +222,7 @@ public class FXMLCentralReportesController implements Initializable {
             return;
         }
         try {
-            tablaEgresos.setItems(FXCollections.observableArrayList(reportesDAO.getMovimientosKardex("salida", java.sql.Date.valueOf(dpInicioEgresos.getValue()), java.sql.Date.valueOf(dpFinEgresos.getValue()))));
+            tablaEgresos.setItems(FXCollections.observableArrayList(reportesDAO.getReporteAgrupadoPorPartida("salida", java.sql.Date.valueOf(dpInicioEgresos.getValue()), java.sql.Date.valueOf(dpFinEgresos.getValue()))));
         } catch (UserDisplayableException e) {
         }
     }
@@ -343,5 +341,4 @@ public class FXMLCentralReportesController implements Initializable {
             }
         }
     }
-
 }

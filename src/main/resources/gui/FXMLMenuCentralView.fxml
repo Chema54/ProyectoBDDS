@@ -10,9 +10,9 @@
             <menus>
             <Menu fx:id="menuSucursales" mnemonicParsing="false" text="Sucursales">
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#irRegistrarSucursales" text="Registrar" />
-                  <MenuItem mnemonicParsing="false" onAction="#irTablaModificarSucursales" text="Modificar" />
-                  <MenuItem mnemonicParsing="false" onAction="#irAsignarDepartamentoASucursal" text="Asignar Departamento" />
+                  <MenuItem fx:id="miRegistrarSucursal" mnemonicParsing="false" onAction="#irRegistrarSucursales" text="Registrar" />
+                  <MenuItem fx:id="miModificarSucursal" mnemonicParsing="false" onAction="#irTablaModificarSucursales" text="Modificar" />
+                  <MenuItem fx:id="miAsignarDepto" mnemonicParsing="false" onAction="#irAsignarDepartamentoASucursal" text="Asignar Departamento" />
               </items>
             </Menu>
                 <Menu fx:id="menuUsuarios" mnemonicParsing="false" text="Usuarios">

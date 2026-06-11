@@ -87,4 +87,45 @@ public class ReportesDAO {
             throw ExceptionHandler.handleSQLException(LOGGER, e, "Error al vaciar bitácora.");
         }
     }
+
+    public java.util.List<main.business.dto.ReporteKardexDTO> getReporteAgrupadoPorPartida(String tipoMovimiento, java.sql.Date inicio, java.sql.Date fin) throws main.common.UserDisplayableException {
+        String query = "SELECT " +
+                       "partida, " +
+                       "'VARIOS (Agrupado)' AS articulo, " + 
+                       "MAX(fecha) AS fecha, " +
+                       "SUM(cantidad) AS cantidad, " +
+                       "SUM(importe_total) AS costo, " + 
+                       "0.0 AS costo_promedio, " +
+                       "'Resumen por Partida' AS referencia " +
+                       "FROM Vista_Kardex_Partidas " +
+                       "WHERE tipo_movimiento = ? AND fecha BETWEEN ? AND ? " +
+                       "GROUP BY partida";
+
+        java.util.List<main.business.dto.ReporteKardexDTO> lista = new java.util.ArrayList<>();
+        try (java.sql.Connection con = main.database.DBConnector.getInstance().getConnection();
+             java.sql.PreparedStatement ps = con.prepareStatement(query)) {
+            
+            ps.setString(1, tipoMovimiento);
+            ps.setDate(2, inicio);
+            ps.setDate(3, fin);
+            
+            try (java.sql.ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(new main.business.dto.ReporteKardexDTO(
+                        rs.getString("articulo"),       
+                        rs.getString("partida"),        
+                        rs.getDate("fecha"),            
+                        rs.getInt("cantidad"),          
+                        rs.getDouble("costo"),          
+                        rs.getDouble("costo_promedio"), 
+                        tipoMovimiento,     
+                        rs.getString("referencia")  
+                    ));
+                }
+            }
+            return lista;
+        } catch (java.sql.SQLException e) {
+            throw main.common.ExceptionHandler.handleSQLException(org.apache.logging.log4j.LogManager.getLogger(ReportesDAO.class), e, "Error al generar reporte agrupado usando la Vista.");
+        }
+    }
 }

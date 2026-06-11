@@ -14,10 +14,6 @@ import main.database.DBConnector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 /**
  *
  * @author josem
@@ -125,6 +121,34 @@ public class EmpleadoDAO extends CompleteDAOShape<EmpleadoDTO, Integer> {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible eliminar el empleado.");
+        }
+    }
+    
+    // =========================================================================
+    // MÉTODO PARA LEER LA VISTA DEL DIRECTORIO (RÚBRICA: VISTAS)
+    // =========================================================================
+    public List<main.business.dto.DirectorioEmpleadoDTO> getVistaDirectorio() throws UserDisplayableException {
+        String query = "SELECT * FROM Vista_Directorio_Empleados";
+        List<main.business.dto.DirectorioEmpleadoDTO> list = new ArrayList<>();
+        
+        try (Connection connection = DBConnector.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet rs = statement.executeQuery()) {
+             
+            while (rs.next()) {
+                list.add(new main.business.dto.DirectorioEmpleadoDTO(
+                    rs.getString("numero_personal"),
+                    rs.getString("nombre"),
+                    rs.getString("apellidos"),
+                    rs.getString("departamento"),
+                    rs.getString("sucursal"),
+                    rs.getString("usuario"),
+                    rs.getInt("id_sucursal")
+                ));
+            }
+            return list;
+        } catch (SQLException e) {
+            throw ExceptionHandler.handleSQLException(LOGGER, e, "Error al cargar la vista del directorio.");
         }
     }
 }

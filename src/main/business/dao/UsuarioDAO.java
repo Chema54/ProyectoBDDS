@@ -14,7 +14,6 @@ import main.common.UserDisplayableException;
 import main.database.DBConnector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.mindrot.jbcrypt.BCrypt;
 
 public class UsuarioDAO extends CompleteDAOShape<UsuarioDTO, String> {
 
@@ -91,7 +90,9 @@ public class UsuarioDAO extends CompleteDAOShape<UsuarioDTO, String> {
 
             try (java.sql.Statement st = con.createStatement()) {
                 // 1. Crear el usuario en el motor
-                st.execute("CREATE USER IF NOT EXISTS '" + usuario.getUsuario() + "'@'%' IDENTIFIED BY '" + usuario.getContraseña() + "'");
+                String passwordSegura = usuario.getContraseña().replace("'", "''"); //Para prevenir inyeccion
+
+                st.execute("CREATE USER IF NOT EXISTS '" + usuario.getUsuario() + "'@'%' IDENTIFIED BY '" + passwordSegura + "'");
 
                 // 2. Otorgar permisos según su Rol estricto
                 if (usuario.getRol() == UsuarioRol.CENTRAL) {
